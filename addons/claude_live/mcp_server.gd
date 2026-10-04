@@ -143,6 +143,8 @@ func handle_message(msg) -> Variant:
 	if not (msg is Dictionary) or not msg.has("method"):
 		return null  # responses from client: ignore
 	var id = msg.get("id", null)
+	if id is float and id == floorf(id):
+		id = int(id)  # JSON.parse_string yields floats; echo ints back as ints
 	var method: String = msg.method
 	if id == null:
 		return null  # notification

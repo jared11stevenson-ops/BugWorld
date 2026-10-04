@@ -1,0 +1,1 @@
+{"name":"claude-live-tests","version":"0.1.0","private":true,"type":"module","dependencies":{"ws":"^8.18.0"},"scripts":{"test":"node --test --test-concurrency=1 --test-timeout=180000 ."}}

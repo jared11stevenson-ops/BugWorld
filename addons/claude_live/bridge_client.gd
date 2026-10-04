@@ -1,7 +1,7 @@
 @tool
 extends RefCounted
 ## Outbound WebSocket to the relay. Config: user://claude_live_relay.json {"url":"wss://host","token":"..."}
-## Reconnects forever with bounded exponential backoff (1s..30s) and a heartbeat.
+## Reconnects forever with bounded exponential backoff (1s..8s) and a heartbeat.
 
 const CFG := "user://claude_live_relay.json"
 const HB_MS := 15000
@@ -40,6 +40,25 @@ func reload_config() -> void:
 		state = "backoff"
 
 
+## Imports a connection file {"url","token"}; stores it in user:// (never in the project). Returns "" or an error.
+func import_connection(path: String) -> String:
+	if not FileAccess.file_exists(path):
+		return "File not found."
+	var cfg = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (cfg is Dictionary) or str(cfg.get("url", "")) == "" or str(cfg.get("token", "")).length() < 32:
+		return "That file is not a valid connection (needs url and token)."
+	var url := str(cfg.url)
+	if not (url.begins_with("wss://") or url.begins_with("ws://")):
+		return "Connection url must start with wss:// (or ws:// for local testing)."
+	var f := FileAccess.open(CFG, FileAccess.WRITE)
+	if f == null:
+		return "Could not store the connection."
+	f.store_string(JSON.stringify({"url": url, "token": str(cfg.token)}))
+	f.close()
+	reload_config()
+	return ""
+
+
 func _connect() -> void:
 	_ws = WebSocketPeer.new()
 	_ws.handshake_headers = PackedStringArray(["Authorization: Bearer " + _token])
@@ -55,7 +74,7 @@ func _connect() -> void:
 func _schedule_retry() -> void:
 	state = "backoff"
 	_retry_at = Time.get_ticks_msec() + int(_backoff * 1000.0)
-	_backoff = min(_backoff * 2.0, 30.0)
+	_backoff = min(_backoff * 2.0, 8.0)
 
 
 func poll() -> void:

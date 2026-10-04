@@ -5,6 +5,7 @@ extends RefCounted
 const MAX_SNAPSHOTS := 30
 const SNAP_DIR := "user://claude_live_snapshots"
 const DEDUP_MAX := 256
+const VALIDATE_DIR := "user://claude_live_validate"
 
 var plugin: EditorPlugin
 var _dedup := {}
@@ -47,6 +48,7 @@ func definitions() -> Array:
 		_t("run_project", "Run the project's main scene (or a given scene).", {"scene": s}),
 		_t("stop_project", "Stop the running project.", {}),
 		_t("screenshot", "Capture the editor's 2D or 3D viewport as PNG.", {"view": {"type": "string", "enum": ["2d", "3d"]}}),
+		_t("get_property", "Read a property of a node in the edited scene (value as Godot literal string).", {"node": s, "property": s}, ["node", "property"]),
 		_t("get_logs", "Recent editor errors/warnings/output captured since the plugin loaded.", {"clear": {"type": "boolean"}}),
 		_t("self_test", "Run write/read/CAS/rollback/refresh checks on a scratch file.", {}),
 		_t("status", "Plugin status and counters.", {}),
@@ -64,7 +66,7 @@ func call_tool(name: String, args: Dictionary) -> Dictionary:
 		res = call("t_" + name, args)
 	else:
 		res = _err("unknown tool: " + name)
-	if rid != "":
+	if rid != "" and not res.get("isError", false):  # only successes are replayed; a failed call may be retried
 		_dedup[rid] = res
 		_dedup_order.append(rid)
 		if _dedup_order.size() > DEDUP_MAX:
@@ -102,6 +104,13 @@ func safe_path(p: String) -> String:
 		return "res://"
 	if out[0] == ".git" or out[0] == ".godot":
 		return ""
+	# Symlinks can point outside the project; refuse any path that crosses one.
+	var d := DirAccess.open("res://")
+	var walked := ""
+	for part in out:
+		walked = part if walked == "" else walked + "/" + part
+		if d != null and d.is_link(walked):
+			return ""
 	return "res://" + "/".join(out)
 
 
@@ -157,6 +166,17 @@ func validate_text(path: String, text: String) -> String:
 	elif ext == "tscn" or ext == "tres":
 		if not (text.begins_with("[gd_scene") or text.begins_with("[gd_resource")):
 			return "not a valid %s header" % ext
+		# Real parse: load from a scratch copy so a broken scene never reaches the project.
+		var tmp := VALIDATE_DIR.path_join("probe." + ext)
+		DirAccess.make_dir_recursive_absolute(VALIDATE_DIR)
+		var f := FileAccess.open(tmp, FileAccess.WRITE)
+		if f:
+			f.store_string(text)
+			f.close()
+			var res = ResourceLoader.load(tmp, "", ResourceLoader.CACHE_MODE_IGNORE)
+			DirAccess.remove_absolute(tmp)
+			if res == null:
+				return "%s failed to load (parse error)" % ext
 	elif ext == "json":
 		if JSON.parse_string(text) == null and text.strip_edges() != "null":
 			return "invalid JSON"
@@ -415,6 +435,13 @@ func t_set_property(a: Dictionary) -> Dictionary:
 	return _ok({"value": var_to_str(n.get(str(a.property)))})
 
 
+func t_get_property(a: Dictionary) -> Dictionary:
+	var n := _find(str(a.get("node", "")))
+	if n == null:
+		return _err("node not found")
+	return _ok({"value": var_to_str(n.get(str(a.get("property", ""))))})
+
+
 func t_remove_node(a: Dictionary) -> Dictionary:
 	var n := _find(str(a.get("node", "")))
 	if n == null or n == _root():
@@ -465,6 +492,8 @@ func t_stop_project(_a: Dictionary) -> Dictionary:
 
 
 func t_screenshot(a: Dictionary) -> Dictionary:
+	if DisplayServer.get_name() == "headless":
+		return _err("no renderer: the editor is running headless, so there is nothing to capture")
 	var vp: SubViewport = EditorInterface.get_editor_viewport_3d(0) if a.get("view", "2d") == "3d" else EditorInterface.get_editor_viewport_2d()
 	var img := vp.get_texture().get_image()
 	if img == null:
@@ -516,4 +545,4 @@ func t_self_test(_a: Dictionary) -> Dictionary:
 
 
 func t_status(_a: Dictionary) -> Dictionary:
-	return _ok({"godot": Engine.get_version_info().string, "platform": OS.get_name(), "project": ProjectSettings.globalize_path("res://"), "stats": _stats, "snapshots": _snapshots.size(), "scene": (_root().scene_file_path if _root() else "")})
+	return _ok({"godot": Engine.get_version_info().string, "platform": OS.get_name(), "project": ProjectSettings.globalize_path("res://"), "stats": _stats, "relay": (plugin.bridge.state if plugin.get("bridge") else "none"), "snapshots": _snapshots.size(), "scene": (_root().scene_file_path if _root() else "")})

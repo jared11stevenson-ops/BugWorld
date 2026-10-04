@@ -22,6 +22,12 @@ func _enter_tree() -> void:
 	else:
 		print("[claude_live] MCP ready at http://127.0.0.1:%d/mcp  token file: %s" % [server.port, server.token_path()])
 	bridge = Bridge.new(server)
+	# Automation hook (headless / Termux scripts): same import the dock's "Load connection" uses.
+	var imp := OS.get_environment("CLAUDE_LIVE_IMPORT")
+	if imp != "":
+		var ierr: String = bridge.import_connection(imp)
+		if ierr != "":
+			push_warning("[claude_live] CLAUDE_LIVE_IMPORT: " + ierr)
 	dock = Dock.new()
 	dock.setup(bridge)
 	add_control_to_dock(DOCK_SLOT_RIGHT_UL, dock)

@@ -67,6 +67,15 @@ export function createRelay({ tokens }) {
   });
   const sweep = setInterval(() => wss.clients.forEach((w) => { if (!w.isAlive) return w.terminate(); w.isAlive = false; w.ping(); }), 20000);
   server.on("close", () => clearInterval(sweep));
+  // Graceful stop: upgraded sockets are detached from http.Server, so close them explicitly.
+  server.shutdown = () => new Promise((resolve) => {
+    clearInterval(sweep);
+    for (const p of pending.values()) { clearTimeout(p.timer); p.res.destroy(); }
+    wss.clients.forEach((w) => w.terminate());
+    server.closeAllConnections?.();
+    server.close(() => resolve());
+    setTimeout(resolve, 500);
+  });
   return server;
 }
 

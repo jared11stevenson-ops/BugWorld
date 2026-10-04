@@ -31,17 +31,13 @@ func setup(p_bridge) -> void:
 
 
 func _on_file(path: String) -> void:
-	var cfg = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if not (cfg is Dictionary) or str(cfg.get("url", "")) == "" or str(cfg.get("token", "")).length() < 32:
-		_status.text = "That file is not a valid connection (needs url and token)."
-		return
-	var f := FileAccess.open(bridge.CFG, FileAccess.WRITE)
-	if f == null:
-		_status.text = "Could not store the connection."
-		return
-	f.store_string(JSON.stringify({"url": cfg.url, "token": cfg.token}))
-	f.close()
-	bridge.reload_config()
+	var err: String = bridge.import_connection(path)
+	_status.text = err if err != "" else "Connection loaded."
+	_refresh_soon()
+
+
+func _refresh_soon() -> void:
+	await get_tree().create_timer(0.5).timeout
 	_refresh()
 
 
