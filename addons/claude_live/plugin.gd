@@ -4,9 +4,11 @@ extends EditorPlugin
 
 const McpServer := preload("res://addons/claude_live/mcp_server.gd")
 const Tools := preload("res://addons/claude_live/tools.gd")
+const Bridge := preload("res://addons/claude_live/bridge_client.gd")
 
 var server
 var tools
+var bridge
 
 
 func _enter_tree() -> void:
@@ -17,10 +19,13 @@ func _enter_tree() -> void:
 		push_error("[claude_live] could not listen on 127.0.0.1:%d (error %d)" % [server.port, err])
 	else:
 		print("[claude_live] MCP ready at http://127.0.0.1:%d/mcp  token file: %s" % [server.port, server.token_path()])
+	bridge = Bridge.new(server)
 	set_process(true)
 
 
 func _exit_tree() -> void:
+	if bridge:
+		bridge.stop()
 	if server:
 		server.stop()
 
@@ -28,3 +33,5 @@ func _exit_tree() -> void:
 func _process(_delta: float) -> void:
 	if server:
 		server.poll()
+	if bridge:
+		bridge.poll()

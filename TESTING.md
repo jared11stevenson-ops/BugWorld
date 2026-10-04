@@ -3,6 +3,7 @@
 | Check | Result |
 |---|---|
 | `gdparse` on addons/claude_live/*.gd | run in build env (see commit); syntax only |
+| relay/test.js (auth, routing, concurrency, drop handling) | PASS (Node, local) |
 | Execution in Godot 4.x editor | NOT RUN |
 | Android device | NOT RUN |
 | Claude Code <-> plugin MCP handshake | NOT RUN |

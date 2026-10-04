@@ -123,7 +123,7 @@ func _try_handle(c: Dictionary) -> bool:
 	if parsed is Array:
 		var outs := []
 		for m in parsed:
-			var o = _dispatch(m)
+			var o = handle_message(m)
 			if o != null:
 				outs.append(o)
 		if outs.is_empty():
@@ -131,7 +131,7 @@ func _try_handle(c: Dictionary) -> bool:
 		else:
 			_respond(c.peer, 200, "application/json", JSON.stringify(outs))
 		return true
-	var out = _dispatch(parsed)
+	var out = handle_message(parsed)
 	if out == null:
 		_respond(c.peer, 202, "text/plain", "")
 	else:
@@ -139,7 +139,7 @@ func _try_handle(c: Dictionary) -> bool:
 	return true
 
 
-func _dispatch(msg) -> Variant:
+func handle_message(msg) -> Variant:
 	if not (msg is Dictionary) or not msg.has("method"):
 		return null  # responses from client: ignore
 	var id = msg.get("id", null)
