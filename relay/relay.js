@@ -9,6 +9,10 @@ const MAX_PENDING = 64;          // concurrent in-flight requests per relay
 const FAIL_LIMIT = 20;           // failed auth attempts per client IP ...
 const FAIL_WINDOW_MS = 60000;    // ... per window, then 429
 
+// Opt-in operational log (RELAY_LOG=1): method/tool name, duration, outcome. Never arguments, results or tokens.
+const logLine = (o) => { if (process.env.RELAY_LOG) console.log(JSON.stringify({ t: new Date().toISOString(), ...o })); };
+const labelOf = (m) => (m.method === "tools/call" ? `tools/call:${String(m.params?.name ?? "?").slice(0, 64)}` : String(m.method).slice(0, 64));
+
 export function createRelay({ tokens }) {
   // tokens: Set of pairing tokens (>=32 chars). Same token authenticates both sides of a pair.
   const plugins = new Map(); // token -> ws
@@ -51,9 +55,10 @@ export function createRelay({ tokens }) {
       const relayId = `r${++seq}`;
       const timer = setTimeout(() => {
         pending.delete(relayId);
+        logLine({ ev: "timeout", req: labelOf(msg), ms: TIMEOUT_MS });
         res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ jsonrpc: "2.0", id: msg.id, error: { code: -32001, message: "Godot did not answer in time (it may be backgrounded or reconnecting). Retry; use request_id for safe retries." } }));
       }, TIMEOUT_MS);
-      pending.set(relayId, { res, timer, origId: msg.id, token });
+      pending.set(relayId, { res, timer, origId: msg.id, token, label: labelOf(msg), t0: Date.now() });
       ws.send(JSON.stringify({ ...msg, id: relayId }));
     });
   });
@@ -67,6 +72,7 @@ export function createRelay({ tokens }) {
     wss.handleUpgrade(req, sock, head, (ws) => {
       const old = plugins.get(token);
       plugins.set(token, ws);
+      logLine({ ev: "plugin_connected", replaced: !!old });
       if (old) old.close(4000, "replaced");
       ws.isAlive = true;
       ws.on("pong", () => (ws.isAlive = true));
@@ -76,9 +82,10 @@ export function createRelay({ tokens }) {
         const p = pending.get(m.id);
         if (!p || p.token !== token) return; // duplicate/late reply: ignore
         pending.delete(m.id); clearTimeout(p.timer);
+        logLine({ ev: "reply", req: p.label, ms: Date.now() - p.t0, ok: !m.error && !m.result?.isError });
         p.res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ...m, id: p.origId }));
       });
-      ws.on("close", () => { if (plugins.get(token) === ws) plugins.delete(token); });
+      ws.on("close", () => { if (plugins.get(token) === ws) plugins.delete(token); logLine({ ev: "plugin_disconnected" }); });
     });
   });
   const sweep = setInterval(() => wss.clients.forEach((w) => { if (!w.isAlive) return w.terminate(); w.isAlive = false; w.ping(); }), 20000);

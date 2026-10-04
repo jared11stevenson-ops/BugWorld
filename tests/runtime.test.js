@@ -108,3 +108,18 @@ test("edit main.tscn 1 -> 5 while stopped, re-run: the RUNNING game shows 5 (scr
   assert.notDeepEqual(buf, fs.readFileSync(path.join(ART, "game_before.png")), "screenshot should change when the number changes");
   await g.tool("stop_project");
 });
+
+test("editor screenshot (whole window and 2D viewport) is a real, non-blank image", async () => {
+  await g.tool("open_scene", { path: "res://main.tscn" });
+  for (const view of ["editor", "2d"]) {
+    const r = await g.tool("screenshot", { view });
+    assert.equal(r.isError, false, r.text);
+    const buf = Buffer.from(r.raw.content[0].data, "base64");
+    const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
+    assert.ok(w >= 400 && h >= 300, `${view}: ${w}x${h}`);
+    assert.ok(buf.length > 3000, `${view}: looks blank (${buf.length} bytes)`);
+    fs.mkdirSync(ART, { recursive: true });
+    fs.writeFileSync(path.join(ART, `editor_${view}.png`), buf);
+    console.log(`# measured: editor screenshot view=${view} ${w}x${h}, ${buf.length} bytes`);
+  }
+});

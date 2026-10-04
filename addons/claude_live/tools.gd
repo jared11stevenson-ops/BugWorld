@@ -48,7 +48,7 @@ func definitions() -> Array:
 		_t("connect_signal", "Connect a signal between nodes in the edited scene.", {"from": s, "signal": s, "to": s, "method": s}, ["from", "signal", "to", "method"]),
 		_t("run_project", "Run the project's main scene (or a given scene).", {"scene": s}),
 		_t("stop_project", "Stop the running project.", {}),
-		_t("screenshot", "Capture the editor's 2D or 3D viewport as PNG.", {"view": {"type": "string", "enum": ["2d", "3d"]}}),
+		_t("screenshot", "Capture the Godot EDITOR as PNG: view=editor (default) is the whole editor window; 2d/3d switch to that tab and capture its viewport.", {"view": {"type": "string", "enum": ["editor", "2d", "3d"]}, "max_width": {"type": "integer"}}),
 		_t("get_property", "Read a property of a node in the edited scene (value as Godot literal string).", {"node": s, "property": s}, ["node", "property"]),
 		_t("get_logs", "Engine log output (editor and running game): errors, warnings, prints. Use since=<next from the previous call> to read only new entries.", {"since": {"type": "integer"}, "limit": {"type": "integer"}, "level": {"type": "string", "enum": ["all", "problems"]}, "source": {"type": "string", "enum": ["all", "editor", "game"]}, "clear": {"type": "boolean"}}),
 		_t("game_status", "Is the game (started by run_project) connected? Returns fps, node count, renderer.", {}),
@@ -500,12 +500,25 @@ func t_stop_project(_a: Dictionary) -> Dictionary:
 func t_screenshot(a: Dictionary) -> Dictionary:
 	if DisplayServer.get_name() == "headless":
 		return _err("no renderer: the editor is running headless, so there is nothing to capture")
-	var vp: SubViewport = EditorInterface.get_editor_viewport_3d(0) if a.get("view", "2d") == "3d" else EditorInterface.get_editor_viewport_2d()
-	var img := vp.get_texture().get_image()
-	if img == null:
-		return _err("no image")
-	var b64 := Marshalls.raw_to_base64(img.save_png_to_buffer())
-	return {"content": [{"type": "image", "data": b64, "mimeType": "image/png"}]}
+	var view := str(a.get("view", "editor"))
+	var vp: Viewport
+	if view == "editor":
+		vp = EditorInterface.get_base_control().get_viewport()  # the whole editor window, as the user sees it
+	else:
+		# The 2D/3D sub-viewports only render while their tab is the active main screen.
+		EditorInterface.set_main_screen_editor("3D" if view == "3d" else "2D")
+		var loop := Engine.get_main_loop() as SceneTree
+		await loop.process_frame
+		await loop.process_frame
+		await loop.process_frame
+		vp = EditorInterface.get_editor_viewport_3d(0) if view == "3d" else EditorInterface.get_editor_viewport_2d()
+	var img: Image = vp.get_texture().get_image()
+	if img == null or img.is_empty():
+		return _err("no image available")
+	var max_w := int(a.get("max_width", 1280))
+	if max_w > 0 and img.get_width() > max_w:
+		img.resize(max_w, int(img.get_height() * float(max_w) / img.get_width()), Image.INTERPOLATE_BILINEAR)
+	return {"content": [{"type": "image", "data": Marshalls.raw_to_base64(img.save_png_to_buffer()), "mimeType": "image/png"}]}
 
 
 # ----------------------------------------------------------------------- logs
