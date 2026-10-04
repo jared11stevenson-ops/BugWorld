@@ -25,5 +25,26 @@ await new Promise((res) => { const bad = new WebSocket(`ws://127.0.0.1:${port}/p
 ws.close(); await new Promise((r) => setTimeout(r, 100));
 r = await (await post({ jsonrpc: "2.0", id: 9, method: "ping" })).json();
 assert.match(r.error.message, /not connected/);
+// health endpoint (no auth, used by Fly/Render)
+assert.equal((await fetch(`http://127.0.0.1:${port}/healthz`)).status, 200);
+// brute-force throttle: repeated bad tokens from one client get 429, a good token from it is then also throttled for the window
+const srv2 = createRelay({ tokens: new Set([T]) });
+await new Promise((r) => srv2.listen(0, r));
+const p2 = srv2.address().port;
+const bad2 = () => fetch(`http://127.0.0.1:${p2}/mcp`, { method: "POST", headers: { authorization: "Bearer " + "q".repeat(40) }, body: "{}" });
+const codes = []; for (let i = 0; i < 25; i++) codes.push((await bad2()).status);
+assert.equal(codes[0], 401); assert.equal(codes[24], 429);
+await srv2.shutdown();
+// in-flight cap: 64 stalled requests fill the relay, the 65th gets a clear busy error
+const srv3 = createRelay({ tokens: new Set([T]) });
+await new Promise((r) => srv3.listen(0, r));
+const p3 = srv3.address().port;
+const ws3 = new WebSocket(`ws://127.0.0.1:${p3}/plugin`, { headers: { authorization: `Bearer ${T}` } });
+await new Promise((r) => ws3.on("open", r)); // plugin never answers
+const stalled = []; for (let i = 0; i < 64; i++) stalled.push(fetch(`http://127.0.0.1:${p3}/mcp`, { method: "POST", headers: { authorization: `Bearer ${T}` }, body: JSON.stringify({ jsonrpc: "2.0", id: i + 1, method: "x" }) }).catch(() => {}));
+await new Promise((r) => setTimeout(r, 300));
+const over = await (await fetch(`http://127.0.0.1:${p3}/mcp`, { method: "POST", headers: { authorization: `Bearer ${T}` }, body: JSON.stringify({ jsonrpc: "2.0", id: 999, method: "x" }) })).json();
+assert.match(over.error.message, /busy/);
+await srv3.shutdown();
 console.log("relay tests passed");
 srv.close(); process.exit(0);

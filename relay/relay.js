@@ -5,6 +5,9 @@ import crypto from "node:crypto";
 import { WebSocketServer } from "ws";
 
 const TIMEOUT_MS = 60000;
+const MAX_PENDING = 64;          // concurrent in-flight requests per relay
+const FAIL_LIMIT = 20;           // failed auth attempts per client IP ...
+const FAIL_WINDOW_MS = 60000;    // ... per window, then 429
 
 export function createRelay({ tokens }) {
   // tokens: Set of pairing tokens (>=32 chars). Same token authenticates both sides of a pair.
@@ -13,10 +16,20 @@ export function createRelay({ tokens }) {
   let seq = 0;
   const ok = (t) => [...tokens].some((x) => x.length === t.length && crypto.timingSafeEqual(Buffer.from(x), Buffer.from(t)));
 
+  const fails = new Map(); // ip -> [timestamps]
+  const clientIp = (req) => String(req.headers["fly-client-ip"] || req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+  const throttled = (ip) => { const now = Date.now(); const a = (fails.get(ip) || []).filter((t) => now - t < FAIL_WINDOW_MS); fails.set(ip, a); return a.length >= FAIL_LIMIT; };
+  const noteFail = (ip) => { const a = fails.get(ip) || []; a.push(Date.now()); fails.set(ip, a); };
+  const gc = setInterval(() => { const now = Date.now(); for (const [ip, a] of fails) if (!a.some((t) => now - t < FAIL_WINDOW_MS)) fails.delete(ip); }, FAIL_WINDOW_MS);
+  gc.unref?.();
+
   const server = http.createServer((req, res) => {
+    if (req.url === "/healthz" && req.method === "GET") return res.writeHead(200, { "content-type": "text/plain", "cache-control": "no-store" }).end("ok");
     const token = (req.headers.authorization || "").replace(/^Bearer /, "");
     if (req.url !== "/mcp" || req.headers.origin) return res.writeHead(404).end();
-    if (!token || !ok(token)) return res.writeHead(401).end("unauthorized");
+    const ip = clientIp(req);
+    if (throttled(ip)) return res.writeHead(429, { "retry-after": "60" }).end("too many failed attempts");
+    if (!token || !ok(token)) { noteFail(ip); return res.writeHead(401).end("unauthorized"); }
     if (req.method !== "POST") return res.writeHead(405).end();
     let body = "";
     req.on("data", (c) => { body += c; if (body.length > 8e6) req.destroy(); });
@@ -34,6 +47,7 @@ export function createRelay({ tokens }) {
         }));
       }
       if (isNotification) { ws.send(JSON.stringify(msg)); return res.writeHead(202).end(); }
+      if (pending.size >= MAX_PENDING) return res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ jsonrpc: "2.0", id: msg.id, error: { code: -32002, message: "Relay is busy (too many requests in flight). Retry shortly." } }));
       const relayId = `r${++seq}`;
       const timer = setTimeout(() => {
         pending.delete(relayId);
@@ -47,7 +61,9 @@ export function createRelay({ tokens }) {
   const wss = new WebSocketServer({ noServer: true, maxPayload: 16e6 });
   server.on("upgrade", (req, sock, head) => {
     const token = (req.headers.authorization || "").replace(/^Bearer /, "");
-    if (req.url !== "/plugin" || !token || !ok(token)) { sock.write("HTTP/1.1 401 Unauthorized\r\n\r\n"); return sock.destroy(); }
+    const ip = clientIp(req);
+    if (throttled(ip)) { sock.write("HTTP/1.1 429 Too Many Requests\r\n\r\n"); return sock.destroy(); }
+    if (req.url !== "/plugin" || !token || !ok(token)) { noteFail(ip); sock.write("HTTP/1.1 401 Unauthorized\r\n\r\n"); return sock.destroy(); }
     wss.handleUpgrade(req, sock, head, (ws) => {
       const old = plugins.get(token);
       plugins.set(token, ws);
@@ -66,10 +82,10 @@ export function createRelay({ tokens }) {
     });
   });
   const sweep = setInterval(() => wss.clients.forEach((w) => { if (!w.isAlive) return w.terminate(); w.isAlive = false; w.ping(); }), 20000);
-  server.on("close", () => clearInterval(sweep));
+  server.on("close", () => { clearInterval(sweep); clearInterval(gc); });
   // Graceful stop: upgraded sockets are detached from http.Server, so close them explicitly.
   server.shutdown = () => new Promise((resolve) => {
-    clearInterval(sweep);
+    clearInterval(sweep); clearInterval(gc);
     for (const p of pending.values()) { clearTimeout(p.timer); p.res.destroy(); }
     wss.clients.forEach((w) => w.terminate());
     server.closeAllConnections?.();

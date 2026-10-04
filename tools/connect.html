@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Live connection</title>
+<style>
+  :root { --bg:#fff; --fg:#1b1f24; --muted:#59636e; --card:#f6f8fa; --line:#d0d7de; --accent:#0969da; --warn:#9a6700; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --card:#161b22; --line:#30363d; --accent:#4493f8; --warn:#d29922; } }
+  body { background:var(--bg); color:var(--fg); font:16px/1.5 system-ui,sans-serif; margin:0; padding:16px; }
+  main { max-width:44rem; margin:0 auto; }
+  h1 { font-size:1.4rem; margin:.4rem 0 .2rem; }
+  p.sub, .note { color:var(--muted); margin:.2rem 0 1rem; }
+  label { display:block; font-weight:600; margin:1rem 0 .3rem; }
+  input[type=url] { width:100%; box-sizing:border-box; padding:.6rem; font:inherit; background:var(--card); color:var(--fg); border:1px solid var(--line); border-radius:6px; }
+  button { font:inherit; padding:.55rem .9rem; margin:.4rem .4rem .4rem 0; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  pre { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:.7rem; overflow-x:auto; white-space:pre-wrap; word-break:break-all; margin:.3rem 0; }
+  .warn { color:var(--warn); }
+  #out[hidden] { display:none; }
+  #err { color:#cf222e; min-height:1.4em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Claude Live connection</h1>
+  <p class="sub">Generates a secret and the connection file for Godot's <b>Load connection</b> button. Everything happens in this page; nothing is uploaded.</p>
+
+  <label for="url">Relay URL (https, from your Fly.io / Render deploy)</label>
+  <input id="url" type="url" inputmode="url" placeholder="https://my-relay.fly.dev" autocomplete="off">
+  <button id="gen" class="primary">Generate</button>
+  <div id="err" role="alert"></div>
+
+  <section id="out" hidden>
+    <p class="warn"><b>The token is a secret.</b> Anyone with it can edit your open project. Do not commit or share it.</p>
+
+    <h2>1. Connection file for Godot</h2>
+    <button id="dl">Download claude-live-connection.json</button>
+    <p class="note">Save it on the phone, then in Godot open the <b>Claude Live</b> dock → <b>Load connection</b> and pick it.</p>
+
+    <h2>2. Give the relay the secret</h2>
+    <p class="note">Fly.io:</p><pre id="fly"></pre>
+    <p class="note">Render: add this environment variable in the dashboard:</p><pre id="render"></pre>
+
+    <h2>3. Register the relay with Claude Code</h2>
+    <pre id="add"></pre>
+    <button data-copy="add">Copy this command</button>
+  </section>
+</main>
+<script>
+"use strict";
+let current = null;
+
+function build(urlText) {
+  let u;
+  try { u = new URL(urlText.trim()); } catch (e) { throw new Error("That is not a valid URL."); }
+  const local = ["127.0.0.1", "localhost", "[::1]"].includes(u.hostname);
+  if (u.protocol === "wss:") u.protocol = "https:";
+  if (u.protocol === "ws:") u.protocol = "http:";
+  if (u.protocol !== "https:" && !(u.protocol === "http:" && local)) throw new Error("Use an https:// URL (plain http is only allowed for localhost).");
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  const token = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  const base = u.origin;
+  return {
+    file: { url: base.replace(/^http/, "ws"), token },
+    fly: "fly secrets set RELAY_TOKENS=" + token,
+    render: "RELAY_TOKENS=" + token,
+    add: 'claude mcp add --transport http godot ' + base + '/mcp --header "Authorization: Bearer ' + token + '"',
+  };
+}
+
+document.getElementById("gen").addEventListener("click", () => {
+  const err = document.getElementById("err");
+  err.textContent = "";
+  try {
+    current = build(document.getElementById("url").value);
+  } catch (e) { err.textContent = e.message; return; }
+  document.getElementById("fly").textContent = current.fly;
+  document.getElementById("render").textContent = current.render;
+  document.getElementById("add").textContent = current.add;
+  document.getElementById("out").hidden = false;
+});
+
+document.getElementById("dl").addEventListener("click", () => {
+  if (!current) return;
+  const blob = new Blob([JSON.stringify(current.file, null, 2) + "\n"], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "claude-live-connection.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent); b.textContent = "Copied"; } catch (e) { b.textContent = "Select the text and copy it"; }
+}));
+</script>
+</body>
+</html>
