@@ -15,6 +15,6 @@ Prompt Claude Code, switch to Godot, watch. See KNOWN_LIMITATIONS.md and TESTING
 ## Cloud / relay mode (Claude Code that can't reach the phone's localhost)
 The plugin also dials **out** to a relay (no port-forwarding):
 1. Deploy `relay/` anywhere with a public HTTPS/WSS URL: `RELAY_TOKENS=<40+ char secret> npm start`.
-2. On the phone, create `user://claude_live_relay.json` (Godot user dir) with `{"url":"wss://your-relay","token":"<secret>"}`; restart the plugin.
+2. In Godot, open the **Claude Live** dock, tap **Load connection** and pick a JSON file `{"url":"wss://your-relay","token":"<secret>"}` (stored outside the project).
 3. Point Claude Code at it: `claude mcp add --transport http godot https://your-relay/mcp --header "Authorization: Bearer <secret>"`.
 The relay only forwards JSON-RPC; it stores nothing. The environment running Claude Code must allow the relay's host. `relay/test.js` passes locally; the Godot-side client is untested in a real editor.

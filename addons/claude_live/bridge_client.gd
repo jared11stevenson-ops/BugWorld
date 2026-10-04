@@ -22,6 +22,14 @@ var _seen_order: Array = []
 
 func _init(p_server) -> void:
 	server = p_server
+	reload_config()
+
+
+func reload_config() -> void:
+	if _ws.get_ready_state() != WebSocketPeer.STATE_CLOSED:
+		_ws.close(1000, "reconfigure")
+	state = "disabled"
+	_backoff = 1.0
 	if not FileAccess.file_exists(CFG):
 		return
 	var cfg = JSON.parse_string(FileAccess.get_file_as_string(CFG))
