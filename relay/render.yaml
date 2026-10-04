@@ -1,0 +1,14 @@
+# Render Blueprint. RELAY_TOKENS is entered in the dashboard (sync: false), never stored in git.
+services:
+  - type: web
+    name: claude-live-relay
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # A free web service sleeps after ~15 min idle and drops the WebSocket: use a paid instance.
+    plan: starter
+    numInstances: 1
+    healthCheckPath: /healthz
+    envVars:
+      - key: RELAY_TOKENS
+        sync: false

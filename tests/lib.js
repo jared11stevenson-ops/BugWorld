@@ -22,7 +22,7 @@ function copyProject(dst) {
 }
 
 /** relayCfg: optional {url, token}; written to the plugin's user dir before start (as the dock would). */
-export async function startGodot({ relayCfg, env = {} } = {}) {
+export async function startGodot({ relayCfg, env = {}, display = false } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "cl-test-"));
   const project = path.join(root, "project");
   const xdg = path.join(root, "xdg");
@@ -33,7 +33,13 @@ export async function startGodot({ relayCfg, env = {} } = {}) {
   if (relayCfg) fs.writeFileSync(path.join(userDir, "claude_live_relay.json"), JSON.stringify(relayCfg));
   const port = await freePort();
   let log = "";
-  const proc = spawn(GODOT, ["--headless", "--editor", "--path", project], {
+  // display=true: real (software-rendered) editor under Xvfb, needed to launch the game and take screenshots.
+  const cmd = display ? "xvfb-run" : GODOT;
+  const args = display
+    ? ["-a", "-s", "-screen 0 1280x720x24", GODOT, "--rendering-driver", "opengl3", "--editor", "--path", project]
+    : ["--headless", "--editor", "--path", project];
+  const proc = spawn(cmd, args, {
+    detached: true,
     env: { ...process.env, XDG_DATA_HOME: xdg, XDG_CONFIG_HOME: path.join(root, "xdgc"), XDG_CACHE_HOME: path.join(root, "xdgk"), CLAUDE_LIVE_PORT: String(port), ...env },
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -62,7 +68,7 @@ export async function startGodot({ relayCfg, env = {} } = {}) {
     file: (rel) => path.join(project, rel),
     read: (rel) => fs.readFileSync(path.join(project, rel), "utf8"),
     exists: (rel) => fs.existsSync(path.join(project, rel)),
-    async stop() { proc.kill("SIGKILL"); await sleep(200); fs.rmSync(root, { recursive: true, force: true }); },
+    async stop() { try { process.kill(-proc.pid, "SIGKILL"); } catch {} await sleep(300); fs.rmSync(root, { recursive: true, force: true }); },
   };
   const t0 = Date.now();
   while (Date.now() - t0 < 90000) {

@@ -6,6 +6,7 @@ extends RefCounted
 const DEFAULT_PORT := 6590
 const MAX_BODY := 8 * 1024 * 1024
 const PROTOCOL := "2025-03-26"
+const Json := preload("res://addons/claude_live/json_util.gd")
 
 var port: int = DEFAULT_PORT
 var tools
@@ -60,6 +61,12 @@ func poll() -> void:
 	for i in range(_clients.size() - 1, -1, -1):
 		var c: Dictionary = _clients[i]
 		var peer: StreamPeerTCP = c.peer
+		if c.get("done", false):
+			peer.disconnect_from_host()
+			_clients.remove_at(i)
+			continue
+		if c.get("busy", false):
+			continue  # a coroutine is answering this request
 		peer.poll()
 		if peer.get_status() != StreamPeerTCP.STATUS_CONNECTED:
 			_clients.remove_at(i)
@@ -118,25 +125,31 @@ func _try_handle(c: Dictionary) -> bool:
 		return true
 	var parsed = JSON.parse_string(body)
 	if parsed == null:
-		_respond(c.peer, 400, "application/json", JSON.stringify({"jsonrpc": "2.0", "id": null, "error": {"code": -32700, "message": "parse error"}}))
+		_respond(c.peer, 400, "application/json", Json.stringify({"jsonrpc": "2.0", "id": null, "error": {"code": -32700, "message": "parse error"}}))
 		return true
+	c["busy"] = true
+	_dispatch(c, parsed)  # coroutine: may finish later (game_* tools wait for the game)
+	return false
+
+
+func _dispatch(c: Dictionary, parsed) -> void:
 	if parsed is Array:
 		var outs := []
 		for m in parsed:
-			var o = handle_message(m)
+			var o = await handle_message(m)
 			if o != null:
 				outs.append(o)
 		if outs.is_empty():
 			_respond(c.peer, 202, "text/plain", "")
 		else:
-			_respond(c.peer, 200, "application/json", JSON.stringify(outs))
-		return true
-	var out = handle_message(parsed)
-	if out == null:
-		_respond(c.peer, 202, "text/plain", "")
+			_respond(c.peer, 200, "application/json", Json.stringify(outs))
 	else:
-		_respond(c.peer, 200, "application/json", JSON.stringify(out))
-	return true
+		var out = await handle_message(parsed)
+		if out == null:
+			_respond(c.peer, 202, "text/plain", "")
+		else:
+			_respond(c.peer, 200, "application/json", Json.stringify(out))
+	c["done"] = true
 
 
 func handle_message(msg) -> Variant:
@@ -164,7 +177,7 @@ func handle_message(msg) -> Variant:
 		"tools/call":
 			var name: String = params.get("name", "")
 			var args: Dictionary = params.get("arguments", {}) if params.get("arguments") is Dictionary else {}
-			return _ok(id, tools.call_tool(name, args))
+			return _ok(id, await tools.call_tool(name, args))
 	return {"jsonrpc": "2.0", "id": id, "error": {"code": -32601, "message": "method not found: " + method}}
 
 

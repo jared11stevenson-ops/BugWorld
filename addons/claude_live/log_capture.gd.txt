@@ -1,0 +1,28 @@
+## Source of the engine-log capture class (Godot 4.5+ only: the Logger class does not exist before that).
+## Deliberately NOT a .gd file: Godot 4.4 editors would report a parse error for `extends Logger`.
+## compat.gd compiles this text at runtime, and only when ClassDB.class_exists("Logger").
+@tool
+extends Logger
+## Callbacks can arrive on any thread; the sink (tools.add_log / runtime outbox) is thread-safe.
+
+var sink: Callable  # (source: String, kind: String, msg: String, where: String)
+var source := "editor"
+
+
+func _log_message(message: String, error: bool) -> void:
+	if sink.is_valid():
+		sink.call(source, "stderr" if error else "info", message.strip_edges(false, true), "")
+
+
+func _log_error(function: String, file: String, line: int, code: String, rationale: String, _editor_notify: bool, error_type: int, script_backtraces: Array[ScriptBacktrace]) -> void:
+	if not sink.is_valid():
+		return
+	var kinds := ["error", "warning", "script_error", "shader_error"]
+	var kind: String = kinds[error_type] if error_type >= 0 and error_type < kinds.size() else "error"
+	var where := "%s:%d (%s)" % [file, line, function]
+	# Prefer the script frame (res://main.gd:7) over the engine's own C++ location.
+	for bt in script_backtraces:
+		if bt != null and bt.get_frame_count() > 0:
+			where = "%s:%d (%s)" % [bt.get_frame_file(0), bt.get_frame_line(0), bt.get_frame_function(0)]
+			break
+	sink.call(source, kind, rationale if rationale != "" else code, where)

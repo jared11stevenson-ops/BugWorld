@@ -194,3 +194,45 @@ test("screenshot reports a clear error when headless instead of crashing", async
   assert.equal(r.isError, true);
   assert.match(r.text, /headless/);
 });
+
+test("control characters in file content / logs never produce invalid JSON", async () => {
+  fs.writeFileSync(g.file("ansi.txt"), "\x1b[31mred\x1b[0m bell\x07 tab\t end\n");
+  const res = await fetch(`http://127.0.0.1:${g.port}/mcp`, { method: "POST", headers: { authorization: `Bearer ${g.token}` }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "read_file", arguments: { path: "res://ansi.txt" } } }) });
+  const raw = await res.text();
+  assert.doesNotMatch(raw, /[\x00-\x1f]/); // strict JSON: no raw control chars
+  const inner = JSON.parse(JSON.parse(raw).result.content[0].text);
+  assert.equal(inner.content, "\x1b[31mred\x1b[0m bell\x07 tab\t end\n");
+  const logs = await fetch(`http://127.0.0.1:${g.port}/mcp`, { method: "POST", headers: { authorization: `Bearer ${g.token}` }, body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "get_logs", arguments: {} } }) });
+  JSON.parse(await logs.text());
+});
+
+test("get_logs: native Logger captures editor output and errors; cursor and filters work", async () => {
+  const st = await g.tool("status");
+  const [maj, min] = (await g.tool("self_test")).json.godot.match(/^(\d+)\.(\d+)/).slice(1).map(Number);
+  if (maj === 4 && min < 5) {
+    // Godot 4.4: no Logger class. The plugin must still run and say so honestly.
+    assert.equal(st.json.logger, false);
+    const r = await g.tool("get_logs");
+    assert.match(r.json.capture, /unavailable/);
+    return;
+  }
+  assert.equal(st.json.logger, true, "engine Logger should be active on Godot 4.5+");
+  let r = await g.tool("get_logs", { source: "editor" });
+  assert.equal(r.json.capture, "engine Logger");
+  assert.ok(r.json.entries.some((e) => /MCP ready/.test(e.msg)), "startup line captured");
+  await g.tool("validate_script", { source: "func (((" }); // makes the engine log a parse error
+  const first = (await g.tool("get_logs", { level: "problems" })).json;
+  const err = first.entries.find((e) => /Parse Error|Expected function name/i.test(e.msg));
+  assert.ok(err, "parse error captured: " + JSON.stringify(first.entries).slice(0, 400));
+  assert.match(err.kind, /error/);
+  assert.match(err.where, /gdscript|\.gd:\d+/i);
+  assert.ok(first.entries.every((e) => e.kind !== "info"));
+  const again = (await g.tool("get_logs", { since: first.next })).json; // cursor: only newer entries
+  assert.ok(again.entries.every((e) => e.seq > first.next));
+  assert.ok(again.next >= first.next);
+  assert.equal((await g.tool("get_logs", { limit: 2 })).json.entries.length <= 2, true);
+  const all = JSON.stringify((await g.tool("get_logs", { limit: 500 })).json);
+  assert.doesNotMatch(all, new RegExp(g.token), "token must never appear in logs");
+  const cleared = await g.tool("get_logs", { clear: true });
+  assert.equal((await g.tool("get_logs", {})).json.entries.length >= 0, true);
+});

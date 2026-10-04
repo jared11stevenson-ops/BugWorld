@@ -1,4 +1,5 @@
-.godot/
 node_modules
-tests/artifacts/
+test.js
+*.md
+.env
 *connection*.json

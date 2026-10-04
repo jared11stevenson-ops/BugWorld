@@ -5,6 +5,7 @@ extends RefCounted
 const MAX_SNAPSHOTS := 30
 const SNAP_DIR := "user://claude_live_snapshots"
 const DEDUP_MAX := 256
+const Json := preload("res://addons/claude_live/json_util.gd")
 const VALIDATE_DIR := "user://claude_live_validate"
 
 var plugin: EditorPlugin
@@ -49,13 +50,18 @@ func definitions() -> Array:
 		_t("stop_project", "Stop the running project.", {}),
 		_t("screenshot", "Capture the editor's 2D or 3D viewport as PNG.", {"view": {"type": "string", "enum": ["2d", "3d"]}}),
 		_t("get_property", "Read a property of a node in the edited scene (value as Godot literal string).", {"node": s, "property": s}, ["node", "property"]),
-		_t("get_logs", "Recent editor errors/warnings/output captured since the plugin loaded.", {"clear": {"type": "boolean"}}),
+		_t("get_logs", "Engine log output (editor and running game): errors, warnings, prints. Use since=<next from the previous call> to read only new entries.", {"since": {"type": "integer"}, "limit": {"type": "integer"}, "level": {"type": "string", "enum": ["all", "problems"]}, "source": {"type": "string", "enum": ["all", "editor", "game"]}, "clear": {"type": "boolean"}}),
+		_t("game_status", "Is the game (started by run_project) connected? Returns fps, node count, renderer.", {}),
+		_t("game_tree", "Inspect the RUNNING game's scene tree with key properties (text, position, visible, size). props adds more property names.", {"depth": {"type": "integer"}, "props": {"type": "array", "items": s}}),
+		_t("game_get_property", "Read one property of a node in the RUNNING game, by absolute path e.g. /root/Main/Label.", {"node": s, "property": s}, ["node", "property"]),
+		_t("game_screenshot", "Screenshot of the RUNNING game window as PNG (needs a real display; not available headless).", {"max_width": {"type": "integer"}}),
 		_t("self_test", "Run write/read/CAS/rollback/refresh checks on a scratch file.", {}),
 		_t("status", "Plugin status and counters.", {}),
 	]
 
 
 # ------------------------------------------------------------------- dispatch
+## Coroutine-capable: game_* tools wait for the running game's reply.
 func call_tool(name: String, args: Dictionary) -> Dictionary:
 	_stats.calls += 1
 	var rid: String = str(args.get("request_id", ""))
@@ -63,7 +69,7 @@ func call_tool(name: String, args: Dictionary) -> Dictionary:
 		return _dedup[rid]
 	var res: Dictionary
 	if has_method("t_" + name):
-		res = call("t_" + name, args)
+		res = await call("t_" + name, args)
 	else:
 		res = _err("unknown tool: " + name)
 	if rid != "" and not res.get("isError", false):  # only successes are replayed; a failed call may be retried
@@ -75,7 +81,7 @@ func call_tool(name: String, args: Dictionary) -> Dictionary:
 
 
 func _ok(data: Variant) -> Dictionary:
-	var text: String = data if data is String else JSON.stringify(data, "  ")
+	var text: String = data if data is String else Json.stringify(data, "  ")
 	return {"content": [{"type": "text", "text": text}]}
 
 
@@ -502,19 +508,90 @@ func t_screenshot(a: Dictionary) -> Dictionary:
 	return {"content": [{"type": "image", "data": b64, "mimeType": "image/png"}]}
 
 
-var _log_buffer: Array = []
+# ----------------------------------------------------------------------- logs
+const LOG_MAX := 1000
+var _log_mutex := Mutex.new()
+var _logs: Array = []  # {seq, t, source, kind, msg, where}
+var _log_seq := 0
+var logger_active := false  # true when the engine Logger (4.5+) is feeding add_log
 
-func push_log(kind: String, msg: String) -> void:
-	_log_buffer.append("[%s] %s" % [kind, msg])
-	if _log_buffer.size() > 200:
-		_log_buffer.pop_front()
+
+## Thread-safe: the engine Logger may call this from any thread.
+func add_log(source: String, kind: String, msg: String, where: String = "") -> void:
+	_log_mutex.lock()
+	_log_seq += 1
+	_logs.append({"seq": _log_seq, "t": Time.get_unix_time_from_system(), "source": source, "kind": kind, "msg": msg.left(2000), "where": where})
+	if _logs.size() > LOG_MAX:
+		_logs.pop_front()
+	_log_mutex.unlock()
+
+
+func push_log(kind: String, msg: String) -> void:  # kept for callers on Godot < 4.5
+	add_log("editor", kind, msg)
 
 
 func t_get_logs(a: Dictionary) -> Dictionary:
-	var out := "\n".join(_log_buffer)
+	var since := int(a.get("since", 0))
+	var limit := clampi(int(a.get("limit", 100)), 1, 500)
+	var level := str(a.get("level", "all"))  # all | problems
+	var source := str(a.get("source", "all"))  # all | editor | game
+	var out: Array = []
+	_log_mutex.lock()
+	for e in _logs:
+		if e.seq <= since:
+			continue
+		if source != "all" and e.source != source:
+			continue
+		if level == "problems" and e.kind == "info":
+			continue
+		out.append(e)
+	var last := _log_seq
 	if bool(a.get("clear", false)):
-		_log_buffer.clear()
-	return _ok(out if out != "" else "(no captured messages)")
+		_logs.clear()
+	_log_mutex.unlock()
+	if out.size() > limit:
+		out = out.slice(out.size() - limit)
+	return _ok({
+		"capture": "engine Logger" if logger_active else "unavailable (needs Godot 4.5+; only game output forwarded by the runtime probe is captured)",
+		"next": last,
+		"entries": out,
+	})
+
+
+# ----------------------------------------------------------- running game (probe)
+func t_game_status(_a: Dictionary) -> Dictionary:
+	var dbg = plugin.get("debugger")
+	var running: bool = dbg != null and dbg.is_game_connected()
+	var out := {"running": running, "playing_in_editor": EditorInterface.is_playing_scene()}
+	if running:
+		out["stats"] = await dbg.request("stats")
+	return _ok(out)
+
+
+func t_game_tree(a: Dictionary) -> Dictionary:
+	var dbg = plugin.get("debugger")
+	if dbg == null:
+		return _err("runtime probe unavailable")
+	var r: Dictionary = await dbg.request("tree", {"depth": int(a.get("depth", 6)), "props": a.get("props", [])})
+	return _err(r.error) if r.has("error") else _ok(r)
+
+
+func t_game_get_property(a: Dictionary) -> Dictionary:
+	var dbg = plugin.get("debugger")
+	if dbg == null:
+		return _err("runtime probe unavailable")
+	var r: Dictionary = await dbg.request("get", {"node": str(a.get("node", "")), "property": str(a.get("property", ""))})
+	return _err(r.error) if r.has("error") else _ok(r)
+
+
+func t_game_screenshot(a: Dictionary) -> Dictionary:
+	var dbg = plugin.get("debugger")
+	if dbg == null:
+		return _err("runtime probe unavailable")
+	var r: Dictionary = await dbg.request("screenshot", {"max_width": int(a.get("max_width", 960))}, 15.0)
+	if r.has("error"):
+		return _err(r.error)
+	return {"content": [{"type": "image", "data": Marshalls.raw_to_base64(r.png), "mimeType": "image/png"}]}
 
 
 # ------------------------------------------------------------------ self test
@@ -545,4 +622,4 @@ func t_self_test(_a: Dictionary) -> Dictionary:
 
 
 func t_status(_a: Dictionary) -> Dictionary:
-	return _ok({"godot": Engine.get_version_info().string, "platform": OS.get_name(), "project": ProjectSettings.globalize_path("res://"), "stats": _stats, "relay": (plugin.bridge.state if plugin.get("bridge") else "none"), "snapshots": _snapshots.size(), "scene": (_root().scene_file_path if _root() else "")})
+	return _ok({"godot": Engine.get_version_info().string, "platform": OS.get_name(), "project": ProjectSettings.globalize_path("res://"), "stats": _stats, "logger": logger_active, "relay": (plugin.bridge.state if plugin.get("bridge") else "none"), "snapshots": _snapshots.size(), "scene": (_root().scene_file_path if _root() else "")})

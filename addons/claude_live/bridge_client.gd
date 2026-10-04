@@ -18,6 +18,7 @@ var _last_rx := 0
 var _last_hb := 0
 var _seen := {}  # relay ids already answered: duplicate protection
 var _seen_order: Array = []
+var _inflight := {}  # ids being executed right now (async tools)
 
 
 func _init(p_server) -> void:
@@ -119,15 +120,20 @@ func _on_text(text: String) -> void:
 	if id != null and _seen.has(key):
 		_ws.send_text(_seen[key])  # duplicate delivery: replay, never re-execute
 		return
-	var out = server.handle_message(m)
+	if id != null and _inflight.has(key):
+		return  # duplicate of a request still running; the first reply will answer it
+	if id != null:
+		_inflight[key] = true
+	var out = await server.handle_message(m)
+	_inflight.erase(key)
 	if out == null:
 		return
-	var s := JSON.stringify(out)
+	var s: String = server.Json.stringify(out)
 	_seen[key] = s
 	_seen_order.append(key)
 	if _seen_order.size() > 128:
 		_seen.erase(_seen_order.pop_front())
-	_ws.send_text(s)
+	_ws.send_text(s)  # always the CURRENT socket: survives a reconnect during a long call
 
 
 func stop() -> void:

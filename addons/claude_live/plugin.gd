@@ -6,15 +6,26 @@ const McpServer := preload("res://addons/claude_live/mcp_server.gd")
 const Tools := preload("res://addons/claude_live/tools.gd")
 const Dock := preload("res://addons/claude_live/dock.gd")
 const Bridge := preload("res://addons/claude_live/bridge_client.gd")
+const DebuggerPlug := preload("res://addons/claude_live/debugger.gd")
+const Compat := preload("res://addons/claude_live/compat.gd")
+const AUTOLOAD := "ClaudeLiveRuntime"
 
 var server
 var tools
 var bridge
 var dock
+var debugger
+var logger
 
 
 func _enter_tree() -> void:
 	tools = Tools.new(self)
+	# Engine log capture needs the Logger class (Godot 4.5+); compat.gd returns null on older engines.
+	logger = Compat.make_logger("editor", tools.add_log)
+	tools.logger_active = logger != null
+	debugger = DebuggerPlug.new()
+	debugger.tools = tools
+	add_debugger_plugin(debugger)
 	server = McpServer.new(tools)
 	var err: int = server.start()
 	if err != OK:
@@ -34,7 +45,19 @@ func _enter_tree() -> void:
 	set_process(true)
 
 
+## Called only when the user enables/disables the plugin (not on every editor start).
+func _enable_plugin() -> void:
+	add_autoload_singleton(AUTOLOAD, "res://addons/claude_live/runtime.gd")
+
+
+func _disable_plugin() -> void:
+	remove_autoload_singleton(AUTOLOAD)
+
+
 func _exit_tree() -> void:
+	if debugger:
+		remove_debugger_plugin(debugger)
+	Compat.remove_logger(logger)
 	if dock:
 		remove_control_from_docks(dock)
 		dock.queue_free()

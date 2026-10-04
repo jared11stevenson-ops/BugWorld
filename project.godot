@@ -5,6 +5,10 @@ config_version=5
 config/name="Claude Live Test"
 run/main_scene="res://main.tscn"
 
+[autoload]
+
+ClaudeLiveRuntime="*res://addons/claude_live/runtime.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/claude_live/plugin.cfg")
