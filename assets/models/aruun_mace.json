@@ -1,0 +1,50 @@
+{
+ "ball_center_xz": [
+  -1.042,
+  0.35
+ ],
+ "ball_radius_incl_spikes": 0.38,
+ "ball_body_radius": 0.306,
+ "spikes": [
+  {
+   "angle_deg": 14,
+   "tip_r": 0.436
+  },
+  {
+   "angle_deg": 72,
+   "tip_r": 0.3932
+  },
+  {
+   "angle_deg": 98,
+   "tip_r": 0.3432
+  },
+  {
+   "angle_deg": 131,
+   "tip_r": 0.3576
+  },
+  {
+   "angle_deg": 218,
+   "tip_r": 0.3232
+  },
+  {
+   "angle_deg": 313,
+   "tip_r": 0.3848
+  },
+  {
+   "angle_deg": 337,
+   "tip_r": 0.3588
+  },
+  {
+   "angle_deg": 352,
+   "tip_r": 0.4052
+  }
+ ],
+ "haft_from_xz": [
+  -1.0,
+  0.6
+ ],
+ "grip_xz": [
+  -0.64,
+  0.9
+ ]
+}

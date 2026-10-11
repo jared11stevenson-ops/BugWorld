@@ -3,3 +3,4 @@ node_modules
 tests/artifacts/
 *connection*.json
 *.blend1
+__pycache__/

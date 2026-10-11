@@ -82,129 +82,154 @@ def curve_tube(name, pts, r_start, r_end, m, res=12):
 def X(x, side): return (x * side)  # mirror helper
 
 # ======================================================================================================
-# Layout: every coordinate below was read off references/aruun/aruun_{front,side,back}.png (metres).
-# Front view: +X = image right. Side view: character faces -Y. Feet on z=0, total height 2.40 m (horn tip).
+# Built from tools/blender/aruun_spec.py (+ aruun_spec_fit.json, tuned by tools/reference/fit_silhouette.py so the
+# model's front and side silhouettes overlap the reference drawings). Metres, +Z up, character faces -Y.
 # ======================================================================================================
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import aruun_spec as S
+spec = S.load()
+Pj = lambda j: Vector(S.pos(spec, j))
 M["mane"] = mat("Mane_Olive", (0.45, 0.42, 0.16), 0.7)
 M["green_dark"] = mat("Cape_Dark", (0.10, 0.12, 0.05), 0.9)
 M["mantle"] = mat("Mantle_Brown", (0.045, 0.035, 0.03), 0.85)
 M["pupil"] = mat("Pupil", (0.01, 0.01, 0.01), 0.2)
-M["navy"] = M["carapace"]
+
+def loft(name, A, B, ra, rb, m, seg=20, link=True):
+    """tapered elliptical capsule: ra/rb = (rx, ry) at each end; rx lies along world X (front view), ry along ~Y (side view)"""
+    A, B = Vector(A), Vector(B); d = B - A; L = d.length
+    if L < 1e-5: return sphere(name, tuple(A), (ra[0], ra[1], ra[0]), m, 16, 10)
+    dn = d / L; ref = Vector((1, 0, 0)) if abs(dn.x) < 0.9 else Vector((0, 1, 0))
+    e1 = (ref - dn * ref.dot(dn)).normalized(); e2 = dn.cross(e1)
+    bm = bmesh.new(); rings = []
+    def ring(c, sx, sy):
+        if sx < 1e-6: return [bm.verts.new(c)]
+        return [bm.verts.new(c + e1 * (sx * math.cos(2 * math.pi * k / seg)) + e2 * (sy * math.sin(2 * math.pi * k / seg))) for k in range(seg)]
+    ths = [math.radians(t) for t in (90, 68, 45, 22)]; ma, mb = (ra[0] + ra[1]) / 2, (rb[0] + rb[1]) / 2
+    for th in ths: rings.append(ring(A - dn * ma * math.sin(th), ra[0] * math.cos(th), ra[1] * math.cos(th)))
+    rings += [ring(A, *ra), ring(B, *rb)]
+    for th in reversed(ths): rings.append(ring(B + dn * mb * math.sin(th), rb[0] * math.cos(th), rb[1] * math.cos(th)))
+    for r0, r1 in zip(rings[:-1], rings[1:]):
+        if len(r0) == 1:
+            for k in range(seg): bm.faces.new((r0[0], r1[(k + 1) % seg], r1[k]))
+        elif len(r1) == 1:
+            for k in range(seg): bm.faces.new((r0[k], r0[(k + 1) % seg], r1[0]))
+        else:
+            for k in range(seg): bm.faces.new((r0[k], r0[(k + 1) % seg], r1[(k + 1) % seg], r1[k]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
+    o = bpy.data.objects.new(name, me); col.objects.link(o); me.materials.append(M[m] if isinstance(m, str) else m)
+    for pp in me.polygons: pp.use_smooth = True
+    return o
+
+def bone(nm): return next(b for b in spec["B"] if b[0] == nm)
+def shell(nm, t0, t1, k, m, name=None, off=(0, 0, 0)):
+    """armour plate riding on part of a bone (e.g. the red bracer on the forearm)"""
+    _, a, b_, ra, rb, *_ = bone(nm); A, B = Pj(a), Pj(b_); lerp = lambda t: A + (B - A) * t; r = lambda t, i: (ra[i] + (rb[i] - ra[i]) * t) * k
+    return loft(name or nm + "_" + m, lerp(t0) + Vector(off), lerp(t1) + Vector(off), (r(t0, 0), r(t0, 1)), (r(t1, 0), r(t1, 1)), m)
 
 def disc(name, p, nrm, r, m, thick=0.5):
     bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, location=p)
     o = bpy.context.object; o.name = name; o.scale = (r, r, r * thick)
     o.rotation_euler = V(nrm).to_track_quat("Z", "Y").to_euler(); return finish(o, m)
-
 def spot_on(name, center, radii, d, r, m="cream"):
-    """pale spot with a dark ring, flush on an ellipsoid shell"""
     d = V(d).normalized(); pos = V(center) + V(d.x * radii[0], d.y * radii[1], d.z * radii[2]) * 0.98
     disc(name + "_ring", pos - d * 0.004, d, r * 1.4, "carapace", 0.2); disc(name, pos + d * 0.002, d, r, m, 0.55)
-
-def ragged(name, xc, y0, y1, z0, z1, w0, w1, m, teeth=3, jag=0.10, seed=0.0):
-    bm = bmesh.new()
-    tl = bm.verts.new((xc - w0, y0, z0)); tr = bm.verts.new((xc + w0, y0, z0)); bot = []
-    n = teeth * 2
+def ragged(name, c, m, y, scale_w=1.0, dz=0.0, seed=0.0):
+    bm = bmesh.new(); pts = [(c["xtl"], c["ztop"]), (c["xtr"], c["ztop"])]; n = c["teeth"] * 2
     for k in range(n + 1):
-        f = k / n; z = z1 + (jag * (1 + 0.6 * math.sin(seed + k * 2.1)) if k % 2 else 0.0)
-        bot.append(bm.verts.new((xc - w1 + 2 * w1 * f, y1, z)))
-    bm.faces.new([tl, *bot, tr]); bmesh.ops.triangulate(bm, faces=bm.faces[:])
-    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
-    o = bpy.data.objects.new(name, me); col.objects.link(o); me.materials.append(M[m]); return o
+        f = 1 - k / n; pts.append((c["xbl"] + (c["xbr"] - c["xbl"]) * f, c["zbot"] + dz + (c["jag"] * (1 + 0.5 * math.sin(seed + k * 2.1)) if k % 2 else 0.0)))
+    vs = [bm.verts.new((x * scale_w, y, z)) for x, z in pts]; bm.faces.new(vs); bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name, me); col.objects.link(o); me.materials.append(M[m]); return o
 
-# ---------- torso: lean barbarian, heavy shoulders, bare cream abdomen, forward hunch ----------
-sphere("Pelvis", (0.06, -0.03, 1.02), (0.26, 0.15, 0.17), "carapace")
-sphere("Abdomen", (0.04, -0.10, 1.28), (0.15, 0.13, 0.21), "cream")
-for i, z in enumerate((1.40, 1.30, 1.20)):
-    for sx in (-1, 1): sphere(f"Abs_{sx}_{i}", (0.04 + 0.055 * sx, -0.215, z), (0.05, 0.03, 0.045), "cream", 12, 8)
-sphere("Chest", (0.05, -0.12, 1.56), (0.27, 0.16, 0.21), "carapace")
-for sx in (-1, 1): sphere(f"Pec_{sx}", (0.05 + 0.12 * sx, -0.255, 1.55), (0.12, 0.07, 0.10), "carapace", 18, 10)
-sphere("Back_Hump", (0.04, 0.0, 1.63), (0.24, 0.12, 0.19), "carapace")
-bpy.ops.mesh.primitive_torus_add(location=(0.05, -0.12, 1.58), major_radius=0.25, minor_radius=0.032)
-o = bpy.context.object; o.name = "Sash_Chest"; o.scale = (1, 0.62, 1.15); o.rotation_euler = (0, math.radians(-38), 0); finish(o, "cream")
-bpy.ops.mesh.primitive_torus_add(location=(0.05, -0.08, 1.22), major_radius=0.19, minor_radius=0.045)
-o = bpy.context.object; o.name = "Belt_Red"; o.scale = (1, 0.75, 1); finish(o, "red")
-bpy.ops.mesh.primitive_torus_add(location=(0.05, -0.11, 1.80), major_radius=0.10, minor_radius=0.012)
-o = bpy.context.object; o.name = "Necklace"; finish(o, "gold")
+# ---------- 1. every spec part ----------
+base_parts = []; ELL = {}
+for nm, a, b_, ra, rb, m, base, view in spec["B"]:
+    if nm.startswith(("Horn", "Neck")): continue                       # smooth curves, built below
+    o = loft(nm, Pj(a), Pj(b_), ra, rb, m); (base_parts if base else []).append(o)
+for nm, c, r, m, base, view in spec["E"]:
+    o = sphere(nm, tuple(Pj(c)), r, m, 32, 20); ELL[nm] = (Pj(c), r)
+    if base: base_parts.append(o)
+# neck + horns as smooth tubes through the fitted joints
+def chain(nm, joints, m):
+    pts = [Pj(j) for j in joints]; rs = [bone(f"{nm}{i}")[3][0] for i in range(len(joints) - 1)] + [bone(f"{nm}{len(joints) - 2}")[4][0]]
+    return curve_tube(nm, pts, rs[0], rs[-1], m)
+chain("Neck", ["neck0", "neck1", "neck2", "neck3"], "orange"); chain("HornMain", ["h0", "h1", "h2", "h3"], "red"); chain("HornFork", ["f0", "f1", "f2", "f3"], "red")
+curve_tube("HornSpur", [Pj("f1") + V(0.0, -0.01, 0.01), Pj("f1") + V(0.06, -0.04, 0.06), Pj("f2") + V(0.10, -0.01, -0.01)], 0.012, 0.004, "orange")
 
-# ---------- neck (thin, orange, black-banded) + small head with red beak and the two horns ----------
-NECK = [V(0.05, -0.06, 1.70), V(0.04, -0.08, 1.82), V(-0.02, -0.10, 1.92), V(-0.07, -0.12, 1.99)]
-curve_tube("Neck", NECK, 0.080, 0.050, "orange")
-for i, t in enumerate((0.20, 0.45, 0.70)):
-    k = min(int(t * 3), 2); pt = NECK[k].lerp(NECK[k + 1], t * 3 - k); r = 0.082 - 0.032 * t
-    sphere(f"Neck_Band_{i}", tuple(pt), (r, r * 0.95, 0.03), "carapace", 16, 6)
-sphere("Skull", (-0.11, -0.12, 2.06), (0.075, 0.105, 0.068), "carapace")
-limb("Beak", V(-0.12, -0.17, 2.05), V(-0.20, -0.31, 1.93), 0.058, 0.016, "red", 14)
-limb("Beak_Under", V(-0.12, -0.17, 2.01), V(-0.19, -0.29, 1.93), 0.04, 0.012, "orange", 10)
-sphere("Eye_R", (-0.065, -0.185, 2.09), (0.026, 0.022, 0.022), "eye", 12, 8); sphere("Pupil_R", (-0.058, -0.205, 2.09), (0.007, 0.01, 0.018), "pupil", 8, 6)
-sphere("Eye_L", (-0.16, -0.185, 2.09), (0.026, 0.022, 0.022), "eye", 12, 8); sphere("Pupil_L", (-0.166, -0.205, 2.09), (0.007, 0.01, 0.018), "pupil", 8, 6)
-limb("Brow_R", V(-0.07, -0.15, 2.12), V(-0.04, -0.21, 2.12), 0.022, 0.01, "carapace", 8); limb("Brow_L", V(-0.15, -0.15, 2.12), V(-0.18, -0.21, 2.12), 0.022, 0.01, "carapace", 8)
-for i, (dx, dz, dy) in enumerate([(0.10, 0.07, 0.07), (0.15, 0.02, 0.09), (-0.12, 0.06, 0.07), (-0.17, 0.0, 0.1), (0.0, 0.10, 0.08), (0.05, -0.04, 0.12)]):
-    curve_tube(f"Mane_{i}", [V(-0.11, -0.10, 2.08), V(-0.11 + dx * 0.6, -0.06, 2.08 + dz * 0.6), V(-0.11 + dx, 0.0 + dy * 0.3, 2.06 + dz - 0.04)], 0.022, 0.003, "mane")
-# big crescent horn (rises, arcs over and hooks forward-right) and the shorter forked horn
-curve_tube("Horn_Main", [V(-0.12, -0.10, 2.12), V(-0.11, -0.16, 2.26), V(-0.05, -0.27, 2.35), V(0.08, -0.40, 2.39)], 0.030, 0.006, "red")
-curve_tube("Horn_Fork", [V(-0.20, -0.10, 2.12), V(-0.25, -0.18, 2.22), V(-0.26, -0.26, 2.30), V(-0.22, -0.32, 2.33)], 0.026, 0.006, "red")
-curve_tube("Horn_Spur", [V(-0.26, -0.18, 2.23), V(-0.20, -0.22, 2.28), V(-0.16, -0.26, 2.29)], 0.012, 0.004, "orange")
+# ---------- 2. extra body mass the sheet shows (pecs, ribs) merged into the carapace ----------
+ch, cr = ELL["Chest"]
+for sx in (-1, 1): base_parts.append(sphere(f"Pec_{sx}", tuple(ch + V(0.12 * sx, -cr[1] * 0.85, -0.01)), (0.12, 0.07, 0.10), "carapace", 18, 10))
+# ---------- 3. one continuous carapace: join + voxel remesh + light smooth ----------
+bpy.ops.object.select_all(action="DESELECT")
+for o in base_parts: o.select_set(True)
+bpy.context.view_layer.objects.active = base_parts[0]; bpy.ops.object.join(); body = bpy.context.object; body.name = "Aruun_Body"
+body.data.remesh_voxel_size = 0.010; bpy.ops.object.voxel_remesh()
+sm = body.modifiers.new("Smooth", "SMOOTH"); sm.factor = 0.5; sm.iterations = 3; bpy.ops.object.modifier_apply(modifier="Smooth")
+for pp in body.data.polygons: pp.use_smooth = True
+body.data.materials.clear(); body.data.materials.append(M["carapace"])
+print("carapace verts", len(body.data.vertices))
 
-# ---------- shoulders / arms ----------
-R_SH = V(0.34, 0.02, 1.68)
-sphere("Pauldron_R", tuple(R_SH), (0.12, 0.11, 0.11), "red")
-sphere("Pauldron_R_Rim", (0.34, 0.02, 1.58), (0.125, 0.115, 0.03), "cream")
-for i, (d, r) in enumerate([((0.15, -0.8, 0.55), 0.045), ((0.35, -0.25, 0.9), 0.04), ((0.8, -0.3, 0.4), 0.04)]):
-    spot_on(f"PSpot_R_{i}", R_SH, (0.12, 0.11, 0.11), d, r)
-sphere("Pauldron_L", (-0.27, 0.0, 1.60), (0.11, 0.11, 0.10), "red")
-for i, (d, r) in enumerate([((-0.3, -0.8, 0.5), 0.04), ((-0.8, -0.3, 0.4), 0.035)]): spot_on(f"PSpot_L_{i}", V(-0.27, 0.0, 1.60), (0.11, 0.11, 0.10), d, r)
-ragged("Mantle", -0.22, 0.03, 0.05, 1.74, 1.38, 0.17, 0.14, "mantle", 3, 0.09, 1.0)           # dark cloak over the left shoulder
-# right arm hangs behind the chest line; big red bracer
-sh, el, wr = V(0.36, 0.03, 1.60), V(0.38, 0.06, 1.24), V(0.36, 0.07, 0.96)
-limb("UpperArm_R", sh, el, 0.085, 0.07, "carapace"); joint("Elbow_R", el, 0.075, "cream")
-limb("Forearm_R", el, wr, 0.075, 0.055, "carapace"); limb("Bracer_R", el + (wr - el) * 0.08, el + (wr - el) * 0.85, 0.09, 0.075, "red")
-sphere("Hand_R", tuple(wr + V(0, 0, -0.07)), (0.07, 0.065, 0.085), "carapace", 14, 8)
-for k in range(3): limb(f"Finger_R_{k}", wr + V(-0.03 + 0.03 * k, 0.0, -0.10), wr + V(-0.03 + 0.03 * k, -0.02, -0.19), 0.017, 0.008, "cream", 6)
-# left arm swings out to the mace
-lsh, lel, lwr = V(-0.27, 0.0, 1.58), V(-0.24, -0.02, 1.28), V(-0.50, -0.08, 0.95)
-limb("UpperArm_L", lsh, lel, 0.085, 0.07, "carapace"); joint("Elbow_L", lel, 0.075, "cream")
-limb("Forearm_L", lel, lwr, 0.075, 0.055, "carapace"); limb("Bracer_L", lel + (lwr - lel) * 0.1, lel + (lwr - lel) * 0.85, 0.100, 0.082, "red")
-sphere("Hand_L", tuple(lwr + V(-0.02, 0, -0.04)), (0.07, 0.07, 0.07), "carapace", 14, 8)
-
-# ---------- legs: digitigrade, asymmetric stance (left leg steps wide), clawed feet ----------
-def leg(tag, hip, knee, ank, toe, claw_dx, claw_len, thigh_r=0.15):
-    limb(f"Thigh_{tag}", hip, knee, thigh_r, 0.12, "carapace"); joint(f"Knee_{tag}", knee, 0.11, "carapace")
-    sphere(f"Kneeplate_{tag}", knee + V(0, -0.07, 0.02), (0.085, 0.045, 0.10), "cream", 16, 10)
-    limb(f"Shin_{tag}", knee, ank, 0.115, 0.066, "carapace"); limb(f"ShinOrange_{tag}", knee + (ank - knee) * 0.2, knee + (ank - knee) * 0.7, 0.095, 0.075, "orange", 12)
-    joint(f"Ankle_{tag}", ank, 0.075, "red"); limb(f"Metatarsus_{tag}", ank, toe, 0.07, 0.06, "carapace")
-    sphere(f"Foot_{tag}", toe + V(claw_dx * 0.4, -0.10, -0.015), (0.10, 0.17, 0.05), "cream", 14, 8)
-    sphere(f"Heel_{tag}", ank + V(0, 0.04, -0.06), (0.085, 0.08, 0.11), "cream", 12, 8)
+# ---------- 4. armour plates (colour = the sheet's red / cream / orange patches) ----------
+shell("Forearm_R", 0.04, 0.88, 1.38, "red", "Bracer_R"); shell("Forearm_L", 0.04, 0.88, 1.38, "red", "Bracer_L")
+shell("Shin_R", 0.18, 0.72, 1.07, "orange", "ShinOrange_R"); shell("Shin_L", 0.18, 0.72, 1.07, "orange", "ShinOrange_L")
+for tag in ("R", "L"):
+    kn = Pj(f"{tag}knee"); hip = Pj(f"{tag}hip"); sx = 1 if tag == "R" else -1
+    tp = hip + (kn - hip) * 0.5; rr = bone(f"Thigh_{tag}")[3]
+    sphere(f"ThighPlate_{tag}", tuple(tp + V(0.01 * sx, -rr[1] * 0.78, 0.0)), (rr[0] * 0.62, 0.05, 0.17), "cream")
+    spot_on(f"ThighSpot_{tag}", tp + V(0.01 * sx, -rr[1] * 0.78, 0.0), (rr[0] * 0.62, 0.05, 0.17), (0.1 * sx, -1, 0.15), 0.045, "red")
+    sphere(f"Kneeplate_{tag}", tuple(kn + V(0, -0.08, 0.02)), (0.085, 0.045, 0.10), "cream", 16, 10)
+    sphere(f"Ankle_{tag}", tuple(Pj(f"{tag}ank")), (0.075, 0.075, 0.075), "red", 14, 8)
     for k in range(3):
-        cx = toe.x + claw_dx * 0.4 + (-0.045 + 0.045 * k)
-        limb(f"Claw_{tag}_{k}", V(cx, toe.y - 0.20, 0.04), V(cx + claw_dx * 0.25, toe.y - 0.20 - claw_len, 0.01), 0.026, 0.005, "orange", 8)
-leg("R", V(0.17, -0.02, 1.0), V(0.26, -0.10, 0.62), V(0.38, 0.10, 0.24), V(0.41, -0.06, 0.07), 0.05, 0.10, 0.17)
-sphere("ThighPlate_R", (0.25, -0.12, 0.84), (0.11, 0.05, 0.17), "cream"); spot_on("ThighSpot_R", V(0.25, -0.12, 0.84), (0.11, 0.05, 0.17), (0.1, -1, 0.1), 0.045, "red")
-leg("L", V(-0.12, -0.02, 1.0), V(-0.28, -0.10, 0.58), V(-0.22, 0.09, 0.22), V(-0.28, -0.10, 0.07), -0.12, 0.10, 0.17)
+        tip = Pj(f"{tag}tip"); toe = Pj(f"{tag}toe"); cx = toe.x + (-0.045 + 0.045 * k)
+        limb(f"Claw_{tag}_{k}", V(cx, tip.y - 0.02, 0.04), V(cx + 0.03 * (1 if tag == "R" else -1), tip.y - 0.13, 0.01), 0.026, 0.005, "orange", 8)
+    el = Pj(f"{tag}el"); sphere(f"Elbow_{tag}", tuple(el), (0.075, 0.075, 0.075), "cream", 14, 8)
+    hd = Pj(f"{tag}hand")
+    for k in range(3): limb(f"Finger_{tag}_{k}", hd + V(-0.03 + 0.03 * k, 0.0, -0.05), hd + V(-0.03 + 0.03 * k, -0.02, -0.14), 0.017, 0.008, "cream", 6)
+# pauldron spots + rim
+for tag, jn in (("R", "Rpaul"), ("L", "Lpaul")):
+    c, r = ELL[f"Pauldron_{tag}"]; sx = 1 if tag == "R" else -1
+    sphere(f"Pauldron_Rim_{tag}", tuple(c + V(0, 0, -r[2] * 0.9)), (r[0] * 1.03, r[1] * 1.03, 0.03), "cream")
+    for i, (d, rr) in enumerate([((0.15 * sx, -0.8, 0.55), 0.045), ((0.35 * sx, -0.25, 0.9), 0.04), ((0.8 * sx, -0.3, 0.4), 0.04)]): spot_on(f"PSpot_{tag}_{i}", c, r, d, rr)
 
-# ---------- loincloth, tassels, talisman, cape ----------
-sphere("Talisman", (0.04, -0.22, 1.12), (0.07, 0.05, 0.085), "cream", 16, 10); sphere("Talisman_Hollow", (0.04, -0.265, 1.12), (0.035, 0.02, 0.04), "pupil", 10, 6)
-for i, x in enumerate((-0.14, -0.05, 0.14, 0.23)):
-    limb(f"Loin_Strip_{i}", V(x, -0.15, 1.12), V(x * 1.05, -0.17, 0.72 - 0.04 * (i % 2)), 0.045, 0.028, "cream", 6).scale = (1, 0.35, 1)
-for i, x in enumerate((-0.18, -0.02, 0.18)):
-    limb(f"Tassel_{i}", V(x, -0.15, 1.15), V(x * 1.05, -0.17, 0.90), 0.014, 0.01, "red", 6); sphere(f"Bead_{i}", (x * 1.05, -0.17, 0.89), (0.02, 0.02, 0.02), "gold", 8, 6)
-ragged("CapeBack", 0.04, 0.10, 0.14, 1.06, 0.36, 0.30, 0.50, "green_dark", 8, 0.10, 0.5)
-ragged("Cape", 0.04, 0.05, 0.09, 1.08, 0.42, 0.27, 0.44, "green", 8, 0.09, 2.0)
-ragged("Cape_Edge_L", -0.42, 0.08, 0.12, 1.02, 0.34, 0.04, 0.07, "mantle", 2, 0.08, 4.0); ragged("Cape_Edge_R", 0.49, 0.08, 0.12, 0.92, 0.38, 0.04, 0.06, "mantle", 2, 0.08, 5.0)
+# ---------- 5. torso dressing: belt, sash, loincloth, talisman, necklace ----------
+pel, ab = Pj("pelvis"), Pj("abdomen")
+bpy.ops.mesh.primitive_torus_add(location=tuple(ab + V(0, 0, -0.06)), major_radius=0.19, minor_radius=0.045)
+o = bpy.context.object; o.name = "Belt_Red"; o.scale = (1, 0.75, 1); finish(o, "red")
+bpy.ops.mesh.primitive_torus_add(location=tuple(ch + V(0, 0, 0.02)), major_radius=0.25, minor_radius=0.032)
+o = bpy.context.object; o.name = "Sash_Chest"; o.scale = (1, 0.62, 1.15); o.rotation_euler = (0, math.radians(-38), 0); finish(o, "cream")
+bpy.ops.mesh.primitive_torus_add(location=tuple(Pj("neck0") + V(0, -0.04, 0.08)), major_radius=0.10, minor_radius=0.012); o = bpy.context.object; o.name = "Necklace"; finish(o, "gold")
+for i, dx in enumerate((-0.20, -0.11, 0.08, 0.17)):
+    limb(f"Loin_{i}", pel + V(dx, -0.12, 0.10), pel + V(dx * 1.05, -0.14, -0.30 - 0.04 * (i % 2)), 0.045, 0.028, "cream", 6).scale = (1, 0.35, 1)
+for i, dx in enumerate((-0.18, -0.02, 0.18)):
+    limb(f"Tassel_{i}", pel + V(dx, -0.13, 0.12), pel + V(dx * 1.05, -0.15, -0.12), 0.014, 0.01, "red", 6); sphere(f"Bead_{i}", tuple(pel + V(dx * 1.05, -0.15, -0.13)), (0.02, 0.02, 0.02), "gold", 8, 6)
+sphere("Talisman", tuple(pel + V(-0.02, -0.19, 0.10)), (0.07, 0.05, 0.085), "cream", 16, 10); sphere("Talisman_Hollow", tuple(pel + V(-0.02, -0.235, 0.10)), (0.035, 0.02, 0.04), "pupil", 10, 6)
 
-# ---------- mace: measured on the front drawing (ball centre, radius, spike tips, grip) ----------
-MX, MY, MZ, MR = -1.042, -0.08, 0.35, 0.30
-bpy.ops.mesh.primitive_uv_sphere_add(segments=40, ring_count=28, radius=MR, location=(MX, MY, MZ)); ball = bpy.context.object; ball.name = "Mace_Ball"; finish(ball, "carapace")
-for i, ang in enumerate((20, 75, 120, 160, 205, 250, 295, 335)):     # spike angles read off the drawn silhouette
-    a_ = math.radians(ang); dv = V(math.cos(a_), 0, math.sin(a_)); tip = 0.075
-    limb(f"Mace_Spike_{i}", V(MX, MY, MZ) + dv * (MR - 0.01), V(MX, MY, MZ) + dv * (MR + tip), 0.045, 0.006, "cream", 10)
+# ---------- 6. head details ----------
+sk, sr = ELL["Skull"]
+for sx, nm in ((1, "R"), (-1, "L")):
+    sphere(f"Eye_{nm}", tuple(sk + V(0.047 * sx, -0.065, 0.03)), (0.026, 0.022, 0.022), "eye", 12, 8); sphere(f"Pupil_{nm}", tuple(sk + V(0.054 * sx, -0.085, 0.03)), (0.007, 0.01, 0.018), "pupil", 8, 6)
+    limb(f"Brow_{nm}", sk + V(0.03 * sx, -0.03, 0.055), sk + V(0.075 * sx, -0.09, 0.055), 0.022, 0.01, "carapace", 8)
+loft("Beak_Under", Pj("beak0") + V(0, 0.0, -0.03), Pj("beak1") + V(0, 0.0, -0.012), (0.04, 0.04), (0.012, 0.012), "orange")
+for i, (dx, dz, dy) in enumerate([(0.10, 0.07, 0.07), (0.15, 0.02, 0.09), (-0.12, 0.06, 0.07), (-0.17, 0.0, 0.10), (0.0, 0.10, 0.08), (0.05, -0.04, 0.12)]):
+    curve_tube(f"Mane_{i}", [sk + V(0, 0.02, 0.02), sk + V(dx * 0.6, 0.06, 0.02 + dz * 0.6), sk + V(dx, 0.12 + dy * 0.3, dz - 0.04)], 0.022, 0.003, "mane")
+
+# ---------- 7. cloth: wide ragged cape (two layers), dark mantle over the left shoulder ----------
+cp = spec["CAPE"]; y0, y1 = cp["y"]
+ragged("CapeBack", cp, "green_dark", y1 + 0.03, 1.02, -0.04, 0.5); ragged("Cape", cp, "green", y0, 0.94, 0.02, 2.0)
+mn = spec["MANTLE"]; ragged("Mantle", mn, "mantle", mn["y"][0], 1.0, 0.0, 1.0)
+
+# ---------- 8. mace: ball + spikes read off the drawn silhouette + studs ----------
+mc, mr = ELL["MaceBall"]
+for i, ang in enumerate((20, 75, 120, 160, 205, 250, 295, 335)):
+    a_ = math.radians(ang); dv = V(math.cos(a_), 0, math.sin(a_))
+    limb(f"Mace_Spike_{i}", mc + dv * (mr[0] - 0.01), mc + dv * (mr[0] + 0.075), 0.045, 0.006, "cream", 10)
 for i, (dx, dz, r, m) in enumerate([(-0.17, 0.04, 0.085, "orb"), (0.08, 0.14, 0.05, "orange"), (-0.05, -0.12, 0.05, "cream"), (0.14, -0.08, 0.055, "red"), (-0.20, -0.14, 0.045, "orange"), (0.02, 0.0, 0.045, "gold")]):
-    disc(f"Mace_Stud_{i}", V(MX + dx, MY - MR * 0.93, MZ + dz), (0, -1, 0), r, m, 0.4)
-limb("Mace_Haft", V(MX + 0.20, MY, MZ + 0.22), V(-0.52, -0.08, 0.93), 0.034, 0.03, "brown", 12); limb("Mace_Grip", V(-0.60, -0.08, 0.86), V(-0.50, -0.08, 0.97), 0.04, 0.04, "cream", 10)
+    disc(f"Mace_Stud_{i}", mc + V(dx, -mr[0] * 0.93, dz), (0, -1, 0), r, m, 0.4)
+limb("Mace_Grip", Pj("grip") + V(-0.06, 0, -0.06), Pj("grip") + V(0.03, 0, 0.04), 0.04, 0.04, "cream", 10)
 
 # ---------- subtle surface: subsurf on every mesh for clean silhouettes ----------
 for o in col.objects:
-    if o.type == "MESH" and not any(k in o.name for k in ("Spike", "Claw", "Finger", "Strip", "Cape", "Tuft", "Horn", "Neck", "Mane", "Feather", "Cord")):
+    if o.type == "MESH" and not any(k in o.name for k in ("Spike", "Claw", "Finger", "Strip", "Cape", "Tuft", "Horn", "Neck", "Mane", "Feather", "Cord", "Body")):
         md = o.modifiers.new("Subsurf", "SUBSURF"); md.levels = 1; md.render_levels = 1
 
 # =====================================================================
