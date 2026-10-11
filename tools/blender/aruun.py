@@ -167,20 +167,20 @@ n = bpy.context.object; n.name = "Necklace"; n.scale = (1, 0.8, 1); finish(n, "g
 
 # ---------- mace: long haft, spiked beetle-shell head w/ red orbs ----------
 hand = V(0.52, -0.25, 0.95)
-haft_a, haft_b = V(0.52, -0.25, 0.95), V(0.72, -0.55, 0.28)
-limb("Mace_Haft", V(0.50, -0.10, 1.20), haft_b, 0.028, 0.04, "brown", 10)
+haft_a, haft_b = V(0.52, -0.25, 0.95), V(0.72, -0.56, 0.26)
+limb("Mace_Haft", V(0.50, -0.10, 1.20), haft_b, 0.028, 0.036, "brown", 10)
 limb("Mace_Grip_Wrap", V(0.50, -0.18, 1.02), V(0.55, -0.30, 0.82), 0.03, 0.03, "cream", 10)
-head_c = V(0.78, -0.65, 0.20)
-sphere("Mace_Ball", head_c, (0.27, 0.27, 0.27), "carapace", 28, 20)
+head_c = V(0.76, -0.62, 0.17)
+sphere("Mace_Ball", head_c, (0.17, 0.17, 0.17), "carapace", 28, 20)
 import random; random.seed(7)
-bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=0.27)
+bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=0.17)
 dirs = [v.co.normalized() for v in bm.verts]; bm.free()
 for i, d in enumerate(dirs):
-    p = head_c + d * 0.27
+    p = head_c + d * 0.17
     if i % 3 == 0:
-        limb(f"Mace_Spike_{i}", p - d * 0.02, p + d * 0.12, 0.04, 0.006, "cream", 8)
+        limb(f"Mace_Spike_{i}", p - d * 0.02, p + d * 0.08, 0.028, 0.005, "cream", 8)
     elif i % 3 == 1:
-        sphere(f"Mace_Orb_{i}", p, (0.06, 0.06, 0.04), "orb" if i % 2 else "red", 10, 6)
+        sphere(f"Mace_Orb_{i}", p, (0.04, 0.04, 0.025), "orb" if i % 2 else "red", 10, 6)
 limb("Mace_Ferrule", haft_b, head_c + V(-0.1, 0.13, 0.12), 0.04, 0.03, "gold", 10)
 # shoulder rim spikes
 for s in (-1, 1):

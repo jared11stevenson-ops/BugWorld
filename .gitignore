@@ -2,3 +2,4 @@
 node_modules
 tests/artifacts/
 *connection*.json
+*.blend1
