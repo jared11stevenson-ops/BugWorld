@@ -11,7 +11,7 @@ Needs: numpy, pillow, scipy, scikit-image
 import json, os
 import numpy as np
 from PIL import Image
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage import gaussian_filter, gaussian_filter1d, binary_opening
 from skimage.measure import marching_cubes
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -41,7 +41,9 @@ def sample_side(m):    # [z, y]   side image: right = -Y
     c = np.clip((CX0 - ys / PX).astype(int), 0, m.shape[1] - 1)[None, :]; r = np.clip((GROUND - zs / PX).astype(int), 0, m.shape[0] - 1)[:, None]; return m[r, c]
 def soften(m, sigma_px=3.0):      # remove 2 mm pixel jitter from the drawn edge so the carve has no horizontal ledges (<6 mm change)
     return gaussian_filter(m.astype(np.float32), sigma_px) > 0.5
-MF, MS = sample_front(soften(F_body)), sample_side(soften(S))
+def thin_free(m, k):   # drop protrusions thinner than ~k voxels (cords, tassels, hair tufts would extrude into full-width planks)
+    return binary_opening(m, structure=np.ones((k, k), bool))
+MF, MS = thin_free(sample_front(soften(F_body)), 4), thin_free(sample_side(soften(S)), 4)
 
 def runs_center_half(row):
     """per-sample centre and half-width of the run it belongs to (0 outside)"""
@@ -57,7 +59,14 @@ CXs = np.zeros(MF.shape); HXs = np.zeros(MF.shape); CYs = np.zeros(MS.shape); HY
 for k in range(len(zs)):
     CXs[k], HXs[k] = runs_center_half(MF[k]); CYs[k], HYs[k] = runs_center_half(MS[k])
 
-HULL_MODE = os.environ.get("HULL_MODE", "box")
+HULL_MODE = os.environ.get("HULL_MODE", "ellipse")
+def zsmooth(Cv, Hv, sigma=3.0):
+    """smooth the per-height run centre / half-width along z (normalised convolution, so empty rows don't drag values to 0)"""
+    m = (Hv > 0).astype(np.float32); den = gaussian_filter1d(m, sigma, axis=0, mode="nearest") + 1e-6
+    Cs = gaussian_filter1d(Cv * m, sigma, axis=0, mode="nearest") / den; Hs = gaussian_filter1d(Hv * m, sigma, axis=0, mode="nearest") / den
+    return np.where(m > 0, Cs, 0), np.where(m > 0, np.maximum(Hs, 1.0), 0)
+if HULL_MODE == "ellipse":
+    CXs, HXs = zsmooth(CXs, HXs); CYs, HYs = zsmooth(CYs, HYs)
 occ = np.zeros((len(xs), len(ys), len(zs)), bool)
 if HULL_MODE == "box":
     occ = MF.T[:, None, :] & MS.T[None, :, :]                     # [x, y, z]: front mask extruded along Y  AND  side mask extruded along X
@@ -69,12 +78,14 @@ else:
         v = np.abs((iy - CYs[k]) / np.maximum(HYs[k], 1e-6)); v[HYs[k] == 0] = 9
         occ[:, :, k] = (u[:, None] ** N_EXP + v[None, :] ** N_EXP) <= 1.0
 
+occ[:, :, zs > 2.13] = False        # horns above the skull are rebuilt as round tubes in Blender (a carve makes them flat slabs)
+
 # ---- silhouette check: project the carve back and compare with the drawings ----
 pf = occ.any(1).T; ps = occ.any(0).T   # [z,x], [z,y]
 iou = lambda a, b: float((a & b).sum() / max((a | b).sum(), 1))
 print("IoU front", round(iou(pf, MF), 4), " side", round(iou(ps, MS), 4))
 
-field = gaussian_filter(occ.astype(np.float32), (2.4, 2.4, 1.6) if HULL_MODE == 'box' else (1.2, 1.2, 1.8))
+field = gaussian_filter(occ.astype(np.float32), (2.4, 2.4, 1.6) if HULL_MODE == 'box' else (1.0, 1.0, 1.4))
 verts, faces, _, _ = marching_cubes(field, 0.5, spacing=(V, V, V))
 verts += np.array([XR[0], YR[0], ZR[0]])
 verts = verts.astype(np.float32); faces = faces[:, ::-1].astype(np.int32)   # outward normals for Blender winding

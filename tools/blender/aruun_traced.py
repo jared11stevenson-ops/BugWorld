@@ -28,6 +28,26 @@ for p in me.polygons: p.use_smooth = True
 sm = body.modifiers.new("Smooth", "SMOOTH"); sm.factor = 0.5; sm.iterations = 8
 dm = body.modifiers.new("Decimate", "DECIMATE"); dm.ratio = min(1.0, TARGET_FACES / len(me.polygons))
 bpy.ops.object.modifier_apply(modifier="Smooth"); bpy.ops.object.modifier_apply(modifier="Decimate")
+# horns: round tubes along the fitted 3D curves (joints from tools/blender/aruun_spec_fit.json), joined into the body
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import aruun_spec as S
+_spec = S.load(); _P = lambda j: Vector(S.pos(_spec, j))
+def tube(name, pts, radii):
+    cu = bpy.data.curves.new(name, "CURVE"); cu.dimensions = "3D"; cu.bevel_depth = 1.0; cu.bevel_resolution = 6; cu.resolution_u = 14; cu.use_fill_caps = True
+    sp = cu.splines.new("BEZIER"); sp.bezier_points.add(len(pts) - 1)
+    for bp, p_, r_ in zip(sp.bezier_points, pts, radii): bp.co = p_; bp.handle_left_type = bp.handle_right_type = "AUTO"; bp.radius = r_
+    o = bpy.data.objects.new(name, cu); sc.collection.objects.link(o); bpy.context.view_layer.objects.active = o; o.select_set(True)
+    bpy.ops.object.convert(target="MESH"); o = bpy.context.object
+    for p_ in o.data.polygons: p_.use_smooth = True
+    return o
+horns = [tube("HornMain", [_P(j) for j in ("h0", "h1", "h2", "h3")], (0.032, 0.024, 0.016, 0.006)),
+         tube("HornFork", [_P(j) for j in ("f0", "f1", "f2", "f3")], (0.028, 0.021, 0.014, 0.006)),
+         tube("HornSpur", [_P("f1") + Vector((0, -0.01, 0.01)), _P("f1") + Vector((0.06, -0.04, 0.06)), _P("f2") + Vector((0.10, -0.01, -0.01))], (0.013, 0.009, 0.004))]
+_sk = _P("skull"); bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=20, location=tuple(_sk)); _cap = bpy.context.object; _cap.scale = (0.080, 0.112, 0.076)
+for p_ in _cap.data.polygons: p_.use_smooth = True
+horns.append(_cap)
+bpy.ops.object.select_all(action="DESELECT"); body.select_set(True)
+for o in horns: o.select_set(True)
+bpy.context.view_layer.objects.active = body; bpy.ops.object.join()
 n_body = len(body.data.polygons); print("body faces", n_body)
 
 # ------------------------------------------------------------------ mace
@@ -89,7 +109,7 @@ def projected_art(nt, front_only=False):
             va = N("ShaderNodeVectorMath"); va.operation = "ADD"; L(csum, va.inputs[0]); L(v_.outputs[0], va.inputs[1]); csum = va.outputs[0]; wsum = math_("ADD", wsum, ww)
     inv = math_("DIVIDE", 1.0, math_("MAXIMUM", wsum, 1e-4)); art = N("ShaderNodeVectorMath"); art.operation = "SCALE"; L(csum, art.inputs[0]); L(inv, art.inputs["Scale"])
     wmax = math_("MAXIMUM", math_("MAXIMUM", w["front"], w["back"]), w["side"])
-    fade = N("ShaderNodeMapRange"); fade.clamp = True; fade.inputs["From Min"].default_value = 0.03; fade.inputs["From Max"].default_value = 0.22; L(wmax, fade.inputs["Value"])
+    fade = N("ShaderNodeMapRange"); fade.clamp = True; fade.inputs["From Min"].default_value = 0.06; fade.inputs["From Max"].default_value = 0.30; L(wmax, fade.inputs["Value"])
     if front_only: fade.inputs["From Min"].default_value = -1; fade.inputs["From Max"].default_value = 0.0
     cover = math_("MULTIPLY", math_("MULTIPLY", wsum, 40.0, clamp=True), fade.outputs[0])
     ledge = math_("MULTIPLY", math_("SUBTRACT", math_("ABSOLUTE", ns.outputs["Z"]), 0.45), 4.0, clamp=True)   # near-horizontal faces: keep the neighbouring art row, not navy
