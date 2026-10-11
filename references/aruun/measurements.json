@@ -1,0 +1,116 @@
+{
+  "units": "1 px = 2 mm; figure height 2400 mm; canvas 1600x1300 px; ground line at y=1250; axis x=800",
+  "views": {
+    "front": {
+      "source_box": [
+        0,
+        0,
+        476,
+        612
+      ],
+      "source_height_px": 596,
+      "scale_factor": 2.013,
+      "axis_sheet_x": 350,
+      "figure_top_y": 50,
+      "ground_y": 1250
+    },
+    "back": {
+      "source_box": [
+        458,
+        118,
+        640,
+        600
+      ],
+      "source_height_px": 449,
+      "scale_factor": 2.673,
+      "axis_sheet_x": 554,
+      "figure_top_y": 50,
+      "ground_y": 1250
+    },
+    "side": {
+      "source_box": [
+        636,
+        118,
+        768,
+        600
+      ],
+      "source_height_px": 457,
+      "scale_factor": 2.626,
+      "axis_sheet_x": 672,
+      "figure_top_y": 50,
+      "ground_y": 1250
+    }
+  },
+  "palette": [
+    {
+      "index": 1,
+      "hex": "#8f3a32",
+      "srgb": [
+        143,
+        58,
+        50
+      ],
+      "linear": [
+        0.2747,
+        0.0423,
+        0.0319
+      ]
+    },
+    {
+      "index": 2,
+      "hex": "#a23c33",
+      "srgb": [
+        162,
+        60,
+        51
+      ],
+      "linear": [
+        0.3613,
+        0.0452,
+        0.0331
+      ]
+    },
+    {
+      "index": 3,
+      "hex": "#bb6d44",
+      "srgb": [
+        187,
+        109,
+        68
+      ],
+      "linear": [
+        0.4969,
+        0.1529,
+        0.0578
+      ]
+    },
+    {
+      "index": 4,
+      "hex": "#716a4d",
+      "srgb": [
+        113,
+        106,
+        77
+      ],
+      "linear": [
+        0.1651,
+        0.1441,
+        0.0742
+      ]
+    },
+    {
+      "index": 5,
+      "hex": "#5b4433",
+      "srgb": [
+        91,
+        68,
+        51
+      ],
+      "linear": [
+        0.1046,
+        0.0578,
+        0.0331
+      ]
+    }
+  ]
+}
