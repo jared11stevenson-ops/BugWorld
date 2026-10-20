@@ -72,6 +72,11 @@ BANK = [
     ("wave interference", "physics", ["resonance", "splash"], ["trough", "ripple", "swell"], "When two waves meet they add together or cancel, producing patterns of bigger and smaller ripples.", ["water", "wave", "ripple", "splash"]),
     ("rally scoring", "sport", ["rally", "tipping"], ["serve", "point", "side-out"], "Modern volleyball awards a point on every rally, whichever team served.", ["volleyball", "rally", "score"]),
     ("tidal pools", "marine biology", ["symbiosis", "scarcity"], ["pool", "anemone", "ebb"], "Tidal pools trap seawater at low tide and shelter small communities of animals.", ["beach", "water", "pool"]),
+    ("evolved turtles", "biology", ["selection", "scarcity", "feedback"], ["carapace", "plastron", "slowtide"], "A turtle's shell is its ribs and backbone fused into bone, and some species live well over a century.", ["turtle", "turtles", "tortoise", "shell", "evolved", "reptile"]),
+    ("sea turtle navigation", "ecology", ["migration", "signal"], ["hatchling", "nestbeach", "magnetic"], "Sea turtles return to the beach where they hatched, guided in part by Earth's magnetic field.", ["turtle", "turtles", "navigation", "hatchling"]),
+    ("tank warfare", "military history", ["projectile", "predation", "tipping"], ["tread", "salient", "bulwark"], "Tanks were first used in battle by the British at the Somme in September 1916.", ["tank", "tanks", "warfare", "armor", "armour", "war"]),
+    ("the Battle of Kursk", "military history", ["projectile", "scarcity", "predation"], ["salient", "minefield", "steppe"], "Kursk in 1943 involved one of the largest tank engagements in history.", ["tank", "tanks", "kursk", "war"]),
+    ("convergent evolution", "evolution", ["selection", "feedback"], ["analogue", "niche", "lineage"], "Unrelated animals such as dolphins and sharks evolved similar body shapes for the same problems.", ["evolved", "evolution", "convergent"]),
 ]
 FIELDS = sorted({b[1] for b in BANK})
 

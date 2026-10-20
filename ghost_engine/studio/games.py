@@ -36,7 +36,7 @@ def assemble(project_dir, game_id, title, universe, extra_files, libs, template_
         f.write(f'config_version=5\n\n[application]\n\nconfig/name="{title}"\nrun/main_scene="res://main.tscn"\nconfig/features=PackedStringArray("4.4")\n\n'
                 '[rendering]\n\nrenderer/rendering_method="gl_compatibility"\nrenderer/rendering_method.mobile="gl_compatibility"\n\n[debug]\n\ngdscript/warnings/integer_division=0\ngdscript/warnings/unused_parameter=0\ngdscript/warnings/shadowed_variable=0\n\n'
                 '[display]\n\nwindow/size/viewport_width=1100\nwindow/size/viewport_height=680\nwindow/stretch/mode="canvas_items"\n')
-    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon", "mood", "elements", "laws", "physics", "siblings") if k in universe}
+    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon", "mood", "elements", "laws", "physics", "siblings", "skin") if k in universe}
     uj["lore"] = universe.get("lore", {})
     uj["game_title"] = title
     json.dump(uj, open(os.path.join(project_dir, "data", "universe.json"), "w"), indent=1)
@@ -169,6 +169,22 @@ def build_volley(uni, out_dir, params, tuning=None):
 # ---------------------------------------------------------------- G: splash (top-down water-balloon fight)
 def build_splash(uni, out_dir, params, tuning=None):
     files = {"data/splash.gd": gd_const("DATA", {"params": params})}
-    title = f"{uni['name']}: Splash"
+    title = f"{uni['name']}: {uni.get('skin', {}).get('title', 'Splash')}"
     assemble(out_dir, "splash", title, uni, files, ["kernel.gd", "shell.gd"], "game_splash.gd", ["splash_core.gd", "tune_splash.gd"])
     return {"id": "splash", "title": title, "genre": "top-down water-balloon battle", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: artillery (turn-based ballistic duel; theme-neutral engine)
+def build_artillery(uni, out_dir, params, tuning=None):
+    files = {"data/artillery.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Siege"
+    assemble(out_dir, "artillery", title, uni, files, ["kernel.gd", "shell.gd"], "game_artillery.gd", ["artillery_core.gd", "tune_artillery.gd"])
+    return {"id": "artillery", "title": title, "genre": "turn-based artillery duel", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: bastion (wave defence; theme-neutral engine)
+def build_bastion(uni, out_dir, params, tuning=None):
+    files = {"data/bastion.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Bastion"
+    assemble(out_dir, "bastion", title, uni, files, ["kernel.gd", "shell.gd"], "game_bastion.gd", ["bastion_core.gd", "tune_bastion.gd"])
+    return {"id": "bastion", "title": title, "genre": "wave-defence strategy", "params": params, "tuning": tuning}

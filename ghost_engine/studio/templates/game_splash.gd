@@ -45,17 +45,27 @@ func start() -> void:
 		params[k] = D.DATA["params"][k]
 	for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level", "barrier", "ret", "win", "king_goal"]:
 		params[k] = int(params[k])
-	title_screen(U.get("game_title", "Splash"), "Move: WASD / arrows   Aim: mouse   Throw: click\nStand in your bucket to refill. Dodge the rings!\n" + universe_line(), [["Play", intro], ["How to play", help]])
+	title_screen(U.get("game_title", "Splash"), "Move: WASD / arrows   Aim: mouse   Throw: click\nStand in your %s to refill. Dodge the rings!\n" % sk("station") + universe_line(), [["Play", intro], ["How to play", help]])
+
+
+func sk(key: String) -> String:
+	var d: Dictionary = {"proj": "balloon", "station": "bucket", "verb": "soaking", "hurt": "Soaked!", "hp": "dryness", "champ": "Soak champion", "okay": "Dry enough!", "pick": "Pick up a balloon", "name": "soak"}
+	return String(U.get("skin", d).get(key, d.get(key, "")))
+
+
+func fxcol(a := 1.0) -> Color:
+	var f: Array = U.get("skin", {}).get("fx", [0.3, 0.6, 1.0])
+	return Color(float(f[0]), float(f[1]), float(f[2]), a)
 
 
 func help() -> void:
-	text_screen("How to play", "Each balloon arcs through the air and bursts where it lands, soaking everyone nearby, friends included. Three direct splashes and you are out. Stand in your team's bucket to refill (you carry up to %d). Eliminate the other team, or be the drier team when time runs out.\nLaw of this universe: %s" % [int(params["max_ammo"]), U.get("law_text", "")], "Back", start)
+	text_screen("How to play", "Each %s arcs through the air and bursts where it lands, %s everyone nearby, friends included. Three direct hits and you are out. Stand in your team's %s to refill (you carry up to %d). Eliminate the other team, or be the healthier team when time runs out.\nLaw of this universe: %s" % [sk("proj"), sk("verb"), sk("station"), int(params["max_ammo"]), U.get("law_text", "")], "Back", start)
 
 
 func intro() -> void:
 	round_i = 0
 	wins = 0
-	text_screen("The soak of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))) + "\n\n" + rival_line(0) + " · " + rival_line(1) + " · " + rival_line(2), "Pick up a balloon", begin_match)
+	text_screen("The %s of %s" % [sk("name"), U.get("name", "this world")], "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))) + "\n\n" + rival_line(0) + " · " + rival_line(1) + " · " + rival_line(2), sk("pick"), begin_match)
 
 
 func enemy_params(r: int) -> Array:
@@ -198,7 +208,7 @@ func draw_field(c: Control) -> void:
 		p[3] += 1
 	puddles = puddles.filter(func(p): return p[3] < 700)
 	for p in puddles:
-		c.draw_circle(P.call(p[0], p[1]), p[2] * k, Color(0.3, 0.6, 1.0, 0.22 * (1.0 - float(p[3]) / 700.0)))
+		c.draw_circle(P.call(p[0], p[1]), p[2] * k, fxcol(0.22 * (1.0 - float(p[3]) / 700.0)))
 	for team in 2:
 		var st := S.station(team)
 		c.draw_circle(P.call(st.x, st.y), 42.0 * k, Color(0.15, 0.4, 0.8, 0.9))
@@ -221,7 +231,7 @@ func draw_field(c: Control) -> void:
 		if int(s["t"]) - int(b[4]) >= int(b[5]) - 1:
 			note_splash(b[2], b[3])
 	for r in rings:
-		c.draw_arc(P.call(r[0], r[1]), float(params["splash_r"]) * r[2] * k, 0, TAU, 28, Color(0.8, 0.95, 1.0, 1.0 - r[2]), 3.0)
+		c.draw_arc(P.call(r[0], r[1]), float(params["splash_r"]) * r[2] * k, 0, TAU, 28, fxcol(1.0 - r[2]).lightened(0.5), 3.0)
 	for d in drops:
 		c.draw_circle(P.call(d[0], d[1]), 3.0 * k, Color(0.7, 0.9, 1.0, clampf(d[4] * 2.0, 0.0, 1.0)))
 	for i in s["agents"].size():
@@ -233,7 +243,7 @@ func draw_field(c: Control) -> void:
 			continue
 		c.draw_circle(pos + Vector2(2, 4) * k, 16.0 * k, Color(0, 0, 0, 0.3))
 		c.draw_circle(pos, 16.0 * k, team_col)
-		c.draw_circle(pos, 16.0 * k * clampf(a["wet"] / 100.0, 0.0, 1.0), Color(0.2, 0.45, 0.95, 0.55))
+		c.draw_circle(pos, 16.0 * k * clampf(a["wet"] / 100.0, 0.0, 1.0), fxcol(0.55))
 		if i == 0:
 			c.draw_arc(pos, 20.0 * k, 0, TAU, 20, Color.WHITE, 2.0)
 		var f := Vector2(a["vx"], a["vy"])
@@ -253,7 +263,7 @@ func draw_field(c: Control) -> void:
 	for a in s["agents"]:
 		wet[a["team"]] += minf(100.0, a["wet"])
 	var n: int = int(params["team_size"])
-	c.draw_string(ThemeDB.fallback_font, off + Vector2(12, 24), "Round %d/3   Your team dryness %d%%   Rivals %d%%   Time %d   Ammo %d" % [round_i + 1, 100 - int(wet[0] / n), 100 - int(wet[1] / n), maxi(0, (int(params["max_ticks"]) - int(s["t"])) / 60), s["agents"][0]["ammo"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, pal[4])
+	c.draw_string(ThemeDB.fallback_font, off + Vector2(12, 24), "Round %d/3   Your team %s %d%%   Rivals %d%%   Time %d   Ammo %d" % [round_i + 1, sk("hp"), 100 - int(wet[0] / n), 100 - int(wet[1] / n), maxi(0, (int(params["max_ticks"]) - int(s["t"])) / 60), s["agents"][0]["ammo"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, pal[4])
 
 
 func _match_end() -> void:
@@ -268,11 +278,11 @@ func _match_end() -> void:
 		save["best"] = maxi(int(save.get("best", 0)), round_i)
 		write_save()
 		if round_i >= 3:
-			end_screen("Soak champion", "You survived every round.\n\n%s" % U.get("lore", {}).get("epilogue_win", ""), {"won": true, "attempts": attempt}, "Back to title", start)
+			end_screen(sk("champ"), "You survived every round.\n\n%s" % U.get("lore", {}).get("epilogue_win", ""), {"won": true, "attempts": attempt}, "Back to title", start)
 		else:
-			text_screen("Round won", "Dry enough! The next rivals throw %s." % ("with more sting" if round_i == 2 else "straighter"), "Next round", begin_match)
+			text_screen("Round won", sk("okay") + " The next rivals fire %s." % ("with more sting" if round_i == 2 else "straighter"), "Next round", begin_match)
 	else:
-		text_screen("Soaked!", "You lost this round. Aim straight at the rival instead of guessing where they will be, and dodge the rings when they are close.", "Rematch", begin_match)
+		text_screen(sk("hurt"), "You lost this round. Aim straight at the rival instead of guessing where they will be, and dodge the rings when they are close.", "Rematch", begin_match)
 
 
 # ---------------------------------------------------------------- headless verification

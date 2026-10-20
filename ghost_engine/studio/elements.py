@@ -35,6 +35,10 @@ ELEMENTS = {
     "selection": {"law": "Variants compete; what survives is what the world rewards.", "physics": {}},
     "feedback": {"law": "Effects feed their own causes; small pushes grow or die.", "physics": {}},
     "entropy": {"law": "Order decays; effort is what holds it together.", "physics": {}},
+    "shell_armor": {"law": "Hardened shells turn blows aside; the patient survive what the bold do not.", "physics": {"armor_factor": 1.6}},
+    "longevity": {"law": "The long-lived plan in centuries; haste is a young species' folly.", "physics": {}},
+    "siege": {"law": "Fortified places fall to bombardment and patience alike.", "physics": {}},
+    "logistics": {"law": "Armies march on fuel and fodder; supply decides wars.", "physics": {}},
     "predation": {"law": "Some live by taking from others, and the others adapt.", "physics": {}},
 }
 
@@ -54,6 +58,11 @@ ENTRY_ELEMENTS = {   # explicit decompositions, richer than the tags
     "tidal locking": ["tide", "pulse"],
     "surface tension": ["soak", "burst"],
     "quarantine": ["quarantine", "network", "fog"],
+    "evolved turtles": ["shell_armor", "longevity", "selection", "tide", "team"],
+    "sea turtle navigation": ["signal", "drift", "tide", "longevity"],
+    "tank warfare": ["projectile_arc", "shell_armor", "siege", "logistics", "team"],
+    "the Battle of Kursk": ["projectile_arc", "siege", "logistics", "scarcity"],
+    "convergent evolution": ["selection", "feedback"],
     "John Snow's cholera map": ["contagion", "signal", "network"],
 }
 
@@ -76,11 +85,18 @@ FAMILIES = {
                "modules": {"ball": {0: ("rubber", []), 1: ("water balloon", ["burst", "soak"])},
                            "net": {0: ("solid net", []), 1: ("porous net", ["wind", "drift", "diffusion", "slick"])},
                            "score": {0: ("rally scoring", ["rally"]), 1: ("soak scoring", ["soak"])}}},
-    "splash": {"genre": "top-down arena action", "unlock": ["projectile_arc", "burst"],
-               "modules": {"barrier": {0: ("open arena", []), 1: ("net across the arena", ["net"])},
+    "splash": {"genre": "top-down arena action", "unlock": [], "neutral": True,
+               "modules": {"barrier": {0: ("open arena", []), 1: ("wall across the arena", ["net", "siege"])},
                            "ret": {0: ("no returns", []), 1: ("bat balloons back", ["rally", "signal", "bounce"])},
                            "win": {0: ("elimination", []), 1: ("hold the fountain", ["tipping", "wells", "pulse", "tide", "soak"])}}},
     "cordon": {"genre": "network strategy", "unlock": ["contagion", "quarantine", "diffusion"], "modules": {"purge": {0: ("no purge", []), 1: ("purge allowed", ["purge"])}}},
+    "artillery": {"genre": "turn-based artillery duel", "unlock": [], "neutral": True,       # theme-neutral engine: playable in any universe, skinned by it
+                  "modules": {"terrain": {0: ("steady ground", []), 1: ("cratering ground", [])},
+                              "ricochet": {0: ("shells burst on contact", []), 1: ("shells ricochet once", [])},
+                              "gust": {0: ("steady wind", []), 1: ("gusting wind", [])}}},
+    "bastion": {"genre": "wave-defence strategy", "unlock": [], "neutral": True,
+                "modules": {"mortar": {0: ("cannons only", []), 1: ("area mortars", [])}, "chill": {0: ("no slowing", []), 1: ("slowing towers", [])},
+                            "armored": {0: ("light invaders", []), 1: ("armored heavy invaders", [])}}},
     "arcade3d": {"genre": "3D action", "unlock": [], "modules": {"law": {0: ("law of the universe", [])}}},
     "concept": {"genre": "strategy duel", "unlock": [], "modules": {}},
     "steward": {"genre": "world simulation", "unlock": [], "modules": {}},
@@ -99,7 +115,7 @@ def module_available(family, mod, val, elements):
 
 def universe_physics(elements):
     """Fuse element physics into the shared constants every game of the universe must honour."""
-    ph = {"gravity_scale": 1.0, "wind": 0.0, "slick": 0, "burst_radius": 1.0, "soak_weight": 0.0, "restitution_scale": 1.0}
+    ph = {"gravity_scale": 1.0, "wind": 0.0, "slick": 0, "burst_radius": 1.0, "soak_weight": 0.0, "restitution_scale": 1.0, "armor_factor": 1.0}
     for e in elements:
         for k, v in ELEMENTS[e]["physics"].items():
             if k == "wind":
@@ -113,3 +129,13 @@ def universe_physics(elements):
 
 def laws_text(elements):
     return [ELEMENTS[e]["law"] for e in elements]
+
+
+SKINS = {   # the same engine, dressed by the universe: engines are theme-neutral, universes supply the fiction
+    "soak": {"proj": "balloon", "station": "bucket", "verb": "soaking", "hurt": "Soaked!", "hp": "dryness", "champ": "Soak champion", "okay": "Dry enough!", "pick": "Pick up a balloon", "title": "Splash", "fx": [0.3, 0.6, 1.0], "name": "soak"},
+    "shell": {"proj": "shell", "station": "depot", "verb": "battering", "hurt": "Knocked out!", "hp": "integrity", "champ": "Skirmish victor", "okay": "Still standing!", "pick": "Load a shell", "title": "Skirmish", "fx": [0.95, 0.6, 0.25], "name": "skirmish"},
+}
+
+
+def skin(elements):
+    return SKINS["soak" if "soak" in elements else "shell"]

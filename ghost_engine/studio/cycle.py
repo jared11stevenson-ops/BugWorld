@@ -65,6 +65,10 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
     with stage("2c_idea_exploration"):
         exp = ideas.explore(uni, know, os.path.join(STATE, "lab"), quick=quick, log=log)
     chosen = exp["chosen"]
+    ideas.sync_library(know, cname)
+    nxt = ideas.next_capability(exp, uni)
+    know.setdefault("roadmap", []).append({"cycle": cname, "next_capability": nxt})
+    log(f"  studio roadmap: {nxt}")
     genres = [c["genre"] for c in chosen]
     genre_scores = {c["genre"]: c["score"] for c in chosen}
     uni["siblings"] = [{"genre": c["genre"], "label": c["label"], "premise": c["premise"]} for c in chosen]
@@ -76,13 +80,13 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
             proj = os.path.join(gdir, gid)
             if gid == "concept_campaign":
                 games.append(G.build_concept_campaign(uni, proj, STATE, know, gens=bud["g1_gens"], per_gen=24 if quick else 40, log=log))
-                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
+                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated", "surprise", "literalness", "richness")}
             elif gid == "steward":
                 games.append(G.build_steward(uni, proj, target_pct=135))
-                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
+                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated", "surprise", "literalness", "richness")}
             else:
                 kind, builder = {"arcade": ("arcade", G.build_arcade), "arcade3d": ("arcade", G.build_arcade3d), "cordon": ("cordon", G.build_cordon),
-                                 "volley": ("volley", G.build_volley), "splash": ("splash", G.build_splash)}[gid]
+                                 "volley": ("volley", G.build_volley), "splash": ("splash", G.build_splash), "artillery": ("artillery", G.build_artillery), "bastion": ("bastion", G.build_bastion)}[gid]
                 mods = idea["mods"]
                 base = tuner.SPECS[kind]["base"](uni["law"], uni["physics"], mods)
                 builder(uni, proj, base)
@@ -101,7 +105,7 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
                     if t2["in_band"] or tuner.fitness(t2["holdout_best"]) > tuner.fitness(tuning["holdout_best"]):
                         tuning = t2
                 g = builder(uni, proj, tuning["params"], tuning)
-                g["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
+                g["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated", "surprise", "literalness", "richness")}
                 games.append(g)
     reports = {}
     with stage("6_verification"):
@@ -133,6 +137,8 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
     with stage("8_retrospective_and_reset"):
         know_hash_before = hashlib.sha256(json.dumps(know, sort_keys=True).encode()).hexdigest()
         ideas.remember(know, cname, exp["chosen"])
+        for c in exp["chosen"]:
+            know["library"][c["family"]]["uses"] += 1
         retro.retrospective(know, cname, uni, games, reports, timings, genres)
         json.dump(know, open(KNOW, "w"), indent=1, sort_keys=True)
         reset_report = reset_state(uni)

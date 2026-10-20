@@ -251,7 +251,7 @@ def verify_game(game, project, out_dir):
         hb = (game.get("tuning") or {}).get("holdout_best", {})
         checks["difficulty_in_target_band"] = bool(hb) and tuner_band(hb)
         details["tuning_holdout"] = hb
-    elif game["id"] == "splash":
+    elif game["id"] in ("splash", "artillery", "bastion"):
         st2, _e2 = selftest(project)          # determinism across processes: a second run must reproduce the digest
         checks["deterministic_across_runs"] = bool(st.get("deterministic")) and st.get("det_digest") == st2.get("det_digest") and st.get("det_digest") is not None
         details["det_digest"] = [st.get("det_digest"), st2.get("det_digest")]

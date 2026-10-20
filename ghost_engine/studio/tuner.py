@@ -25,7 +25,28 @@ def _ph_volley(law, ph):
             "restitution": round(1.0 * ph.get("restitution_scale", 1.0), 3), "burst_r": round(130.0 * ph.get("burst_radius", 1.0), 1)}
 
 
+ARTILLERY_BOUNDS = {"hp": (60.0, 160.0, 10.0), "blast_r": (30.0, 70.0, 4.0), "blast_dmg": (35.0, 90.0, 5.0), "ai_err": (0.5, 20.0, 1.0), "ai_pow": (0.0, 0.3, 0.02), "max_turns": (12, 40, 2)}
+
+
+def _ph_artillery(law, ph):
+    ph = ph or {}
+    return {"gravity": round(0.3 * ph.get("gravity_scale", 1.0), 4), "wind": round(float(ph.get("wind", 0.0)) * 0.5, 4), "armor": float(ph.get("armor_factor", 1.0))}
+
+
+BASTION_BOUNDS = {"hp0": (14.0, 50.0, 2.0), "hp_growth": (1.1, 1.32, 0.02), "lives": (5, 16, 1), "money": (80, 220, 10), "speed": (1.0, 2.4, 0.2), "cannon_dmg": (6.0, 18.0, 1.0), "count_step": (1, 4, 1), "cost": (30, 60, 5)}
+
+
+def _ph_bastion(law, ph):
+    ph = ph or {}
+    return {"gravity": round(0.3 * ph.get("gravity_scale", 1.0), 4), "armor": float(ph.get("armor_factor", 1.0))}
+
+
 SPECS = {
+    "bastion": {"script": "res://ghost/tune_bastion.gd", "bounds": BASTION_BOUNDS, "probes": [{}, {"hp0": 17.0, "hp_growth": 1.15}, {"hp0": 27.0, "hp_growth": 1.21}],
+                "base": lambda law, ph=None, mod=None: {**_ph_bastion(law, ph), **(mod or {}), "hp0": 22.0, "hp_growth": 1.18, "lives": 10, "money": 120, "waves": 8, "count0": 6, "count_step": 2, "speed": 1.6,
+                                                        "cannon_dmg": 10.0, "mortar_dmg": 9.0, "mortar_r": 46.0, "chill_slow": 0.5, "cost": 40, "bounty": 8, "wave_bonus": 25}},
+    "artillery": {"script": "res://ghost/tune_artillery.gd", "bounds": ARTILLERY_BOUNDS,
+                  "base": lambda law, ph=None, mod=None: {**_ph_artillery(law, ph), **(mod or {}), "hp": 100.0, "blast_r": 44.0, "blast_dmg": 60.0, "pmax": 18.0, "max_turns": 24, "ai_err": 5.0, "ai_pow": 0.08, "ai_wind": 1}},
     "splash": {"script": "res://ghost/tune_splash.gd", "bounds": SPLASH_BOUNDS,
                "base": lambda law, ph=None, mod=None: {**_ph_splash(law, ph), **(mod or {}), "splash_dmg": 45.0, "splash_r": 62.0 * (ph or {}).get("burst_radius", 1.0), "throw_cd": 30, "refill_ticks": 40,
                                     "max_ammo": 3, "team_size": 2, "max_ticks": 2400, "range": 320.0, "speed": 3.4, "en_lead": 0.5, "en_err": 40.0, "en_aggr": 0.65, "en_dodge": 0.5, "ally_level": 1}},
@@ -73,7 +94,9 @@ def in_target_band(r):
     return r["skilled"] >= 0.60 and r["novice"] <= 0.20 and r["skilled"] - r["novice"] >= 0.40 and (avg is None or 0.30 <= avg <= 0.75)
 
 
-HARD_CAPS = {   # widening limits per kind: bounds may grow, but never beyond what the core can express sensibly
+HARD_CAPS = {
+    "bastion": {"hp0": (8.0, 90.0), "hp_growth": (1.05, 1.5), "lives": (3, 25), "money": (50, 320), "speed": (0.7, 3.2), "cannon_dmg": (4.0, 30.0), "count_step": (1, 6), "cost": (20, 80)},
+    "artillery": {"hp": (40.0, 220.0), "blast_r": (22.0, 90.0), "blast_dmg": (25.0, 110.0), "ai_err": (0.2, 30.0), "ai_pow": (0.0, 0.4), "max_turns": (8, 60)},   # widening limits per kind: bounds may grow, but never beyond what the core can express sensibly
     "arcade": {"law_strength": (0.2, 3.0), "hazard_speed": (60.0, 320.0), "spawn_every": (5, 34), "max_hazards": (6, 40), "goal": (2, 8), "stage_secs": (18.0, 60.0), "spawn_step": (1, 5)},
     "volley": {"gravity": (0.2, 0.8), "jump": (8.0, 15.0), "restitution": (0.7, 1.4), "ai_lag": (1, 40), "ai_err": (0.0, 160.0), "ai_aggr": (0.05, 1.0), "points": (3, 15)},
     "splash": {"team_size": (1, 3), "splash_r": (40.0, 100.0), "splash_dmg": (25.0, 75.0), "speed": (2.2, 4.4), "en_lead": (0.0, 1.0), "en_err": (0.0, 150.0), "en_aggr": (0.1, 1.0), "en_dodge": (0.0, 1.0), "ally_level": (0, 2), "throw_cd": (12, 60)},
@@ -163,8 +186,14 @@ def tune(project, kind, law, seed, pop=16, gens=8, init=None, bounds_override=No
             a, b2 = rnd.sample(elite, 2)
             c = {k: (a[k] if rnd.random() < .5 else b2[k]) for k in a}
             popn.append(mutate(c, rnd, bounds))
-    best = ranked[0]
-    held = run_batch(project, [{"p": best, "seed_base": 7000}, {"p": base, "seed_base": 7000}], script)
+    # Selection on a first held-out seed set among the top candidates, then CONFIRMATION of the chosen one on a second, unseen set (winner's-curse-safe release check).
+    top = ranked[:4]
+    held = run_batch(project, [{"p": c, "seed_base": 7000} for c in top] + [{"p": base, "seed_base": 7000}], script)
+    cand = list(zip(top, held[:len(top)]))
+    inb = [x for x in cand if in_target_band(x[1])]
+    best, sel = max(inb or cand, key=lambda x: fitness(x[1]))
+    confirm = run_batch(project, [{"p": best, "seed_base": 9000}], script)[0]
+    held = [confirm, held[-1]]
     at_bounds = {k: ("hi" if best[k] >= bounds[k][1] else "lo") for k in bounds if k in best and (best[k] >= bounds[k][1] or best[k] <= bounds[k][0])}
-    return {"params": best, "curve": curve, "at_bounds": at_bounds, "bounds_used": {k: list(v) for k, v in bounds.items()}, "in_band": in_target_band(held[0]), "default_params": base, "holdout_best": held[0], "holdout_default": held[1],
+    return {"params": best, "curve": curve, "at_bounds": at_bounds, "bounds_used": {k: list(v) for k, v in bounds.items()}, "in_band": in_target_band(held[0]), "default_params": base, "holdout_best": held[0], "holdout_default": held[1], "selection_holdout": sel,
             "start_fitness": curve[0]["best_fitness"], "final_fitness": curve[-1]["best_fitness"], "evaluations": sum(len(v) for v in hist.values())}

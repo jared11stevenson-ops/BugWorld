@@ -95,7 +95,7 @@ class Studio(unittest.TestCase):
         self.assertEqual(feedback.aggregate(k, feedback.load_records(f.name)), {"cordon": {"n": 2, "mean": 4.0}})
 
     def test_tuner_specs_cover_every_tunable_template(self):
-        self.assertEqual(set(tuner.SPECS), {"arcade", "cordon", "volley", "splash"})
+        self.assertEqual(set(tuner.SPECS), {"arcade", "cordon", "volley", "splash", "artillery", "bastion"})
         for kind, sp in tuner.SPECS.items():
             base = sp["base"]("pulse")
             for k, (lo, hi, st) in sp["bounds"].items():
@@ -144,6 +144,57 @@ class Studio(unittest.TestCase):
             open(os.path.join(d, "t.gd"), "w").write('extends SceneTree\nconst V = preload("res://ghost/volley_core.gd")\nfunc _init():\n\tvar p := V.defaults()\n\tp["wind"] = 0.03\n\tp["jump"] = 9.5\n\tp["restitution"] = 0.95\n\tp["points"] = 5\n\tvar s := V.play(76533082012, p, 2, [9, 45.0, 0.55])\n\tprint("GD ", V.digest(s), " ", s["t"])\n\tquit(0)\n')
             out = subprocess.run([GODOT, "--headless", "--path", d, "--script", "res://t.gd"], capture_output=True, text=True, timeout=120).stdout
             self.assertIn("GD 96f94420 1784", out, out[-400:])
+
+    def test_turtle_tank_prompt_builds_a_universe_and_neutral_engines_are_available_everywhere(self):
+        from studio import ideas, elements as EL
+        c, _ = I.pick(prompt="Turtles evolved instead of humans / Tank warfare", seed=1)
+        names = [b[0] for b in c]
+        self.assertIn("evolved turtles", names); self.assertIn("tank warfare", names)
+        u = U.make_universe(c, 1)
+        self.assertGreater(u["physics"]["armor_factor"], 1.0)          # shell armor is a shared constant of this universe
+        fams = {x["family"] for x in ideas.candidates(u)}
+        self.assertTrue({"artillery", "splash", "arcade3d", "bastion"} <= fams)    # theme-neutral engines are playable in any universe
+        self.assertNotIn("volley", fams); self.assertNotIn("cordon", fams)    # theme-bound engines still need their fiction
+        self.assertEqual(u["skin"]["name"], "skirmish")                # no soak element -> shells, not balloons
+        w = U.make_universe(I.pick(prompt="waterballoon fights / volleyball world", seed=1)[0], 1)
+        self.assertEqual(w["skin"]["name"], "soak")
+
+    def test_integration_rewards_engines_that_honour_universe_physics_and_library_tracks_growth(self):
+        from studio import ideas
+        ph = {"gravity_scale": 1.0, "wind": 0.02, "slick": 0, "burst_radius": 1.0, "restitution_scale": 1.0, "armor_factor": 1.6, "soak_weight": 0.0}
+        self.assertEqual(ideas.integration("artillery", ph), 1.0)
+        self.assertLess(ideas.integration("splash", ph), ideas.integration("artillery", ph)); self.assertEqual(ideas.integration("concept", ph), 0.25)
+        k = {}
+        lib = ideas.sync_library(k, "cycle_099")
+        self.assertEqual(lib["artillery"]["added"], "cycle_006"); self.assertTrue(lib["artillery"]["neutral"]); self.assertFalse(lib["volley"]["neutral"])
+
+    @unittest.skipUnless(os.path.exists(GODOT), "Godot binary not available")
+    def test_artillery_core_is_deterministic_and_skill_tiers_are_ordered(self):
+        import subprocess, tempfile, shutil
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, "ghost"))
+            for src, dst in (("godot/ghost/kernel.gd", "ghost/kernel.gd"), ("studio/templates/artillery_core.gd", "ghost/artillery_core.gd")):
+                shutil.copy(os.path.join(ROOT, src), os.path.join(d, dst))
+            open(os.path.join(d, "project.godot"), "w").write('config_version=5\n[application]\nconfig/name="t"\n[debug]\ngdscript/warnings/integer_division=0\n')
+            open(os.path.join(d, "t.gd"), "w").write('extends SceneTree\nconst A = preload("res://ghost/artillery_core.gd")\nfunc _init():\n\tvar p := A.defaults()\n\tp["terrain"] = 1\n\tp["ricochet"] = 1\n\tp["gust"] = 1\n\tp["wind"] = 0.01\n\tvar a := A.digest(A.play(4242, p, 2))\n\tvar b := A.digest(A.play(4242, p, 2))\n\tvar w := [0, 0, 0]\n\tfor lv in 3:\n\t\tfor i in 16:\n\t\t\tw[lv] += 1 if A.play(100 + i, p, lv)["winner"] == 0 else 0\n\tprint("DET ", a == b, " ", w[0], " ", w[1], " ", w[2])\n\tquit(0)\n')
+            out = subprocess.run([GODOT, "--headless", "--path", d, "--script", "res://t.gd"], capture_output=True, text=True, timeout=200).stdout
+            self.assertIn("DET true", out, out[-300:])
+            novice, avg, expert = [int(x) for x in out.split("DET true")[1].split()[:3]]
+            self.assertLess(novice, expert); self.assertLessEqual(novice, avg + 2)
+
+    @unittest.skipUnless(os.path.exists(GODOT), "Godot binary not available")
+    def test_bastion_core_is_deterministic_and_building_order_matters(self):
+        import subprocess, tempfile, shutil
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, "ghost"))
+            for src, dst in (("godot/ghost/kernel.gd", "ghost/kernel.gd"), ("studio/templates/bastion_core.gd", "ghost/bastion_core.gd")):
+                shutil.copy(os.path.join(ROOT, src), os.path.join(d, dst))
+            open(os.path.join(d, "project.godot"), "w").write('config_version=5\n[application]\nconfig/name="t"\n[debug]\ngdscript/warnings/integer_division=0\n')
+            open(os.path.join(d, "t.gd"), "w").write('extends SceneTree\nconst B = preload("res://ghost/bastion_core.gd")\nfunc _init():\n\tvar p := B.defaults()\n\tp["mortar"] = 1\n\tp["chill"] = 1\n\tp["armored"] = 1\n\tp["armor"] = 1.6\n\tp["hp0"] = 17.0\n\tp["hp_growth"] = 1.15\n\tp["lives"] = 10\n\tp["money"] = 120\n\tvar a := B.digest(B.play(4242, p, 2))\n\tvar b := B.digest(B.play(4242, p, 2))\n\tvar w := [0, 0, 0]\n\tfor lv in 3:\n\t\tfor i in 14:\n\t\t\tw[lv] += 1 if B.play(100 + i, p, lv)["winner"] == 0 else 0\n\tprint("DET ", a == b, " ", w[0], " ", w[1], " ", w[2])\n\tquit(0)\n')
+            out = subprocess.run([GODOT, "--headless", "--path", d, "--script", "res://t.gd"], capture_output=True, text=True, timeout=300).stdout
+            self.assertIn("DET true", out, out[-300:])
+            novice, avg, expert = [int(x) for x in out.split("DET true")[1].split()[:3]]
+            self.assertLess(novice, expert)
 
     def test_gate_refuses_unverified_game(self):
         r = {"checks": {"selftest_passes": True, "python_twin_matches": False}}

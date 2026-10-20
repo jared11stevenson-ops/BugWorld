@@ -232,7 +232,7 @@ func codex() -> void:
 		t += "• " + String(l["text"]) + "\n"
 	var ph: Dictionary = U.get("physics", {})
 	if not ph.is_empty():
-		t += "\nPHYSICS (identical in every game of this universe)\ngravity x%.2f   wind %.3f   slick %s   burst radius x%.2f   restitution x%.2f\n" % [float(ph.get("gravity_scale", 1.0)), float(ph.get("wind", 0.0)), "yes" if int(ph.get("slick", 0)) == 1 else "no", float(ph.get("burst_radius", 1.0)), float(ph.get("restitution_scale", 1.0))]
+		t += "\nPHYSICS (identical in every game of this universe)\ngravity x%.2f   wind %.3f   slick %s   burst radius x%.2f   restitution x%.2f   armor x%.2f\n" % [float(ph.get("gravity_scale", 1.0)), float(ph.get("wind", 0.0)), "yes" if int(ph.get("slick", 0)) == 1 else "no", float(ph.get("burst_radius", 1.0)), float(ph.get("restitution_scale", 1.0)), float(ph.get("armor_factor", 1.0))]
 	t += "\nTHE REAL WORLD BEHIND IT\n"
 	for k in U.get("facts", {}):
 		t += "• %s — %s\n" % [k, U["facts"][k]]

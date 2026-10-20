@@ -5,7 +5,7 @@ from . import verify, games as G
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES = {"splash": "game_splash.gd", "volley": "game_volley.gd", "steward": "game_steward.gd", "concept_campaign": "game_concept.gd",
-             "arcade": "game_arcade.gd", "arcade3d": "game_arcade3d.gd", "cordon": "game_contain.gd"}
+             "arcade": "game_arcade.gd", "arcade3d": "game_arcade3d.gd", "cordon": "game_contain.gd", "artillery": "game_artillery.gd", "bastion": "game_bastion.gd"}
 
 
 def patch(cycle, ids, note):
