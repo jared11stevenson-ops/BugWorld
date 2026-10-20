@@ -56,6 +56,15 @@ only 2 of 4 actions were live. The optimizer had gamed my proxy. I added a *live
 adaptive agents' decisions is dead), re-ran everything, and added liveness to the compile gate. The same revision
 applies to the baseline numbers; the earlier champion is not used anywhere.
 
+### Overfitting check against unseen strategies
+
+`python -m ghost.lab.holdout_strategies` adds 4 strategies never used in evolution (alternator, opener_guard,
+greedy_medic, mirror; lab-only) and recomputes robust dominance over all 10 static strategies on the 8 held-out seeds
+(`evidence/lab/holdout_strategies.json`). The margin shrinks: baseline **0.59** (best strategy: greedy_medic) vs evolved
+**0.36 / 0.06 / 0.34** (runs 1/2/3). All three are lower than baseline, but runs 1 and 3 sit at the 0.35 'balanced'
+line rather than clearly under it, so the 0.23–0.28 figures above partly reflect the training policy set.
+Run 2 is the most robust design.
+
 ### What the evolved rules did to the persistent world (not optimized for; measured)
 
 30 paired worlds × 600 ticks, evolved − baseline (±95% CI): kills **−58 ± 9** (94.8→36.8), NPCs alive **+3.3 ± 0.8**,
@@ -95,7 +104,7 @@ correlational.
   the loop and the mechanic family is fixed (I added `fatigue` by hand; evolution only tuned it). Open-ended invention
   is not implemented.
 - Policies are a fixed set of 8 archetypes; "adaptive" agents are myopic best-responders. Held-out seeds do not test
-  held-out *strategies*, so some overfitting to this policy set is possible.
+  held-out *strategies*; the separate unseen-strategy check shows part of the dominance reduction is policy-set specific.
 - Only combat is evolved. Economy and world parameters are fuzzed/analyzed but not optimized.
 - The GDScript kernel is a manual port. Parity is guarded by tests, not by construction; any kernel change needs
   `python -m ghost.compiler.compile` (regenerates goldens) and the Godot tests.
@@ -109,6 +118,6 @@ correlational.
    any proxy predicts them; recalibrate or drop proxies accordingly.
 2. Make mechanic invention open-ended: a proposal interface (mechanic = small data program) so an LLM or human can add
    structural mechanics that the same pipeline evaluates, with anti-gaming checks like liveness generalised.
-3. Co-evolve policies with rules (find strategies that exploit a ruleset) to attack the overfitting-to-policy-set risk.
+3. Co-evolve policies with rules (find strategies that exploit a ruleset); the unseen-strategy check above shows the risk is real but modest. Also consider compiling run 2 instead of the train-selected champion.
 4. Extend evolution to economy/world rules with multi-objective (Pareto) fitness instead of one weighted sum.
 5. Generate the GDScript kernel from a single spec instead of hand-porting.

@@ -1,0 +1,57 @@
+{
+ "baseline_v0": {
+  "extended_robust_dominance_mean": 0.59375,
+  "holdout_worst_case": {
+   "alternator": 0.0,
+   "greedy_medic": 0.59375,
+   "mirror": 0.234375,
+   "opener_guard": 0.0
+  },
+  "std": 0.08414320011147662,
+  "top_strategies": [
+   "greedy_medic"
+  ]
+ },
+ "evolved_run1": {
+  "extended_robust_dominance_mean": 0.36328125,
+  "holdout_worst_case": {
+   "alternator": 0.0,
+   "greedy_medic": 0.36328125,
+   "mirror": 0.20703125,
+   "opener_guard": 0.0
+  },
+  "std": 0.03807341540941001,
+  "top_strategies": [
+   "greedy_medic"
+  ]
+ },
+ "evolved_run2": {
+  "extended_robust_dominance_mean": 0.05859375,
+  "holdout_worst_case": {
+   "alternator": 0.0,
+   "greedy_medic": 0.0,
+   "mirror": 0.0,
+   "opener_guard": 0.0
+  },
+  "std": 0.04261215669779576,
+  "top_strategies": [
+   "attacker",
+   "chaos"
+  ]
+ },
+ "evolved_run3": {
+  "extended_robust_dominance_mean": 0.33984375,
+  "holdout_worst_case": {
+   "alternator": 0.0,
+   "greedy_medic": 0.1953125,
+   "mirror": 0.31640625,
+   "opener_guard": 0.01953125
+  },
+  "std": 0.07063727078134814,
+  "top_strategies": [
+   "chaos",
+   "greedy_medic",
+   "mirror"
+  ]
+ }
+}
