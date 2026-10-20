@@ -175,3 +175,17 @@ priors and validated arcade parameters per law, and adapts search budgets from m
 2. Authored-quality assets: mesh/texture generation beyond primitives, skeletal animation, composed audio — each as a role with acceptance tests.
 3. More genre templates (narrative/roguelike/3D-native) and a template-discovery loop so the studio can invent genres, not only select among them.
 4. LLM writers/designers through the inbox contract for lore and concept proposals, with the same measured gate.
+
+
+## Standing principles (from the owner; apply to every future pass)
+1. **Inspirations shape the world, not the games.** "Water balloon fights" may be how the universe's factions go to war, its economy, its religion, its physics; none of the three games has to
+   look like a water balloon fight. Games are drawn from everything the universe makes possible (genre-free), chosen for being unique, fun and revolutionary, as three different genres.
+2. **Do not read instructions literally unless told to.** Intent over wording.
+3. **The owner's job is only: give inspirations and play the games.** Everything else (new genres, mechanics, tooling, tests, self-repair, retrospectives) is the studio's job, every cycle.
+4. **The studio must compound.** Each cycle must leave the studio measurably more capable than before.
+
+### Known gap against these principles (honest)
+Cycle 5 still derived game *families* from inspiration elements (the volley and splash families only unlock when net/balloon elements exist), i.e. too literal. Planned next:
+* Decouple: the universe yields *dynamics, factions, conflict, economy, geography*; a genre-free idea generator (verbs x goals x constraints) proposes ideas, the universe supplies theme, lore, physics and rules.
+* Each cycle adds at least one new genre/module to the library (studio grows its own idea space), validated by bot simulation before it can be chosen.
+* Self-evolution log: every retrospective names one capability to build next and the next cycle starts by building it.

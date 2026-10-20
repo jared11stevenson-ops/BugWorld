@@ -573,6 +573,12 @@
    "cycle": "cycle_005",
    "game": "all",
    "note": "inspirations build the universe; games come from idea exploration over the universe's element-unlocked module space, not from the prompt words."
+  },
+  {
+   "check": "owner_principle",
+   "cycle": "pass4-dev",
+   "game": "all",
+   "note": "Inspirations shape the universe (its wars, culture, physics), not the games; games need not resemble the inspirations. Owner only supplies inspirations and plays; the studio evolves itself every cycle. Next: genre-free idea generator."
   }
  ],
  "tuner_bounds": {
