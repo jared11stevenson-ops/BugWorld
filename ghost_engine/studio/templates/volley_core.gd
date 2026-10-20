@@ -14,13 +14,13 @@ const LEVELS := {0: [22, 100.0, 0.35], 1: [11, 40.0, 0.65], 2: [3, 6.0, 0.95]}  
 
 
 static func defaults() -> Dictionary:
-	return {"wind": 0.0, "slick": 0, "gravity": 0.42, "jump": 10.5, "restitution": 1.0, "points": 7, "ai_lag": 11, "ai_err": 40.0, "ai_aggr": 0.65, "serve_pause": 40, "max_ticks": 14400, "move_acc": 1.5}
+	return {"wind": 0.0, "slick": 0, "gravity": 0.42, "jump": 10.5, "restitution": 1.0, "points": 7, "ai_lag": 11, "ai_err": 40.0, "ai_aggr": 0.65, "serve_pause": 40, "max_ticks": 14400, "move_acc": 1.5, "ball": 0, "net": 0, "score": 0, "burst_r": 130.0}
 
 
 static func new_match(seed_in: int, p: Dictionary) -> Dictionary:
 	var s := {"rng": K.seed_state(seed_in), "p": p, "t": 0, "bx": 250.0, "by": 200.0, "bvx": 0.0, "bvy": 0.0,
 		"px": [250.0, 750.0], "py": [GROUND, GROUND], "pvx": [0.0, 0.0], "pvy": [0.0, 0.0], "score": [0, 0], "server": K.rnd_pub(seed_in), "touches": 0, "last_side": -1,
-		"pause": int(p["serve_pause"]), "rally": 0, "rallies": 0, "rally_hits": 0, "over": 0, "winner": -1, "hist": [], "events": []}
+		"pause": int(p["serve_pause"]), "wet": [0.0, 0.0], "rally": 0, "rallies": 0, "rally_hits": 0, "over": 0, "winner": -1, "hist": [], "events": []}
 	_serve(s)
 	return s
 
@@ -42,15 +42,28 @@ static func _serve(s: Dictionary) -> void:
 
 
 static func _point(s: Dictionary, side: int) -> void:
+	if int(s["p"]["ball"]) == 1 and s["by"] >= GROUND - BR:        # a water balloon bursts where it lands and soaks anyone nearby
+		var R: float = float(s["p"]["burst_r"])
+		for i in 2:
+			var d := absf(s["px"][i] - s["bx"])
+			if d < R:
+				s["wet"][i] = minf(100.0, s["wet"][i] + 100.0 * (1.0 - d / R))
+		s["events"].append("burst")
 	s["score"][side] += 1
 	s["rallies"] += 1
 	s["rally_hits"] += s["rally"]
 	s["server"] = side
 	s["events"].append("point")
-	if s["score"][side] >= int(s["p"]["points"]):
-		s["over"] = 1
-		s["winner"] = side
-		return
+	if int(s["p"]["score"]) == 1:                                    # soak scoring: a drenched player concedes an extra point and is towelled off
+		for i in 2:
+			if s["wet"][i] >= 70.0:
+				s["wet"][i] = 30.0
+				s["score"][1 - i] += 1
+	for i in 2:
+		if s["score"][i] >= int(s["p"]["points"]):
+			s["over"] = 1
+			s["winner"] = i if s["score"][0] != s["score"][1] else side
+			return
 	_serve(s)
 
 
@@ -68,7 +81,9 @@ static func step(s: Dictionary, in0: Array, in1: Array) -> void:
 	var g: float = float(p["gravity"])
 	var ins := [in0, in1]
 	for i in 2:
-		var acc: float = float(p["move_acc"]) * (0.25 if int(p["slick"]) != 0 else 1.0)
+		s["wet"][i] = maxf(0.0, s["wet"][i] - 0.04)
+		var wf: float = 1.0 - 0.5 * s["wet"][i] / 100.0                   # soaked bodies are heavy and slow
+		var acc: float = float(p["move_acc"]) * (0.25 if int(p["slick"]) != 0 else 1.0) * wf
 		var fr := 0.95 if int(p["slick"]) != 0 else 0.8
 		s["pvx"][i] = (s["pvx"][i] + float(ins[i][0]) * acc) * fr
 		s["px"][i] += s["pvx"][i]
@@ -81,7 +96,7 @@ static func step(s: Dictionary, in0: Array, in1: Array) -> void:
 			s["px"][i] = hi
 			s["pvx"][i] = 0.0
 		if ins[i][1] and s["py"][i] >= GROUND:
-			s["pvy"][i] = -float(p["jump"])
+			s["pvy"][i] = -float(p["jump"]) * (1.0 - 0.25 * s["wet"][i] / 100.0)
 			s["events"].append("jump")
 		s["pvy"][i] += g
 		s["py"][i] += s["pvy"][i]
@@ -95,7 +110,7 @@ static func step(s: Dictionary, in0: Array, in1: Array) -> void:
 		s["pause"] -= 1
 		return
 	s["bvx"] += float(p["wind"]) * _tri(int(s["t"]))
-	s["bvy"] += g * 0.8
+	s["bvy"] += g * 0.8 * (1.15 if int(p["ball"]) == 1 else 1.0)
 	for sub in 2:
 		s["bx"] += s["bvx"] / 2.0
 		s["by"] += s["bvy"] / 2.0
@@ -108,7 +123,8 @@ static func step(s: Dictionary, in0: Array, in1: Array) -> void:
 		if s["by"] < BR:
 			s["by"] = BR
 			s["bvy"] = absf(s["bvy"]) * 0.8
-		if absf(s["bx"] - NET_X) < NET_HALF + BR and s["by"] > NET_TOP - BR:
+		var pass_net := int(p["net"]) == 1 and ((int(s["rally"]) * 2654435761 + int(s["score"][0]) * 131 + int(s["score"][1]) * 17) & 0xFFFFFFFF) % 100 < 30      # porous net
+		if absf(s["bx"] - NET_X) < NET_HALF + BR and s["by"] > NET_TOP - BR and not pass_net:
 			if s["by"] < NET_TOP and s["bvy"] > 0.0:
 				s["by"] = NET_TOP - BR
 				s["bvy"] = -absf(s["bvy"]) * 0.7
@@ -134,7 +150,7 @@ static func step(s: Dictionary, in0: Array, in1: Array) -> void:
 				var rvy: float = s["bvy"] - s["pvy"][i]
 				var vn := rvx * nx + rvy * ny
 				if vn < 0.0:
-					var e: float = 1.0 + float(p["restitution"])
+					var e: float = 1.0 + float(p["restitution"]) * (0.85 if int(p["ball"]) == 1 else 1.0)
 					s["bvx"] -= e * vn * nx
 					s["bvy"] -= e * vn * ny
 				s["bvx"] += s["pvx"][i] * 0.3
@@ -223,7 +239,7 @@ static func play(seed_in: int, p: Dictionary, left_level: int, right_params: Arr
 static func digest(s: Dictionary) -> String:
 	var parts := [s["t"], s["score"][0], s["score"][1], s["touches"], s["rally"], s["rallies"], s["rally_hits"], s["over"], s["winner"], s["server"], s["rng"],
 		int(s["bx"] * 1000.0), int(s["by"] * 1000.0), int(s["bvx"] * 1000.0), int(s["bvy"] * 1000.0),
-		int(s["px"][0] * 1000.0), int(s["px"][1] * 1000.0), int(s["py"][0] * 1000.0), int(s["py"][1] * 1000.0)]
+		int(s["px"][0] * 1000.0), int(s["px"][1] * 1000.0), int(s["py"][0] * 1000.0), int(s["py"][1] * 1000.0), int(s["wet"][0] * 1000.0), int(s["wet"][1] * 1000.0)]
 	var strs := PackedStringArray()
 	for x in parts:
 		strs.append(str(int(x)))

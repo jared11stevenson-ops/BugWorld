@@ -37,6 +37,8 @@ def retrospective(know, cname, uni, games, reports, timings, genres):
         if tn and tn.get("in_band"):
             kind = {"arcade3d": "arcade"}.get(g["id"], g["id"])
             key = "cordon" if kind == "cordon" else f"{kind}:{uni['law']}"
+            mk = ",".join(f"{a}{b}" for a, b in sorted(g.get("idea", {}).get("mods", {}).items()))
+            key += (":" + mk) if mk else ""
             know["tuning_priors"][key] = tn["params"]
             actions.append(f"stored validated tuning parameters '{key}' (held-out skill gap confirmed)")
     # 2b) persist widened tuner bounds when a search saturated (the studio's tuning space itself evolves)

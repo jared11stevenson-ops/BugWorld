@@ -1,6 +1,6 @@
 import json, os, shutil, sys, unittest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from studio import inspiration as I, universe as U, cycle, verify, retro, agents, pool, lore, audio, feedback, tuner
+from studio import inspiration as I, universe as U, cycle, verify, retro, agents, lore, audio, feedback, tuner
 
 GODOT = os.environ.get("GODOT_BIN", "/tmp/g/Godot_v4.5-stable_linux.x86_64")
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -36,16 +36,33 @@ class Studio(unittest.TestCase):
             c, _ = I.pick(prompt="The Plague / the Purge", seed=seed)
             tags = {t for b in c for t in b[2]}
             self.assertTrue(tags & {"contagion", "quarantine"}, [b[0] for b in c]); self.assertIn("purge", tags)
-            self.assertEqual(len({b[1] for b in c}), 3)
+            self.assertGreaterEqual(len({b[1] for b in c}), 2)
         u = U.make_universe(I.pick(prompt="plague purge", seed=1)[0], 1)
         self.assertIn(u["law"], ("contagion", "purge"))
 
-    def test_genre_pool_picks_distinct_families_and_rewards_novelty(self):
+    def test_idea_space_is_unlocked_by_fused_elements_and_selects_three_families(self):
+        from studio import ideas, elements as EL
         u = U.make_universe(I.pick(prompt="plague quarantine", seed=3)[0], 3)
-        g1, _ = pool.choose(u, {"cycles": []}, 1)
-        self.assertEqual(len({pool.POOL[g]["family"] for g in g1}), 3); self.assertIn("cordon", g1)
-        g2, s2 = pool.choose(u, {"cycles": [{"genres": g1}]}, 1)
-        self.assertNotEqual(sorted(g1), sorted(g2))      # genres shipped last cycle are disfavoured
+        fams = {c["family"] for c in ideas.candidates(u)}
+        self.assertIn("cordon", fams); self.assertNotIn("volley", fams)          # no net/rally in a plague universe
+        w = U.make_universe(I.pick(prompt="waterballoon fights / volleyball world", seed=1)[0], 1)
+        self.assertEqual(sorted(w["inspirations"]), ["volleyball", "water balloon fights"])
+        wf = {c["family"] for c in ideas.candidates(w)}
+        self.assertTrue({"volley", "splash"} <= wf); self.assertNotIn("cordon", wf)
+        self.assertTrue(any(c["mods"].get("ball") == 1 for c in ideas.candidates(w)))   # fusion module exists only because both inspirations are present
+        only_v = U.make_universe([b for b in I.BANK if b[0] == "volleyball"] + [b for b in I.BANK if b[0] == "rally scoring"], 1)
+        self.assertFalse(any(c["mods"].get("ball") == 1 for c in ideas.candidates(only_v)))
+        self.assertEqual(ideas.novelty({"family": "volley", "mods": {"ball": 0, "net": 0, "score": 0}}, [{"family": "volley", "mods": {}}]), 0.15)
+        self.assertEqual(ideas.novelty({"family": "volley", "mods": {"ball": 1, "net": 1, "score": 1}}, [{"family": "volley", "mods": {}}]), 1.0)
+        self.assertEqual(ideas.novelty({"family": "splash", "mods": {"ball": 1}}, [{"family": "volley", "mods": {}}]), 1.0)
+
+    def test_universe_physics_is_shared_and_fused(self):
+        from studio import elements as EL
+        ph = EL.universe_physics(["wind", "burst", "soak"])
+        self.assertGreater(ph["wind"], 0); self.assertEqual(ph["burst_radius"], 1.0)
+        from studio import tuner
+        b = tuner.SPECS["volley"]["base"]("none", ph, {"ball": 1, "net": 1, "score": 0})
+        self.assertEqual(b["wind"], ph["wind"]); self.assertEqual((b["ball"], b["net"]), (1, 1))
 
     def test_lore_is_derived_from_simulation_and_deterministic(self):
         u = U.make_universe(I.pick(5)[0], 5); u["rules"] = U.prior_rules(u); u["canon"] = {"seed": 101, "fork_tick": 100, "intervention": "none", "richness": 0}
@@ -92,12 +109,10 @@ class Studio(unittest.TestCase):
     def test_waterballoon_volleyball_prompt_gets_new_laws_and_sport_genres(self):
         for seed in range(5):
             c, _ = I.pick(prompt="waterballoon fights / volleyball world", seed=seed)
-            names = " ".join(b[0] for b in c)
-            self.assertTrue("water balloon" in names or "volleyball" in names or "rally" in names, names)
+            self.assertEqual(sorted(b[0] for b in c), ["volleyball", "water balloon fights"])
         u = U.make_universe(I.pick(prompt="waterballoon volleyball", seed=2)[0], 2)
         self.assertIn(u["law"], ("gust", "slick")); self.assertEqual(u["mood"], "bright")
-        g, _ = pool.choose(u, {"cycles": []}, 1)
-        self.assertTrue({"volley", "splash"} & set(g), g)
+        self.assertIn("net", u["elements"]); self.assertIn("burst", u["elements"])
 
     def test_tuner_band_rejects_unrealistic_difficulty_and_widen_respects_caps(self):
         self.assertFalse(tuner.in_target_band({"skilled": 1.0, "average": 1.0, "novice": 0.0}))      # average player must not also win 100%
@@ -116,7 +131,7 @@ class Studio(unittest.TestCase):
         from studio import volley_twin as VT
         p = dict(VT.DEFAULTS); p.update({"wind": 0.03, "jump": 9.5, "restitution": 0.95, "points": 5})
         s = VT.play(76533082012, p, 2, [9, 45.0, 0.55])          # seed > 2^31: the case that exposed an int64 overflow in GDScript
-        self.assertEqual((VT.digest(s), s["t"], s["score"]), ("f0c049c0", 1784, [5, 2]))
+        self.assertEqual((VT.digest(s), s["t"], s["score"]), ("96f94420", 1784, [5, 2]))
 
     @unittest.skipUnless(os.path.exists(GODOT), "Godot binary not available")
     def test_volley_core_in_godot_matches_python_twin_on_large_seed(self):
@@ -128,7 +143,7 @@ class Studio(unittest.TestCase):
             open(os.path.join(d, "project.godot"), "w").write('config_version=5\n[application]\nconfig/name="t"\n[debug]\ngdscript/warnings/integer_division=0\n')
             open(os.path.join(d, "t.gd"), "w").write('extends SceneTree\nconst V = preload("res://ghost/volley_core.gd")\nfunc _init():\n\tvar p := V.defaults()\n\tp["wind"] = 0.03\n\tp["jump"] = 9.5\n\tp["restitution"] = 0.95\n\tp["points"] = 5\n\tvar s := V.play(76533082012, p, 2, [9, 45.0, 0.55])\n\tprint("GD ", V.digest(s), " ", s["t"])\n\tquit(0)\n')
             out = subprocess.run([GODOT, "--headless", "--path", d, "--script", "res://t.gd"], capture_output=True, text=True, timeout=120).stdout
-            self.assertIn("GD f0c049c0 1784", out, out[-400:])
+            self.assertIn("GD 96f94420 1784", out, out[-400:])
 
     def test_gate_refuses_unverified_game(self):
         r = {"checks": {"selftest_passes": True, "python_twin_matches": False}}
@@ -147,7 +162,9 @@ class Studio(unittest.TestCase):
         dest = os.path.join(cycle.ARCHIVE, m["cycle"])
         man = json.load(open(os.path.join(dest, "manifest.json")))
         self.assertEqual(len(man["genres"]), 3)
-        self.assertEqual(len({pool.POOL[g]["family"] for g in man["genres"]}), 3)
+        self.assertEqual(len(set(man["genres"])), 3)
+        ij = json.load(open(os.path.join(dest, "ideas.json")))
+        self.assertEqual(len({c["family"] for c in ij["chosen"]}), 3)
         for g in man["genres"]:
             self.assertTrue(os.path.exists(os.path.join(dest, "games", g, "project.godot")))
         know = json.load(open(cycle.KNOW))

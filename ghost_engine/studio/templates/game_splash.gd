@@ -43,7 +43,7 @@ func start() -> void:
 	params = S.defaults()
 	for k in D.DATA["params"]:
 		params[k] = D.DATA["params"][k]
-	for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level"]:
+	for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level", "barrier", "ret", "win", "king_goal"]:
 		params[k] = int(params[k])
 	title_screen(U.get("game_title", "Splash"), "Move: WASD / arrows   Aim: mouse   Throw: click\nStand in your bucket to refill. Dodge the rings!\n" + universe_line(), [["Play", intro], ["How to play", help]])
 
@@ -55,7 +55,7 @@ func help() -> void:
 func intro() -> void:
 	round_i = 0
 	wins = 0
-	text_screen("The soak of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))), "Pick up a balloon", begin_match)
+	text_screen("The soak of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))) + "\n\n" + rival_line(0) + " · " + rival_line(1) + " · " + rival_line(2), "Pick up a balloon", begin_match)
 
 
 func enemy_params(r: int) -> Array:
@@ -63,6 +63,10 @@ func enemy_params(r: int) -> Array:
 	var err := float(params["en_err"])
 	var ag := float(params["en_aggr"])
 	var dg := float(params["en_dodge"])
+	var m: Dictionary = rival(r)["mod"]
+	err = maxf(0.0, err + float(m["err"]))
+	ag = clampf(ag + float(m["aggr"]), 0.05, 1.0)
+	dg = clampf(dg + float(m["dodge"]), 0.0, 1.0)
 	if r == 0:
 		return [lead + 0.3, err * 1.6, ag * 0.7, dg * 0.5]
 	if r == 2:
@@ -117,7 +121,12 @@ func _process(delta: float) -> void:
 	var ay := Input.get_axis("ui_up", "ui_down") + (float(Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_W)))
 	while acc >= 1.0 / 60.0 and s["over"] == 0:
 		acc -= 1.0 / 60.0
-		var pin := [ax, ay, want_throw, mouse.x, mouse.y]
+		var pin := [ax, ay, want_throw, mouse.x, mouse.y, false]
+		if want_throw and int(params["ret"]) == 1:
+			for b in s["balloons"]:
+				if b[6] != 0 and S.balloon_pos(s, b).distance_to(Vector2(s["agents"][0]["x"], s["agents"][0]["y"])) < 62.0:
+					pin[5] = true           # clicking next to an incoming balloon bats it back
+					pin[2] = false
 		want_throw = false
 		S.step(s, team_in(s, pin))
 		_events()
@@ -180,6 +189,11 @@ func draw_field(c: Control) -> void:
 			c.draw_rect(Rect2(P.call(ix * 80.0, iy * 75.0), Vector2(80, 75) * k), col)
 	c.draw_rect(Rect2(P.call(0, 0), Vector2(150, S.H) * k), Color(pal[3].r, pal[3].g, pal[3].b, 0.18))
 	c.draw_rect(Rect2(P.call(S.W - 150, 0), Vector2(150, S.H) * k), Color(pal[2].r, pal[2].g, pal[2].b, 0.18))
+	if int(params.get("barrier", 0)) == 1:        # the net across the arena (bodies cannot cross, balloons arc over)
+		var nx: float = S.W / 2.0
+		c.draw_rect(Rect2(P.call(nx - 3.0, 0), Vector2(6, S.H) * k), Color(1, 1, 1, 0.55))
+		for iy in 15:
+			c.draw_line(P.call(nx - 14.0, iy * 40.0 + 10.0), P.call(nx + 14.0, iy * 40.0 + 10.0), Color(1, 1, 1, 0.35), 2.0)
 	for p in puddles:
 		p[3] += 1
 	puddles = puddles.filter(func(p): return p[3] < 700)
@@ -267,7 +281,7 @@ func selftest() -> Dictionary:
 	params = S.defaults()
 	for k in D.DATA["params"]:
 		params[k] = D.DATA["params"][k]
-	for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level"]:
+	for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level", "barrier", "ret", "win", "king_goal"]:
 		params[k] = int(params[k])
 	var res := {"ok": false}
 	round_i = 0

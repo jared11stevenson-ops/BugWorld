@@ -11,18 +11,18 @@ const LEVELS := {0: [0.0, 90.0, 0.4, 0.0], 1: [0.5, 40.0, 0.65, 0.5], 2: [0.0, 1
 
 static func defaults() -> Dictionary:
 	return {"slick": 0, "wind": 0.0, "splash_dmg": 45.0, "splash_r": 62.0, "throw_cd": 30, "refill_ticks": 40, "max_ammo": 3, "team_size": 3, "max_ticks": 2400,
-		"range": 320.0, "speed": 3.4, "en_lead": 0.5, "en_err": 40.0, "en_aggr": 0.65, "en_dodge": 0.5, "ally_level": 1}
+		"range": 320.0, "speed": 3.4, "en_lead": 0.5, "en_err": 40.0, "en_aggr": 0.65, "en_dodge": 0.5, "ally_level": 1, "barrier": 0, "ret": 0, "win": 0, "king_goal": 500}
 
 
 static func new_match(seed_in: int, p: Dictionary) -> Dictionary:
-	var s := {"rng": K.seed_state(seed_in), "p": p, "t": 0, "agents": [], "balloons": [], "obst": [], "over": 0, "winner": -1, "hits": [0, 0], "friendly": [0, 0], "events": []}
+	var s := {"rng": K.seed_state(seed_in), "p": p, "t": 0, "agents": [], "balloons": [], "obst": [], "over": 0, "winner": -1, "hits": [0, 0], "friendly": [0, 0], "pts": [0, 0], "bats": [0, 0], "events": []}
 	var n: int = int(p["team_size"])
 	for i in 5:
 		s["obst"].append([200.0 + float(K.rnd(s, 560)), 90.0 + float(K.rnd(s, 420)), 26.0 + float(K.rnd(s, 18))])
 	for team in 2:
 		for i in n:
 			var yy := H * float(i + 1) / float(n + 1) + float(K.rnd(s, 30)) - 15.0
-			s["agents"].append({"x": 110.0 if team == 0 else W - 110.0, "y": yy, "vx": 0.0, "vy": 0.0, "wet": 0.0, "ammo": 1, "cd": 0, "team": team, "alive": 1, "refill": 0})
+			s["agents"].append({"x": 110.0 if team == 0 else W - 110.0, "y": yy, "vx": 0.0, "vy": 0.0, "wet": 0.0, "ammo": 1, "cd": 0, "team": team, "alive": 1, "refill": 0, "bat_cd": 0})
 	return s
 
 
@@ -66,6 +66,11 @@ static func step(s: Dictionary, inputs: Array) -> void:
 		a["y"] += a["vy"]
 		a["x"] = clampf(a["x"], AR, W - AR)
 		a["y"] = clampf(a["y"], AR, H - AR)
+		if int(p["barrier"]) == 1:                       # a net across the arena: bodies stay on their own side, balloons arc over
+			if a["team"] == 0:
+				a["x"] = minf(a["x"], W / 2.0 - AR - 4.0)
+			else:
+				a["x"] = maxf(a["x"], W / 2.0 + AR + 4.0)
 		for o in s["obst"]:
 			var dx: float = a["x"] - o[0]
 			var dy: float = a["y"] - o[1]
@@ -78,6 +83,10 @@ static func step(s: Dictionary, inputs: Array) -> void:
 					a["y"] = o[1] + dy / d * r
 		if a["cd"] > 0:
 			a["cd"] -= 1
+		if a["bat_cd"] > 0:
+			a["bat_cd"] -= 1
+		if int(p["ret"]) == 1 and inp.size() > 5 and inp[5] and a["bat_cd"] == 0:
+			_bat(s, i, a)
 		var st := station(a["team"])
 		if absf(a["x"] - st.x) < 46.0 and absf(a["y"] - st.y) < 46.0 and a["ammo"] < int(p["max_ammo"]):
 			a["refill"] += 1
@@ -104,6 +113,10 @@ static func step(s: Dictionary, inputs: Array) -> void:
 			a["ammo"] -= 1
 			a["cd"] = int(p["throw_cd"])
 			s["events"].append("throw")
+	if int(p["win"]) == 1:                               # hold the fountain: standing in the centre scores for your team
+		for a in s["agents"]:
+			if a["alive"] != 0 and Vector2(a["x"], a["y"]).distance_to(Vector2(W / 2.0, H / 2.0)) < 70.0:
+				s["pts"][a["team"]] += 1
 	var keep := []
 	for b in s["balloons"]:
 		if s["t"] - b[4] >= b[5]:
@@ -116,12 +129,53 @@ static func step(s: Dictionary, inputs: Array) -> void:
 	for a in s["agents"]:
 		tot[a["team"]] += minf(100.0, a["wet"])
 		alive[a["team"]] += a["alive"]
-	if alive[0] == 0 or alive[1] == 0:
+	if int(p["win"]) == 1 and (s["pts"][0] >= int(p["king_goal"]) or s["pts"][1] >= int(p["king_goal"])):
+		s["over"] = 1
+		s["winner"] = 0 if s["pts"][0] >= int(p["king_goal"]) and s["pts"][0] >= s["pts"][1] else 1
+	elif alive[0] == 0 or alive[1] == 0:
 		s["over"] = 1
 		s["winner"] = 1 if alive[0] == 0 and alive[1] > 0 else (0 if alive[1] == 0 and alive[0] > 0 else -1)
 	elif s["t"] >= int(p["max_ticks"]):
 		s["over"] = 1
-		s["winner"] = 0 if tot[0] < tot[1] else (1 if tot[1] < tot[0] else -1)
+		if int(p["win"]) == 1 and s["pts"][0] != s["pts"][1]:
+			s["winner"] = 0 if s["pts"][0] > s["pts"][1] else 1
+		else:
+			s["winner"] = 0 if tot[0] < tot[1] else (1 if tot[1] < tot[0] else -1)
+
+
+static func balloon_pos(s: Dictionary, b: Array) -> Vector2:
+	var u: float = clampf(float(int(s["t"]) - int(b[4])) / float(b[5]), 0.0, 1.0)
+	return Vector2(lerpf(b[0], b[2], u), lerpf(b[1], b[3], u))
+
+
+# Volleyball meets water balloon: bat an incoming balloon back toward whoever threw it.
+static func _bat(s: Dictionary, i: int, a: Dictionary) -> void:
+	var best := -1
+	var bd := 62.0
+	for k in s["balloons"].size():
+		var b: Array = s["balloons"][k]
+		if b[6] == a["team"]:
+			continue
+		var u := float(int(s["t"]) - int(b[4])) / float(b[5])
+		if u < 0.15 or u > 0.95:
+			continue
+		var d := balloon_pos(s, b).distance_to(Vector2(a["x"], a["y"]))
+		if d < bd:
+			bd = d
+			best = k
+	if best < 0:
+		return
+	var b2: Array = s["balloons"][best]
+	var from := balloon_pos(s, b2)
+	var tgt := Vector2(b2[0], b2[1])
+	var thrower: Dictionary = s["agents"][int(b2[7])]
+	if thrower["alive"] != 0:
+		tgt = Vector2(thrower["x"], thrower["y"])
+	var T := flight(from.distance_to(tgt))
+	s["balloons"][best] = [from.x, from.y, tgt.x, tgt.y, s["t"], T, a["team"], i]
+	a["bat_cd"] = 40
+	s["bats"][a["team"]] += 1
+	s["events"].append("bat")
 
 
 static func _splash(s: Dictionary, b: Array) -> void:
@@ -156,7 +210,7 @@ static func _h(s: Dictionary, i: int, k: int) -> float:
 static func ai_input(s: Dictionary, i: int, a: Array) -> Array:
 	var me: Dictionary = s["agents"][i]
 	if me["alive"] == 0:
-		return [0.0, 0.0, false, 0.0, 0.0]
+		return [0.0, 0.0, false, 0.0, 0.0, false]
 	var p: Dictionary = s["p"]
 	var R: float = float(p["splash_r"])
 	var pos := Vector2(me["x"], me["y"])
@@ -168,6 +222,15 @@ static func ai_input(s: Dictionary, i: int, a: Array) -> Array:
 			if pos.distance_to(tp) < R + AR + 12.0 and (_h(s, i, 3) + 1.0) * 50.0 < float(a[3]) * 100.0:
 				var away := pos - tp
 				m += (away.normalized() if away.length() > 0.5 else Vector2(1, 0)) * 1.0
+	var bat := false
+	if int(p["ret"]) == 1 and me["bat_cd"] == 0:
+		for b in s["balloons"]:
+			if b[6] != me["team"] and balloon_pos(s, b).distance_to(pos) < 55.0 and (_h(s, i, 6) + 1.0) * 50.0 < float(a[3]) * 100.0:
+				bat = true
+	if int(p["win"]) == 1:
+		var cen := Vector2(W / 2.0, H / 2.0)
+		if pos.distance_to(cen) > 55.0:
+			m += (cen - pos).normalized() * 0.9
 	var enemy_i := -1
 	var bd := 1e18
 	for j in s["agents"].size():
@@ -178,7 +241,7 @@ static func ai_input(s: Dictionary, i: int, a: Array) -> Array:
 				bd = d2
 				enemy_i = j
 	if enemy_i < 0:
-		return [m.x, m.y, false, 0.0, 0.0]
+		return [m.x, m.y, false, 0.0, 0.0, bat]
 	var e2: Dictionary = s["agents"][enemy_i]
 	var ep := Vector2(e2["x"], e2["y"])
 	var dist := sqrt(bd)
@@ -204,7 +267,7 @@ static func ai_input(s: Dictionary, i: int, a: Array) -> Array:
 					var al: Dictionary = s["agents"][j]
 					if al["alive"] != 0 and al["team"] == me["team"] and j != i and Vector2(al["x"], al["y"]).distance_to(tgt) < R * 0.85:
 						thr = false
-	return [m.x, m.y, thr, tgt.x, tgt.y]
+	return [m.x, m.y, thr, tgt.x, tgt.y, bat]
 
 
 static func team_inputs(s: Dictionary, player_level: int) -> Array:
@@ -241,7 +304,7 @@ static func play_symmetric(seed_in: int, p: Dictionary) -> Dictionary:
 
 
 static func digest(s: Dictionary) -> String:
-	var parts := [s["t"], s["over"], s["winner"], s["hits"][0], s["hits"][1], s["friendly"][0], s["friendly"][1], s["rng"], s["balloons"].size()]
+	var parts := [s["pts"][0], s["pts"][1], s["bats"][0], s["bats"][1], s["t"], s["over"], s["winner"], s["hits"][0], s["hits"][1], s["friendly"][0], s["friendly"][1], s["rng"], s["balloons"].size()]
 	for a in s["agents"]:
 		parts.append_array([int(a["x"] * 1000.0), int(a["y"] * 1000.0), int(a["wet"] * 1000.0), a["ammo"], a["alive"], a["cd"]])
 	var strs := PackedStringArray()

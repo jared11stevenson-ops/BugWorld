@@ -1,0 +1,206 @@
+{
+ "id": "puddlespike-765330820",
+ "seed": 765330820,
+ "name": "Puddlespike",
+ "inspirations": [
+  "water balloon fights",
+  "volleyball"
+ ],
+ "facts": {
+  "water balloon fights": "A water balloon bursts on impact when its thin rubber skin is stretched past its limit.",
+  "volleyball": "Volleyball was invented in 1895 by William G. Morgan in Holyoke, Massachusetts."
+ },
+ "law": "gust",
+ "law_text": "The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+ "palette": [
+  "#262812",
+  "#3f4c26",
+  "#6f63db",
+  "#88f23c",
+  "#acf29d"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Soak Compact",
+   "The Net Compact",
+   "The Sandline Covenant"
+  ],
+  "towns": [
+   "Puddlehollow",
+   "Spikeford",
+   "Soakfall",
+   "Netfall",
+   "Sandlinespire",
+   "Balloonward"
+  ],
+  "currency": "marks",
+  "potion": "salve",
+  "motifs": [
+   "puddle",
+   "spike",
+   "soak",
+   "net",
+   "sandline",
+   "balloon"
+  ]
+ },
+ "mood": "bright",
+ "elements": [
+  "projectile_arc",
+  "burst",
+  "soak",
+  "refill",
+  "friendly_fire",
+  "team",
+  "net",
+  "rally",
+  "touch_limit",
+  "serve",
+  "bounce",
+  "wind"
+ ],
+ "laws": [
+  {
+   "element": "projectile_arc",
+   "text": "Anything thrown flies in an arc and lands where gravity decides, not where it was aimed."
+  },
+  {
+   "element": "burst",
+   "text": "Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "element": "soak",
+   "text": "Water clings. Whatever is soaked grows heavy and slow, and dries only with time."
+  },
+  {
+   "element": "refill",
+   "text": "Ammunition is never free: it must be fetched from a source and carried."
+  },
+  {
+   "element": "friendly_fire",
+   "text": "Splash does not know friend from foe."
+  },
+  {
+   "element": "team",
+   "text": "Bands of allies act together; their rivals are other bands."
+  },
+  {
+   "element": "net",
+   "text": "A net divides the world in two: bodies cannot cross it, but flying things can go over."
+  },
+  {
+   "element": "rally",
+   "text": "A shared object passes back and forth until someone fails to return it."
+  },
+  {
+   "element": "touch_limit",
+   "text": "Each side may handle the shared object only a few times before it must cross."
+  },
+  {
+   "element": "serve",
+   "text": "Every exchange begins with a deliberate launch by one side."
+  },
+  {
+   "element": "bounce",
+   "text": "Hard surfaces return what strikes them, a little livelier than it came."
+  },
+  {
+   "element": "wind",
+   "text": "The air has moods: gusts push light things off their course."
+  }
+ ],
+ "physics": {
+  "gravity_scale": 1.0,
+  "wind": 0.03,
+  "slick": 0,
+  "burst_radius": 1.0,
+  "soak_weight": 1.0,
+  "restitution_scale": 1.0
+ },
+ "siblings": [
+  {
+   "genre": "splash",
+   "label": "net across the arena + bat balloons back + hold the fountain",
+   "premise": "In Puddlespike, The Soak Compact play a top-down water-balloon skirmish: net across the arena + bat balloons back + hold the fountain. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "genre": "volley",
+   "label": "water balloon + porous net + soak scoring",
+   "premise": "In Puddlespike, The Soak Compact play a net-and-rally sport: water balloon + porous net + soak scoring. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "genre": "concept_campaign",
+   "label": "strategy duel",
+   "premise": "In Puddlespike, The Soak Compact play a duel of discovered rules: strategy duel. Laws honoured: Soft things burst on impact and release everything they hold over an area.; Anything thrown flies in an arc and lands where gravity decides, not where it was aimed."
+  }
+ ],
+ "lore": {
+  "prologue": [
+   "Puddlespike was not made; it was assembled from remembered truths. \"A water balloon bursts on impact when its thin rubber skin is stretched past its limit.\" \"Volleyball was invented in 1895 by William G. Morgan in Holyoke, Massachusetts.\"",
+   "From the meeting of these two truths, neither ever meant for the other, the law of Puddlespike was born. The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+   "Day 26: Fenn Stone of The Net Compact fell at Soakfall to Elda Stone of The Soak Compact. It set off 1 later events. That was how the gust first showed itself to the living."
+  ],
+  "factions": {
+   "The Soak Compact": {
+    "trait": "ruthless",
+    "blurb": "The Soak Compact are ruthless: they have taken more lives than any rival. In the canon history they slew 19, lost 17, and still field 5 souls with 8 marks."
+   },
+   "The Net Compact": {
+    "trait": "prosperous",
+    "blurb": "The Net Compact are prosperous: they hold the fattest purses. In the canon history they slew 8, lost 11, and still field 6 souls with 25 marks."
+   },
+   "The Sandline Covenant": {
+    "trait": "beleaguered",
+    "blurb": "The Sandline Covenant are beleaguered: they have buried the most of their own. In the canon history they slew 13, lost 13, and still field 8 souls with 39 marks."
+   }
+  },
+  "towns": {
+   "Puddlehollow": "Puddlehollow: 3 souls live where sandline meets puddle; the wind is felt here first.",
+   "Spikeford": "Spikeford: 2 souls live where spike meets net; the wind is felt here first.",
+   "Soakfall": "Soakfall: 2 souls live where sandline meets balloon; the wind is felt here first.",
+   "Netfall": "Netfall: 2 souls live where puddle meets sandline; the wind is felt here first.",
+   "Sandlinespire": "Sandlinespire: 4 souls live where net meets puddle; the wind is felt here first.",
+   "Balloonward": "Balloonward: 6 souls live where puddle meets sandline; the wind is felt here first."
+  },
+  "rivals": [
+   {
+    "faction": "The Soak Compact",
+    "trait": "ruthless",
+    "mod": {
+     "aggr": 0.15,
+     "err": -10.0,
+     "dodge": 0.0
+    },
+    "blurb": "The Soak Compact are ruthless: they have taken more lives than any rival. In the canon history they slew 19, lost 17, and still field 5 souls with 8 marks."
+   },
+   {
+    "faction": "The Net Compact",
+    "trait": "prosperous",
+    "mod": {
+     "aggr": 0.0,
+     "err": 0.0,
+     "dodge": 0.15
+    },
+    "blurb": "The Net Compact are prosperous: they hold the fattest purses. In the canon history they slew 8, lost 11, and still field 6 souls with 25 marks."
+   },
+   {
+    "faction": "The Sandline Covenant",
+    "trait": "beleaguered",
+    "mod": {
+     "aggr": -0.1,
+     "err": 15.0,
+     "dodge": 0.0
+    },
+    "blurb": "The Sandline Covenant are beleaguered: they have buried the most of their own. In the canon history they slew 13, lost 13, and still field 8 souls with 39 marks."
+   }
+  ],
+  "epilogue_win": "The wind of Puddlespike did not end, but it learned your name. Those who survive will tell it as a story of lull.",
+  "epilogue_lose": "The wind of Puddlespike closes over the place where you stood. Perhaps the next keeper will remember what you could not.",
+  "traits": {
+   "0": "ruthless",
+   "2": "beleaguered",
+   "1": "prosperous"
+  }
+ },
+ "game_title": "Puddlespike: Splash"
+}

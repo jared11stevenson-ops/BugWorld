@@ -13,7 +13,7 @@ func _init() -> void:
 		var p: Dictionary = V.defaults()
 		for k in item["p"]:
 			p[k] = item["p"][k]
-		for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks"]:
+		for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks", "ball", "net", "score"]:
 			p[k] = int(p[k])
 		var ai := [int(p["ai_lag"]), float(p["ai_err"]), float(p["ai_aggr"])]
 		var base: int = int(item.get("seed_base", 1000))

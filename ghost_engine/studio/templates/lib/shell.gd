@@ -202,12 +202,47 @@ func title_screen(title: String, subtitle: String, entries: Array) -> VBoxContai
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	for e in entries:
 		button(v, e[0], e[1])
+	if not U.get("laws", []).is_empty():
+		button(v, "Codex", codex)
 	button(v, "Volume: %d%%" % int(float(save["volume"]) * 100), func():
 		save["volume"] = 0.2 if float(save["volume"]) > 0.9 else float(save["volume"]) + 0.2
 		_apply_volume()
 		write_save()
 		start())
 	return v
+
+
+# Rival faction for round r: its trait from the universe lore shifts the AI (small offsets, applied on top of the tuned rival).
+func rival(r: int) -> Dictionary:
+	var rs: Array = U.get("lore", {}).get("rivals", [])
+	if rs.is_empty():
+		return {"faction": "the rival", "trait": "steadfast", "mod": {"aggr": 0.0, "err": 0.0, "dodge": 0.0}}
+	return rs[(r + 1) % rs.size()]
+
+
+func rival_line(r: int) -> String:
+	var rv := rival(r)
+	return "Rival: %s (%s)" % [rv["faction"], rv["trait"]]
+
+
+# The codex: laws, physics and facts shared by every game of this universe, its factions, and the sibling games.
+func codex() -> void:
+	var t := "THE LAWS OF %s\n" % String(U.get("name", "this world")).to_upper()
+	for l in U.get("laws", []):
+		t += "• " + String(l["text"]) + "\n"
+	var ph: Dictionary = U.get("physics", {})
+	if not ph.is_empty():
+		t += "\nPHYSICS (identical in every game of this universe)\ngravity x%.2f   wind %.3f   slick %s   burst radius x%.2f   restitution x%.2f\n" % [float(ph.get("gravity_scale", 1.0)), float(ph.get("wind", 0.0)), "yes" if int(ph.get("slick", 0)) == 1 else "no", float(ph.get("burst_radius", 1.0)), float(ph.get("restitution_scale", 1.0))]
+	t += "\nTHE REAL WORLD BEHIND IT\n"
+	for k in U.get("facts", {}):
+		t += "• %s — %s\n" % [k, U["facts"][k]]
+	t += "\nFACTIONS\n"
+	for rv in U.get("lore", {}).get("rivals", []):
+		t += "• %s (%s): %s\n" % [rv["faction"], rv["trait"], rv["blurb"]]
+	t += "\nOTHER GAMES FROM THIS UNIVERSE\n"
+	for sb in U.get("siblings", []):
+		t += "• %s\n" % sb["premise"]
+	text_screen("Codex", t, "Back", start)
 
 
 func text_screen(title: String, body: String, next_label: String, next: Callable) -> void:

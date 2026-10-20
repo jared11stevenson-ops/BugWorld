@@ -36,7 +36,7 @@ def assemble(project_dir, game_id, title, universe, extra_files, libs, template_
         f.write(f'config_version=5\n\n[application]\n\nconfig/name="{title}"\nrun/main_scene="res://main.tscn"\nconfig/features=PackedStringArray("4.4")\n\n'
                 '[rendering]\n\nrenderer/rendering_method="gl_compatibility"\nrenderer/rendering_method.mobile="gl_compatibility"\n\n[debug]\n\ngdscript/warnings/integer_division=0\ngdscript/warnings/unused_parameter=0\ngdscript/warnings/shadowed_variable=0\n\n'
                 '[display]\n\nwindow/size/viewport_width=1100\nwindow/size/viewport_height=680\nwindow/stretch/mode="canvas_items"\n')
-    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon", "mood")}
+    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon", "mood", "elements", "laws", "physics", "siblings") if k in universe}
     uj["lore"] = universe.get("lore", {})
     uj["game_title"] = title
     json.dump(uj, open(os.path.join(project_dir, "data", "universe.json"), "w"), indent=1)

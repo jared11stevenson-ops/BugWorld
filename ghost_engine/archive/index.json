@@ -64,5 +64,23 @@
    "volley",
    "steward"
   ]
+ },
+ {
+  "cycle": "cycle_005",
+  "universe": "Puddlespike",
+  "released": [
+   "splash",
+   "volley",
+   "concept_campaign"
+  ],
+  "inspirations": [
+   "water balloon fights",
+   "volleyball"
+  ],
+  "genres": [
+   "splash",
+   "volley",
+   "concept_campaign"
+  ]
  }
 ]

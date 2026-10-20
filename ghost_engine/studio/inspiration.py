@@ -90,12 +90,23 @@ def pick(seed=None, prompt=None, k=3):
     chosen = []
     if prompt:
         words = [w for w in re.findall(r"[a-z]+", prompt.lower()) if len(w) >= 4]
-        def matches(b, w):
-            return w in b[0].lower() or any(m.startswith(w) or w.startswith(m) for m in list(b[3]) + _kw(b) if len(m) >= 4)
-        for w in dict.fromkeys(words):                      # one inspiration per prompt word, distinct fields, random among matches
-            cand = [b for b in BANK if matches(b, w) and b not in chosen and all(b[1] != c[1] for c in chosen)]
-            if cand and len(chosen) < k:
-                chosen.append(rnd.choice(cand))
+        def score(b, w):
+            norm = b[0].lower().replace(" ", "").replace("'", "").replace("-", "")
+            if w in norm:
+                return 3                                           # the word is (part of) the idea's own name
+            if w in [k for k in _kw(b)]:
+                return 2                                           # exact keyword
+            if any(m.startswith(w) or w.startswith(m) for m in list(b[3]) + _kw(b) if len(m) >= 4):
+                return 1                                           # loose stem match
+            return 0
+        for w in dict.fromkeys(words):                      # one inspiration per prompt word: the best-scoring entries, distinct fields
+            cand = [(score(b, w), b) for b in BANK if b not in chosen and all(b[1] != c[1] for c in chosen)]
+            best = max((s for s, _ in cand), default=0)
+            top = [b for s, b in cand if s == best and s > 0]
+            if top and len(chosen) < k:
+                chosen.append(rnd.choice(top))
+    if prompt and len(chosen) >= 2:           # the user named the ideas to fuse: use exactly those, no random filler
+        return chosen, seed
     pool = [b for b in BANK if b not in chosen]
     rnd.shuffle(pool)
     for b in pool:

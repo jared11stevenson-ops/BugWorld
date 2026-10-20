@@ -1,0 +1,742 @@
+{
+ "cycle": "cycle_005",
+ "universe": "puddlespike-765330820",
+ "seed": 765330820,
+ "prompt": "waterballoon fights / volleyball world",
+ "genres": [
+  "splash",
+  "volley",
+  "concept_campaign"
+ ],
+ "genre_scores": {
+  "splash": 0.8691,
+  "volley": 0.8476,
+  "concept_campaign": 0.4093
+ },
+ "games": [
+  {
+   "id": "splash",
+   "title": "Puddlespike: Splash",
+   "genre": "top-down water-balloon battle",
+   "params": {
+    "slick": 0,
+    "wind": 0.039,
+    "barrier": 1,
+    "ret": 1,
+    "win": 1,
+    "splash_dmg": 45.0,
+    "splash_r": 54.0,
+    "throw_cd": 35,
+    "refill_ticks": 40,
+    "max_ammo": 3,
+    "team_size": 1,
+    "max_ticks": 2400,
+    "range": 320.0,
+    "speed": 3.0,
+    "en_lead": 0.1,
+    "en_err": 50.0,
+    "en_aggr": 0.7,
+    "en_dodge": 0.5,
+    "ally_level": 0
+   },
+   "tuning": {
+    "params": {
+     "slick": 0,
+     "wind": 0.039,
+     "barrier": 1,
+     "ret": 1,
+     "win": 1,
+     "splash_dmg": 45.0,
+     "splash_r": 54.0,
+     "throw_cd": 35,
+     "refill_ticks": 40,
+     "max_ammo": 3,
+     "team_size": 1,
+     "max_ticks": 2400,
+     "range": 320.0,
+     "speed": 3.0,
+     "en_lead": 0.1,
+     "en_err": 50.0,
+     "en_aggr": 0.7,
+     "en_dodge": 0.5,
+     "ally_level": 0
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 1.0,
+      "skilled": 0.75,
+      "novice": 0.09375,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 1.0,
+      "skilled": 0.8125,
+      "novice": 0.09375,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 2,
+      "best_fitness": 1.0,
+      "skilled": 0.84375,
+      "novice": 0.07291666666666667,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 3,
+      "best_fitness": 1.0,
+      "skilled": 0.75,
+      "novice": 0.0625,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 4,
+      "best_fitness": 1.0,
+      "skilled": 0.8125,
+      "novice": 0.09375,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 5,
+      "best_fitness": 1.0,
+      "skilled": 0.8125,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 6,
+      "best_fitness": 1.0,
+      "skilled": 0.84375,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 7,
+      "best_fitness": 1.0,
+      "skilled": 0.84375,
+      "novice": 0.015625,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 8,
+      "best_fitness": 1.0,
+      "skilled": 0.875,
+      "novice": 0.010416666666666666,
+      "evals_of_best": 3
+     }
+    ],
+    "at_bounds": {
+     "team_size": "lo",
+     "ally_level": "lo"
+    },
+    "bounds_used": {
+     "team_size": [
+      1,
+      3,
+      1
+     ],
+     "splash_r": [
+      50.0,
+      80.0,
+      4.0
+     ],
+     "splash_dmg": [
+      30.0,
+      60.0,
+      5.0
+     ],
+     "speed": [
+      2.6,
+      3.8,
+      0.2
+     ],
+     "en_lead": [
+      0.0,
+      0.6,
+      0.1
+     ],
+     "en_err": [
+      10.0,
+      90.0,
+      10.0
+     ],
+     "en_aggr": [
+      0.3,
+      1.0,
+      0.05
+     ],
+     "en_dodge": [
+      0.0,
+      1.0,
+      0.1
+     ],
+     "ally_level": [
+      0,
+      2,
+      1
+     ],
+     "throw_cd": [
+      20,
+      45,
+      5
+     ]
+    },
+    "in_band": true,
+    "default_params": {
+     "slick": 0,
+     "wind": 0.039,
+     "barrier": 1,
+     "ret": 1,
+     "win": 1,
+     "splash_dmg": 45.0,
+     "splash_r": 62.0,
+     "throw_cd": 30,
+     "refill_ticks": 40,
+     "max_ammo": 3,
+     "team_size": 2,
+     "max_ticks": 2400,
+     "range": 320.0,
+     "speed": 3.4,
+     "en_lead": 0.5,
+     "en_err": 40.0,
+     "en_aggr": 0.65,
+     "en_dodge": 0.5,
+     "ally_level": 1
+    },
+    "holdout_best": {
+     "average": 0.4375,
+     "novice": 0.03125,
+     "side_bias": 0.1,
+     "skilled": 0.8125,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.8125,
+     "ticks": 2326.4375
+    },
+    "holdout_default": {
+     "average": 0.46875,
+     "novice": 0.0,
+     "side_bias": 0.133333333333333,
+     "skilled": 0.8125,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.8125,
+     "ticks": 1885.5625
+    },
+    "start_fitness": 1.0,
+    "final_fitness": 1.0,
+    "evaluations": 108,
+    "retuned": false
+   },
+   "idea": {
+    "family": "splash",
+    "label": "net across the arena + bat balloons back + hold the fountain",
+    "mods": {
+     "barrier": 1,
+     "ret": 1,
+     "win": 1
+    },
+    "premise": "In Puddlespike, The Soak Compact play a top-down water-balloon skirmish: net across the arena + bat balloons back + hold the fountain. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area.",
+    "score": 0.8691,
+    "fun": 0.934,
+    "depth": 0.804,
+    "novelty": 1.0,
+    "fit": 0.75,
+    "coverage": {
+     "water balloon fights": 1.0,
+     "volleyball": 0.67
+    },
+    "revolution": 0.978,
+    "simulated": true
+   }
+  },
+  {
+   "id": "volley",
+   "title": "Puddlespike: Beach Volley",
+   "genre": "3D sports tournament",
+   "params": {
+    "wind": 0.03,
+    "slick": 0,
+    "gravity": 0.38,
+    "restitution": 0.95,
+    "burst_r": 130.0,
+    "ball": 1,
+    "net": 1,
+    "score": 1,
+    "jump": 11.5,
+    "points": 6,
+    "ai_lag": 11,
+    "ai_err": 45.0,
+    "ai_aggr": 0.55,
+    "serve_pause": 40,
+    "max_ticks": 14400,
+    "move_acc": 1.5
+   },
+   "tuning": {
+    "params": {
+     "wind": 0.03,
+     "slick": 0,
+     "gravity": 0.38,
+     "restitution": 0.95,
+     "burst_r": 130.0,
+     "ball": 1,
+     "net": 1,
+     "score": 1,
+     "jump": 11.5,
+     "points": 6,
+     "ai_lag": 11,
+     "ai_err": 45.0,
+     "ai_aggr": 0.55,
+     "serve_pause": 40,
+     "max_ticks": 14400,
+     "move_acc": 1.5
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 1.0,
+      "skilled": 0.916666666666667,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 0.9990433201058202,
+      "skilled": 0.916666666666667,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 2,
+      "best_fitness": 0.9930130070546737,
+      "skilled": 0.8750000000000003,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 3,
+      "best_fitness": 0.9977638888888889,
+      "skilled": 0.75,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 4,
+      "best_fitness": 1.0,
+      "skilled": 0.916666666666667,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 5,
+      "best_fitness": 0.9949728835978836,
+      "skilled": 0.854166666666667,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 6,
+      "best_fitness": 0.9882656625781626,
+      "skilled": 0.916666666666667,
+      "novice": 0.0625,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 7,
+      "best_fitness": 0.989642736892737,
+      "skilled": 0.902777777777778,
+      "novice": 0.06944444444444443,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 8,
+      "best_fitness": 0.977871799557365,
+      "skilled": 0.892857142857143,
+      "novice": 0.09523809523809526,
+      "evals_of_best": 7
+     }
+    ],
+    "at_bounds": {},
+    "bounds_used": {
+     "gravity": [
+      0.3,
+      0.6,
+      0.02
+     ],
+     "jump": [
+      9.0,
+      13.0,
+      0.5
+     ],
+     "restitution": [
+      0.85,
+      1.2,
+      0.05
+     ],
+     "ai_lag": [
+      2,
+      24,
+      1
+     ],
+     "ai_err": [
+      5.0,
+      100.0,
+      5.0
+     ],
+     "ai_aggr": [
+      0.2,
+      1.0,
+      0.05
+     ],
+     "points": [
+      5,
+      9,
+      1
+     ]
+    },
+    "in_band": true,
+    "default_params": {
+     "wind": 0.03,
+     "slick": 0,
+     "gravity": 0.42,
+     "restitution": 1.0,
+     "burst_r": 130.0,
+     "ball": 1,
+     "net": 1,
+     "score": 1,
+     "jump": 10.5,
+     "points": 7,
+     "ai_lag": 11,
+     "ai_err": 40.0,
+     "ai_aggr": 0.65,
+     "serve_pause": 40,
+     "max_ticks": 14400,
+     "move_acc": 1.5
+    },
+    "holdout_best": {
+     "average": 0.5,
+     "novice": 0.166666666666667,
+     "rally": 3.30376984126984,
+     "side_bias": 0.0416666666666666,
+     "skilled": 0.833333333333333,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.833333333333333,
+     "ticks": 1701.08333333333
+    },
+    "holdout_default": {
+     "average": 0.333333333333333,
+     "novice": 0.125,
+     "rally": 2.78993043993044,
+     "side_bias": 0.0833333333333333,
+     "skilled": 0.958333333333333,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.958333333333333,
+     "ticks": 2030.83333333333
+    },
+    "start_fitness": 1.0,
+    "final_fitness": 0.977871799557365,
+    "evaluations": 108,
+    "retuned": false
+   },
+   "idea": {
+    "family": "volley",
+    "label": "water balloon + porous net + soak scoring",
+    "mods": {
+     "ball": 1,
+     "net": 1,
+     "score": 1
+    },
+    "premise": "In Puddlespike, The Soak Compact play a net-and-rally sport: water balloon + porous net + soak scoring. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area.",
+    "score": 0.8476,
+    "fun": 0.911,
+    "depth": 1.0,
+    "novelty": 1.0,
+    "fit": 0.625,
+    "coverage": {
+     "water balloon fights": 0.5,
+     "volleyball": 1.0
+    },
+    "revolution": 0.938,
+    "simulated": true
+   }
+  },
+  {
+   "id": "concept_campaign",
+   "title": "Puddlespike: Trials",
+   "genre": "strategy duel campaign",
+   "evidence": [
+    {
+     "chapter": 1,
+     "source_id": "mu0094",
+     "proposer": "mutation",
+     "fitness": 0.9247863247863247,
+     "novelty_vs_seeds": 0.8947368421052632,
+     "live_actions": 3,
+     "n_actions": 3,
+     "interaction": 0.999999999625,
+     "leverage": 0.66,
+     "length": 6.833333333333333,
+     "flags": []
+    },
+    {
+     "chapter": 2,
+     "source_id": "mu0203",
+     "proposer": "mutation",
+     "fitness": 0.9577991452991452,
+     "novelty_vs_seeds": 0.8235294117647058,
+     "live_actions": 4,
+     "n_actions": 4,
+     "interaction": 0.8384804140760169,
+     "leverage": 0.3055555555555556,
+     "length": 10.041666666666666,
+     "flags": []
+    },
+    {
+     "chapter": 3,
+     "source_id": "gr0280",
+     "proposer": "grammar",
+     "fitness": 0.9658119658119657,
+     "novelty_vs_seeds": 0.7647058823529411,
+     "live_actions": 4,
+     "n_actions": 4,
+     "interaction": 0.9556047975222247,
+     "leverage": 0.21296296296296297,
+     "length": 14.03125,
+     "flags": []
+    }
+   ],
+   "discovery": {
+    "evaluations": 309,
+    "viable": 120,
+    "cells": 47
+   },
+   "idea": {
+    "family": "concept",
+    "label": "strategy duel",
+    "mods": {},
+    "premise": "In Puddlespike, The Soak Compact play a duel of discovered rules: strategy duel. Laws honoured: Soft things burst on impact and release everything they hold over an area.; Anything thrown flies in an arc and lands where gravity decides, not where it was aimed.",
+    "score": 0.4093,
+    "fun": 0.45,
+    "depth": 0.45,
+    "novelty": 0.15,
+    "fit": 0.542,
+    "coverage": {
+     "water balloon fights": 0.67,
+     "volleyball": 0.5
+    },
+    "revolution": 0.077,
+    "simulated": false
+   }
+  }
+ ],
+ "verification": {
+  "splash": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "deterministic_across_runs": true,
+    "difficulty_in_target_band": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "det_digest": "121df61a",
+     "deterministic": true,
+     "feedback_written": true,
+     "matches_played": 4,
+     "novice_wins_of_12": 2,
+     "ok": true,
+     "perf_step_us": 29.0586666666667,
+     "save_written": true,
+     "tournament_completed": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 112,
+     "title_colors": 149,
+     "w": 1100,
+     "ok": true
+    },
+    "det_digest": [
+     "121df61a",
+     "121df61a"
+    ],
+    "tuning_holdout": {
+     "average": 0.4375,
+     "novice": 0.03125,
+     "side_bias": 0.1,
+     "skilled": 0.8125,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.8125,
+     "ticks": 2326.4375
+    }
+   },
+   "released": true
+  },
+  "volley": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true,
+    "difficulty_in_target_band": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "feedback_written": true,
+     "matches_played": 3,
+     "novice_wins_of_10": 2,
+     "ok": true,
+     "perf_step_us": 21.9216666666667,
+     "save_written": true,
+     "tournament_completed": true,
+     "twin": {
+      "digest": "3e3529aa",
+      "left_level": 2,
+      "right": [
+       11,
+       60.0,
+       0.45
+      ],
+      "score": [
+       6,
+       0
+      ],
+      "seed": 76533082012,
+      "ticks": 824
+     }
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 513,
+     "title_colors": 150,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "ticks_match": true,
+     "score_match": true
+    },
+    "tuning_holdout": {
+     "average": 0.5,
+     "novice": 0.166666666666667,
+     "rally": 3.30376984126984,
+     "side_bias": 0.0416666666666666,
+     "skilled": 0.833333333333333,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.833333333333333,
+     "ticks": 1701.08333333333
+    }
+   },
+   "released": true
+  },
+  "concept_campaign": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "attempts": 3,
+     "audio_loaded": true,
+     "chapters_cleared": 3,
+     "feedback_written": true,
+     "matches": 9,
+     "ok": true,
+     "save_written": true,
+     "universe_loaded": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 118,
+     "title_colors": 127,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "sessions": 9,
+     "mismatches": 0
+    }
+   },
+   "released": true
+  }
+ },
+ "released": [
+  "splash",
+  "volley",
+  "concept_campaign"
+ ],
+ "timings_s": {
+  "1_inspiration": 0.0,
+  "2_universe": 28.3,
+  "2b_lore": 0.2,
+  "2c_idea_exploration": 47.1,
+  "3_build_splash": 334.4,
+  "3_build_volley": 123.3,
+  "3_build_concept_campaign": 27.2,
+  "6_verification": 9.8,
+  "7_archive": 0.0,
+  "total": 570.3,
+  "8_retrospective_and_reset": 0.0
+ },
+ "reset": {
+  "state_dir_removed": true,
+  "grammar_priors_cleared": true,
+  "knowledge_retained": true,
+  "no_universe_leak_in_knowledge": true,
+  "ok": true
+ },
+ "patches": [
+  {
+   "game": "volley",
+   "note": "selftest determinism fix: replay twin match from a clean state (a live _process frame could step the match before the twin snapshot); found when the python twin check failed on first verification",
+   "checks_after": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": false,
+    "difficulty_in_target_band": true
+   }
+  },
+  {
+   "game": "volley",
+   "note": "selftest/twin fix: round_ai values rounded to 4 decimals (0.55-0.10 = 0.45000000000000007 was printed as 0.45 in the twin record, so the python replay used a different AI); found when the twin check failed on first verification",
+   "checks_after": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true,
+    "difficulty_in_target_band": true
+   }
+  },
+  {
+   "game": "splash",
+   "note": "visual: draw the net across the arena when the barrier module is active (found in screenshot review: net existed in the simulation but was invisible)",
+   "checks_after": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "deterministic_across_runs": true,
+    "difficulty_in_target_band": true
+   }
+  }
+ ]
+}

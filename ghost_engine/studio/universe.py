@@ -93,7 +93,18 @@ def make_universe(inspirations, seed):
             if nm not in towns:
                 break
         towns.append(nm)
-    uni = {"id": f"{uname.lower()}-{seed}", "seed": seed, "name": uname, "inspirations": [b[0] for b in inspirations],
+    from . import elements as EL
+    elements, sources = [], {}
+    for b in inspirations:
+        for e in EL.entry_elements(b):
+            sources.setdefault(e, []).append(b[0])
+            if e not in elements:
+                elements.append(e)
+    law_element = {"gust": "wind", "slick": "slick", "contagion": "contagion", "purge": "purge", "pulse": "pulse", "wells": "wells", "drift": "drift"}.get(law)
+    if law_element and law_element not in elements:
+        elements.append(law_element); sources[law_element] = ["the law of the universe"]
+    uni = {"id": f"{uname.lower()}-{seed}", "elements": elements, "element_sources": sources, "physics": EL.universe_physics(elements),
+           "laws": [{"element": e, "text": EL.ELEMENTS[e]["law"]} for e in elements], "seed": seed, "name": uname, "inspirations": [b[0] for b in inspirations],
            "facts": {b[0]: b[4] for b in inspirations}, "fields": [b[1] for b in inspirations], "tags": tags, "law": law,
            "law_text": LAW_TEXT[law], "palette": pal,
            "mood": {"gust": "bright", "slick": "bright", "contagion": "dread", "purge": "tense", "wells": "tense", "pulse": "calm", "drift": "calm"}[law],

@@ -13,7 +13,7 @@ func _init() -> void:
 		var p: Dictionary = S.defaults()
 		for k in item["p"]:
 			p[k] = item["p"][k]
-		for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level"]:
+		for k in ["slick", "throw_cd", "refill_ticks", "max_ammo", "team_size", "max_ticks", "ally_level", "barrier", "ret", "win", "king_goal"]:
 			p[k] = int(p[k])
 		var base: int = int(item.get("seed_base", 1000))
 		var w := [0, 0, 0]

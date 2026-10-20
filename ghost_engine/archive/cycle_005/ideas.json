@@ -1,0 +1,857 @@
+{
+ "universe": "Puddlespike",
+ "elements": [
+  "projectile_arc",
+  "burst",
+  "soak",
+  "refill",
+  "friendly_fire",
+  "team",
+  "net",
+  "rally",
+  "touch_limit",
+  "serve",
+  "bounce",
+  "wind"
+ ],
+ "physics": {
+  "gravity_scale": 1.0,
+  "wind": 0.03,
+  "slick": 0,
+  "burst_radius": 1.0,
+  "soak_weight": 1.0,
+  "restitution_scale": 1.0
+ },
+ "weights": {
+  "fun": 0.28,
+  "depth": 0.14,
+  "novelty": 0.24,
+  "fit": 0.34
+ },
+ "chosen": [
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 1,
+    "ret": 1,
+    "win": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "friendly_fire",
+    "net",
+    "projectile_arc",
+    "rally",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "net across the arena + bat balloons back + hold the fountain",
+   "sim": {
+    "average": 0.53125,
+    "novice": 0.03125,
+    "side_bias": 0.1,
+    "skilled": 0.59375,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.59375,
+    "ticks": 1816.75
+   },
+   "depth": 0.804,
+   "fun": 0.934,
+   "simulated": true,
+   "fit": 0.75,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.67
+   },
+   "novelty": 1.0,
+   "score": 0.8691,
+   "revolution": 0.978,
+   "premise": "In Puddlespike, The Soak Compact play a top-down water-balloon skirmish: net across the arena + bat balloons back + hold the fountain. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 1,
+    "net": 1,
+    "score": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit",
+    "wind"
+   ],
+   "label": "water balloon + porous net + soak scoring",
+   "sim": {
+    "average": 0.375,
+    "novice": 0.208333333333333,
+    "rally": 2.91453962703963,
+    "side_bias": 0.0416666666666667,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 2048.375
+   },
+   "depth": 1.0,
+   "fun": 0.911,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 0.5,
+    "volleyball": 1.0
+   },
+   "novelty": 1.0,
+   "score": 0.8476,
+   "revolution": 0.938,
+   "premise": "In Puddlespike, The Soak Compact play a net-and-rally sport: water balloon + porous net + soak scoring. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "family": "concept",
+   "genre": "concept_campaign",
+   "mods": {},
+   "elements": [
+    "burst",
+    "projectile_arc",
+    "rally",
+    "soak",
+    "team",
+    "touch_limit"
+   ],
+   "label": "strategy duel",
+   "fun": 0.45,
+   "depth": 0.45,
+   "simulated": false,
+   "fit": 0.542,
+   "coverage": {
+    "water balloon fights": 0.67,
+    "volleyball": 0.5
+   },
+   "novelty": 0.15,
+   "score": 0.4093,
+   "revolution": 0.077,
+   "premise": "In Puddlespike, The Soak Compact play a duel of discovered rules: strategy duel. Laws honoured: Soft things burst on impact and release everything they hold over an area.; Anything thrown flies in an arc and lands where gravity decides, not where it was aimed."
+  }
+ ],
+ "ranked": [
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 1,
+    "ret": 1,
+    "win": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "friendly_fire",
+    "net",
+    "projectile_arc",
+    "rally",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "net across the arena + bat balloons back + hold the fountain",
+   "sim": {
+    "average": 0.53125,
+    "novice": 0.03125,
+    "side_bias": 0.1,
+    "skilled": 0.59375,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.59375,
+    "ticks": 1816.75
+   },
+   "depth": 0.804,
+   "fun": 0.934,
+   "simulated": true,
+   "fit": 0.75,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.67
+   },
+   "novelty": 1.0,
+   "score": 0.8691,
+   "revolution": 0.978,
+   "premise": "In Puddlespike, The Soak Compact play a top-down water-balloon skirmish: net across the arena + bat balloons back + hold the fountain. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 1,
+    "net": 1,
+    "score": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit",
+    "wind"
+   ],
+   "label": "water balloon + porous net + soak scoring",
+   "sim": {
+    "average": 0.375,
+    "novice": 0.208333333333333,
+    "rally": 2.91453962703963,
+    "side_bias": 0.0416666666666667,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 2048.375
+   },
+   "depth": 1.0,
+   "fun": 0.911,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 0.5,
+    "volleyball": 1.0
+   },
+   "novelty": 1.0,
+   "score": 0.8476,
+   "revolution": 0.938,
+   "premise": "In Puddlespike, The Soak Compact play a net-and-rally sport: water balloon + porous net + soak scoring. Laws honoured: Hard surfaces return what strikes them, a little livelier than it came.; Soft things burst on impact and release everything they hold over an area."
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 1,
+    "net": 1,
+    "score": 0
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit",
+    "wind"
+   ],
+   "label": "water balloon + porous net + rally scoring",
+   "sim": {
+    "average": 0.333333333333333,
+    "novice": 0.0833333333333333,
+    "rally": 2.88821063196063,
+    "side_bias": 0.0416666666666667,
+    "skilled": 0.958333333333333,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.958333333333333,
+    "ticks": 2371.54166666667
+   },
+   "depth": 1.0,
+   "fun": 0.971,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 0.5,
+    "volleyball": 1.0
+   },
+   "novelty": 0.717,
+   "score": 0.7965,
+   "revolution": 0.672
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 0,
+    "ret": 1,
+    "win": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "friendly_fire",
+    "projectile_arc",
+    "rally",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "open arena + bat balloons back + hold the fountain",
+   "sim": {
+    "average": 0.53125,
+    "novice": 0.0625,
+    "side_bias": 0.0666666666666667,
+    "skilled": 0.71875,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.71875,
+    "ticks": 1680.03125
+   },
+   "depth": 0.938,
+   "fun": 1.0,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.5
+   },
+   "novelty": 0.717,
+   "score": 0.7959,
+   "revolution": 0.644
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 1,
+    "net": 0,
+    "score": 1
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit"
+   ],
+   "label": "water balloon + solid net + soak scoring",
+   "sim": {
+    "average": 0.416666666666667,
+    "novice": 0.25,
+    "rally": 2.83190836940837,
+    "side_bias": 0.0416666666666667,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 1815.08333333333
+   },
+   "depth": 1.0,
+   "fun": 0.888,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 0.5,
+    "volleyball": 1.0
+   },
+   "novelty": 0.717,
+   "score": 0.7732,
+   "revolution": 0.672
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 1,
+    "ret": 1,
+    "win": 0
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "friendly_fire",
+    "net",
+    "projectile_arc",
+    "rally",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "net across the arena + bat balloons back + elimination",
+   "sim": {
+    "average": 0.6875,
+    "novice": 0.28125,
+    "side_bias": 0.0666666666666667,
+    "skilled": 0.78125,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.78125,
+    "ticks": 2342.625
+   },
+   "depth": 0.714,
+   "fun": 0.867,
+   "simulated": true,
+   "fit": 0.75,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.67
+   },
+   "novelty": 0.717,
+   "score": 0.7698,
+   "revolution": 0.653
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 0,
+    "net": 1,
+    "score": 1
+   },
+   "elements": [
+    "bounce",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit",
+    "wind"
+   ],
+   "label": "rubber + porous net + soak scoring",
+   "sim": {
+    "average": 0.5,
+    "novice": 0.0833333333333333,
+    "rally": 3.05909171846672,
+    "side_bias": 0.0,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 2582.08333333333
+   },
+   "depth": 1.0,
+   "fun": 0.969,
+   "simulated": true,
+   "fit": 0.5,
+   "coverage": {
+    "water balloon fights": 0.33,
+    "volleyball": 1.0
+   },
+   "novelty": 0.717,
+   "score": 0.7534,
+   "revolution": 0.538
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 1,
+    "ret": 0,
+    "win": 1
+   },
+   "elements": [
+    "burst",
+    "friendly_fire",
+    "net",
+    "projectile_arc",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "net across the arena + no returns + hold the fountain",
+   "sim": {
+    "average": 0.46875,
+    "novice": 0.1875,
+    "side_bias": 0.166666666666667,
+    "skilled": 0.9375,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.9375,
+    "ticks": 1601.3125
+   },
+   "depth": 1.0,
+   "fun": 0.919,
+   "simulated": true,
+   "fit": 0.5,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.33
+   },
+   "novelty": 0.717,
+   "score": 0.7394,
+   "revolution": 0.538
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 1,
+    "net": 0,
+    "score": 0
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit"
+   ],
+   "label": "water balloon + solid net + rally scoring",
+   "sim": {
+    "average": 0.291666666666667,
+    "novice": 0.0416666666666667,
+    "rally": 2.8240882959633,
+    "side_bias": 0.0833333333333333,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 2117.25
+   },
+   "depth": 1.0,
+   "fun": 0.896,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 0.5,
+    "volleyball": 1.0
+   },
+   "novelty": 0.433,
+   "score": 0.7073,
+   "revolution": 0.406
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 0,
+    "ret": 1,
+    "win": 0
+   },
+   "elements": [
+    "bounce",
+    "burst",
+    "friendly_fire",
+    "projectile_arc",
+    "rally",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "open arena + bat balloons back + elimination",
+   "sim": {
+    "average": 0.65625,
+    "novice": 0.25,
+    "side_bias": 0.0666666666666667,
+    "skilled": 0.90625,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.90625,
+    "ticks": 2298.15625
+   },
+   "depth": 0.938,
+   "fun": 0.918,
+   "simulated": true,
+   "fit": 0.625,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.5
+   },
+   "novelty": 0.433,
+   "score": 0.7048,
+   "revolution": 0.389
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 0,
+    "net": 0,
+    "score": 1
+   },
+   "elements": [
+    "bounce",
+    "net",
+    "rally",
+    "serve",
+    "soak",
+    "team",
+    "touch_limit"
+   ],
+   "label": "rubber + solid net + soak scoring",
+   "sim": {
+    "average": 0.625,
+    "novice": 0.0833333333333333,
+    "rally": 3.04125712250712,
+    "side_bias": 0.0833333333333334,
+    "skilled": 0.958333333333333,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.958333333333333,
+    "ticks": 2507.0
+   },
+   "depth": 1.0,
+   "fun": 0.995,
+   "simulated": true,
+   "fit": 0.5,
+   "coverage": {
+    "water balloon fights": 0.33,
+    "volleyball": 1.0
+   },
+   "novelty": 0.433,
+   "score": 0.6925,
+   "revolution": 0.325
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 0,
+    "net": 1,
+    "score": 0
+   },
+   "elements": [
+    "bounce",
+    "net",
+    "rally",
+    "serve",
+    "team",
+    "touch_limit",
+    "wind"
+   ],
+   "label": "rubber + porous net + rally scoring",
+   "sim": {
+    "average": 0.5,
+    "novice": 0.0833333333333333,
+    "rally": 3.05909171846672,
+    "side_bias": 0.0,
+    "skilled": 1.0,
+    "skilled_score": 0.0,
+    "skilled_stage1": 1.0,
+    "ticks": 2582.08333333333
+   },
+   "depth": 1.0,
+   "fun": 0.969,
+   "simulated": true,
+   "fit": 0.375,
+   "coverage": {
+    "water balloon fights": 0.17,
+    "volleyball": 1.0
+   },
+   "novelty": 0.433,
+   "score": 0.6427,
+   "revolution": 0.244
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 0,
+    "ret": 0,
+    "win": 1
+   },
+   "elements": [
+    "burst",
+    "friendly_fire",
+    "projectile_arc",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "open arena + no returns + hold the fountain",
+   "sim": {
+    "average": 0.5,
+    "novice": 0.15625,
+    "side_bias": 0.0666666666666667,
+    "skilled": 0.96875,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.96875,
+    "ticks": 1570.53125
+   },
+   "depth": 1.0,
+   "fun": 0.96,
+   "simulated": true,
+   "fit": 0.375,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.17
+   },
+   "novelty": 0.433,
+   "score": 0.6402,
+   "revolution": 0.244
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 1,
+    "ret": 0,
+    "win": 0
+   },
+   "elements": [
+    "burst",
+    "friendly_fire",
+    "net",
+    "projectile_arc",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "net across the arena + no returns + elimination",
+   "sim": {
+    "average": 0.53125,
+    "novice": 0.375,
+    "side_bias": 0.0666666666666667,
+    "skilled": 0.84375,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.84375,
+    "ticks": 2285.96875
+   },
+   "depth": 0.67,
+   "fun": 0.853,
+   "simulated": true,
+   "fit": 0.5,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.33
+   },
+   "novelty": 0.433,
+   "score": 0.6066,
+   "revolution": 0.253
+  },
+  {
+   "family": "volley",
+   "genre": "volley",
+   "mods": {
+    "ball": 0,
+    "net": 0,
+    "score": 0
+   },
+   "elements": [
+    "bounce",
+    "net",
+    "rally",
+    "serve",
+    "team",
+    "touch_limit"
+   ],
+   "label": "rubber + solid net + rally scoring",
+   "sim": {
+    "average": 0.625,
+    "novice": 0.0833333333333333,
+    "rally": 3.04125712250712,
+    "side_bias": 0.0833333333333334,
+    "skilled": 0.958333333333333,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.958333333333333,
+    "ticks": 2507.0
+   },
+   "depth": 1.0,
+   "fun": 0.995,
+   "simulated": true,
+   "fit": 0.375,
+   "coverage": {
+    "water balloon fights": 0.17,
+    "volleyball": 1.0
+   },
+   "novelty": 0.15,
+   "score": 0.5821,
+   "revolution": 0.084
+  },
+  {
+   "family": "splash",
+   "genre": "splash",
+   "mods": {
+    "barrier": 0,
+    "ret": 0,
+    "win": 0
+   },
+   "elements": [
+    "burst",
+    "friendly_fire",
+    "projectile_arc",
+    "refill",
+    "soak",
+    "team"
+   ],
+   "label": "open arena + no returns + elimination",
+   "sim": {
+    "average": 0.59375,
+    "novice": 0.3125,
+    "side_bias": 0.166666666666667,
+    "skilled": 0.96875,
+    "skilled_score": 0.0,
+    "skilled_stage1": 0.96875,
+    "ticks": 2219.84375
+   },
+   "depth": 0.938,
+   "fun": 0.848,
+   "simulated": true,
+   "fit": 0.375,
+   "coverage": {
+    "water balloon fights": 1.0,
+    "volleyball": 0.17
+   },
+   "novelty": 0.15,
+   "score": 0.5323,
+   "revolution": 0.081
+  },
+  {
+   "family": "concept",
+   "genre": "concept_campaign",
+   "mods": {},
+   "elements": [
+    "burst",
+    "projectile_arc",
+    "rally",
+    "soak",
+    "team",
+    "touch_limit"
+   ],
+   "label": "strategy duel",
+   "fun": 0.45,
+   "depth": 0.45,
+   "simulated": false,
+   "fit": 0.542,
+   "coverage": {
+    "water balloon fights": 0.67,
+    "volleyball": 0.5
+   },
+   "novelty": 0.15,
+   "score": 0.4093,
+   "revolution": 0.077,
+   "premise": "In Puddlespike, The Soak Compact play a duel of discovered rules: strategy duel. Laws honoured: Soft things burst on impact and release everything they hold over an area.; Anything thrown flies in an arc and lands where gravity decides, not where it was aimed."
+  },
+  {
+   "family": "steward",
+   "genre": "steward",
+   "mods": {},
+   "elements": [
+    "soak",
+    "wind"
+   ],
+   "label": "world simulation",
+   "fun": 0.45,
+   "depth": 0.45,
+   "simulated": false,
+   "fit": 0.042,
+   "coverage": {
+    "water balloon fights": 0.17,
+    "volleyball": 0.0
+   },
+   "novelty": 0.15,
+   "score": 0.2393,
+   "revolution": 0.006
+  },
+  {
+   "family": "arcade3d",
+   "genre": "arcade3d",
+   "mods": {
+    "law": 0
+   },
+   "elements": [],
+   "label": "law of the universe",
+   "fun": 0.45,
+   "depth": 0.45,
+   "simulated": false,
+   "fit": 0.0,
+   "coverage": {
+    "water balloon fights": 0.0,
+    "volleyball": 0.0
+   },
+   "novelty": 0.15,
+   "score": 0.225,
+   "revolution": 0.0
+  }
+ ]
+}

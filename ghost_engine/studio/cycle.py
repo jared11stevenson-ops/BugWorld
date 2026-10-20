@@ -1,6 +1,6 @@
 """One production cycle: inspiration -> universe -> 3 games -> verify -> archive -> retrospective -> RESET."""
 import hashlib, json, os, shutil, time
-from . import inspiration, universe as U, games as G, tuner, verify, retro, agents, lore, pool
+from . import inspiration, universe as U, games as G, tuner, verify, retro, agents, lore, ideas
 from ghost.foundry import grammar as FG
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,37 +62,47 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
     with stage("2b_lore"):
         uni["lore"] = lore.make_lore(uni)
         json.dump(uni, open(os.path.join(STATE, "universe.json"), "w"), indent=1)
-    genres, genre_scores = pool.choose(uni, know, seed)
-    log(f"  genres chosen: {genres}  (scores {genre_scores})")
+    with stage("2c_idea_exploration"):
+        exp = ideas.explore(uni, know, os.path.join(STATE, "lab"), quick=quick, log=log)
+    chosen = exp["chosen"]
+    genres = [c["genre"] for c in chosen]
+    genre_scores = {c["genre"]: c["score"] for c in chosen}
+    uni["siblings"] = [{"genre": c["genre"], "label": c["label"], "premise": c["premise"]} for c in chosen]
     games = []
     gdir = os.path.join(STATE, "games")
-    for gid in genres:
+    for idea in chosen:
+        gid = idea["genre"]
         with stage(f"3_build_{gid}"):
             proj = os.path.join(gdir, gid)
             if gid == "concept_campaign":
                 games.append(G.build_concept_campaign(uni, proj, STATE, know, gens=bud["g1_gens"], per_gen=24 if quick else 40, log=log))
+                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
             elif gid == "steward":
                 games.append(G.build_steward(uni, proj, target_pct=135))
+                games[-1]["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
             else:
                 kind, builder = {"arcade": ("arcade", G.build_arcade), "arcade3d": ("arcade", G.build_arcade3d), "cordon": ("cordon", G.build_cordon),
                                  "volley": ("volley", G.build_volley), "splash": ("splash", G.build_splash)}[gid]
-                base = tuner.SPECS[kind]["base"](uni["law"])
+                mods = idea["mods"]
+                base = tuner.SPECS[kind]["base"](uni["law"], uni["physics"], mods)
                 builder(uni, proj, base)
-                key = "cordon" if kind == "cordon" else f"{kind}:{uni['law']}"
+                key = ("cordon" if kind == "cordon" else f"{kind}:{uni['law']}") + (":" + ideas.mods_key(mods) if mods else "")
                 init = know["tuning_priors"].get(key)
                 override = know.get("tuner_bounds", {}).get(kind)
-                tuning = tuner.tune(proj, kind, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=init, bounds_override=override, log=log)
+                tuning = tuner.tune(proj, kind, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=init, bounds_override=override, log=log, physics=uni["physics"], mods=mods)
                 tuning["retuned"] = False
                 if not quick and not tuning["in_band"] and tuning["at_bounds"]:
                     # evolved behaviour: the search saturated at its bounds and missed the target band -> widen those bounds (within hard caps) and retune once
                     wide = tuner.widen(kind, {k: tuple(v) for k, v in tuning["bounds_used"].items()}, tuning["at_bounds"])
                     log(f"  tune[{kind}] saturated at {tuning['at_bounds']} and outside target band -> widening bounds and retuning")
-                    t2 = tuner.tune(proj, kind, uni["law"], seed + 1, pop=bud["tune_pop"], gens=bud["tune_gens"], init=tuning["params"], bounds_override=wide, log=log)
+                    t2 = tuner.tune(proj, kind, uni["law"], seed + 1, pop=bud["tune_pop"], gens=bud["tune_gens"], init=tuning["params"], bounds_override=wide, log=log, physics=uni["physics"], mods=mods)
                     t2["retuned"] = True
                     t2["first_attempt"] = {"holdout_best": tuning["holdout_best"], "at_bounds": tuning["at_bounds"], "in_band": False}
                     if t2["in_band"] or tuner.fitness(t2["holdout_best"]) > tuner.fitness(tuning["holdout_best"]):
                         tuning = t2
-                games.append(builder(uni, proj, tuning["params"], tuning))
+                g = builder(uni, proj, tuning["params"], tuning)
+                g["idea"] = {k: idea[k] for k in ("family", "label", "mods", "premise", "score", "fun", "depth", "novelty", "fit", "coverage", "revolution", "simulated")}
+                games.append(g)
     reports = {}
     with stage("6_verification"):
         for g in games:
@@ -113,6 +123,8 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
         manifest = {"cycle": cname, "universe": uni["id"], "seed": seed, "prompt": prompt, "genres": genres, "genre_scores": genre_scores, "games": slim, "verification": reports,
                     "released": [g["id"] for g in games if reports[g["id"]]["released"]], "timings_s": timings}
         json.dump(manifest, open(os.path.join(dest, "manifest.json"), "w"), indent=1)
+        json.dump({"universe": uni["name"], "elements": uni["elements"], "physics": uni["physics"], "weights": exp["weights"], "chosen": exp["chosen"], "ranked": exp["ranked"]},
+                  open(os.path.join(dest, "ideas.json"), "w"), indent=1)
         idx_p = os.path.join(ARCHIVE, "index.json")
         idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
         idx.append({"cycle": cname, "universe": uni["name"], "released": manifest["released"], "inspirations": uni["inspirations"], "genres": genres})
@@ -120,6 +132,7 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
     timings["total"] = round(time.time() - t_all, 1)
     with stage("8_retrospective_and_reset"):
         know_hash_before = hashlib.sha256(json.dumps(know, sort_keys=True).encode()).hexdigest()
+        ideas.remember(know, cname, exp["chosen"])
         retro.retrospective(know, cname, uni, games, reports, timings, genres)
         json.dump(know, open(KNOW, "w"), indent=1, sort_keys=True)
         reset_report = reset_state(uni)

@@ -273,9 +273,181 @@
     "final": 0.7234825486450555,
     "start": 0.6830296373342554
    }
+  },
+  {
+   "bottleneck": "3_build_splash",
+   "canon_richness": 0.7239257324963487,
+   "cycle": "cycle_005",
+   "failed_checks": [
+    "volley:python_twin_matches"
+   ],
+   "genres": [
+    "splash",
+    "volley",
+    "concept_campaign"
+   ],
+   "history_branches_explored": 72,
+   "law": "gust",
+   "median_branch_richness": 0.6758930580527396,
+   "patched_after_release": [
+    "volley",
+    "splash"
+   ],
+   "perf_step_us": {
+    "splash": 28.3406666666667,
+    "volley": 18.9608333333333
+   },
+   "released": [
+    "splash",
+    "volley",
+    "concept_campaign"
+   ],
+   "timings_s": {
+    "1_inspiration": 0.0,
+    "2_universe": 28.3,
+    "2b_lore": 0.2,
+    "2c_idea_exploration": 47.1,
+    "3_build_concept_campaign": 27.2,
+    "3_build_splash": 334.4,
+    "3_build_volley": 123.3,
+    "6_verification": 9.8,
+    "7_archive": 0.0,
+    "total": 570.3
+   },
+   "tuning": {
+    "splash": {
+     "final": 1.0,
+     "holdout_average": 0.4375,
+     "holdout_novice": 0.03125,
+     "holdout_skilled": 0.8125,
+     "in_band": true,
+     "retuned": false,
+     "start": 1.0
+    },
+    "volley": {
+     "final": 0.977871799557365,
+     "holdout_average": 0.5,
+     "holdout_novice": 0.166666666666667,
+     "holdout_skilled": 0.833333333333333,
+     "in_band": true,
+     "retuned": false,
+     "start": 1.0
+    }
+   },
+   "universe_search": {
+    "evaluations": 160,
+    "final": 0.7259396790527032,
+    "start": 0.7105445968471671
+   }
   }
  ],
  "human_feedback": {},
+ "idea_archive": [
+  {
+   "cycle": "cycle_001",
+   "family": "concept",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_001",
+   "family": "steward",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_001",
+   "family": "arcade",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_002",
+   "family": "concept",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_002",
+   "family": "steward",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_002",
+   "family": "arcade",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_003",
+   "family": "cordon",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_003",
+   "family": "arcade3d",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_003",
+   "family": "concept",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_004",
+   "family": "splash",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_004",
+   "family": "volley",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_004",
+   "family": "steward",
+   "label": "baseline",
+   "mods": {}
+  },
+  {
+   "cycle": "cycle_005",
+   "family": "splash",
+   "label": "net across the arena + bat balloons back + hold the fountain",
+   "mods": {
+    "barrier": 1,
+    "ret": 1,
+    "win": 1
+   },
+   "novelty": 1.0,
+   "score": 0.8691
+  },
+  {
+   "cycle": "cycle_005",
+   "family": "volley",
+   "label": "water balloon + porous net + soak scoring",
+   "mods": {
+    "ball": 1,
+    "net": 1,
+    "score": 1
+   },
+   "novelty": 1.0,
+   "score": 0.8476
+  },
+  {
+   "cycle": "cycle_005",
+   "family": "concept",
+   "label": "strategy duel",
+   "mods": {},
+   "novelty": 0.15,
+   "score": 0.4093
+  }
+ ],
  "improvements": [
   {
    "actions": [
@@ -308,6 +480,15 @@
     "'volley': first tuning missed the target band; retune with widened bounds succeeded"
    ],
    "cycle": "cycle_004"
+  },
+  {
+   "actions": [
+    "stored evolved world-rule priors (search improved fitness)",
+    "stored validated tuning parameters 'splash:gust:barrier1,ret1,win1' (held-out skill gap confirmed)",
+    "stored validated tuning parameters 'volley:gust:ball1,net1,score1' (held-out skill gap confirmed)",
+    "tuner for 'splash' saturated at {'team_size': 'lo', 'ally_level': 'lo'} -> bounds widened for future cycles"
+   ],
+   "cycle": "cycle_005"
   }
  ],
  "lessons": [
@@ -368,6 +549,30 @@
   {
    "cycle": "cycle_004",
    "note": "all checks passed; slowest stage was 3_build_volley (528.2s)"
+  },
+  {
+   "check": "python_twin_matches",
+   "cycle": "cycle_005",
+   "game": "volley",
+   "note": "gate failed at first verification; root cause (AI float precision in the twin record) fixed and the game patched in the archive; all 3 games then passed"
+  },
+  {
+   "check": "twin_precision",
+   "cycle": "cycle_005",
+   "game": "volley",
+   "note": "values that cross the GDScript->JSON->Python boundary must be decimal-stable (0.55-0.10 printed as 0.45 replayed a different AI); round AI params to 4 decimals where played."
+  },
+  {
+   "check": "screenshot_review",
+   "cycle": "cycle_005",
+   "game": "splash",
+   "note": "modules that change the rules must also change the picture (the splash net existed in the sim but was invisible until screenshot review); check every module in the screenshot."
+  },
+  {
+   "check": "architecture",
+   "cycle": "cycle_005",
+   "game": "all",
+   "note": "inspirations build the universe; games come from idea exploration over the universe's element-unlocked module space, not from the prompt words."
   }
  ],
  "tuner_bounds": {
@@ -489,6 +694,27 @@
    "throw_cd": 30,
    "wind": 0.04
   },
+  "splash:gust:barrier1,ret1,win1": {
+   "ally_level": 0,
+   "barrier": 1,
+   "en_aggr": 0.7,
+   "en_dodge": 0.5,
+   "en_err": 50.0,
+   "en_lead": 0.1,
+   "max_ammo": 3,
+   "max_ticks": 2400,
+   "range": 320.0,
+   "refill_ticks": 40,
+   "ret": 1,
+   "slick": 0,
+   "speed": 3.0,
+   "splash_dmg": 45.0,
+   "splash_r": 54.0,
+   "team_size": 1,
+   "throw_cd": 35,
+   "win": 1,
+   "wind": 0.039
+  },
   "volley:gust": {
    "ai_aggr": 0.6,
    "ai_err": 55.0,
@@ -502,19 +728,37 @@
    "serve_pause": 40,
    "slick": 0,
    "wind": 0.03
+  },
+  "volley:gust:ball1,net1,score1": {
+   "ai_aggr": 0.55,
+   "ai_err": 45.0,
+   "ai_lag": 11,
+   "ball": 1,
+   "burst_r": 130.0,
+   "gravity": 0.38,
+   "jump": 11.5,
+   "max_ticks": 14400,
+   "move_acc": 1.5,
+   "net": 1,
+   "points": 6,
+   "restitution": 0.95,
+   "score": 1,
+   "serve_pause": 40,
+   "slick": 0,
+   "wind": 0.03
   }
  },
  "universe_priors": {
   "aggro_pct": 8,
   "burn": 2,
-  "flee_pct": 60,
+  "flee_pct": 68,
   "kill_rel_penalty": 6,
-  "loot_pct": 62,
-  "regen_div": 28,
-  "respawn_delay": 34,
-  "restock_ticks": 10,
-  "sell_pct": 77,
-  "swing_pct": 22,
+  "loot_pct": 46,
+  "regen_div": 24,
+  "respawn_delay": 37,
+  "restock_ticks": 9,
+  "sell_pct": 78,
+  "swing_pct": 18,
   "wage": 2
  },
  "version": 1

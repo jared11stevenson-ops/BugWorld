@@ -36,7 +36,7 @@ func start() -> void:
 	params = V.defaults()
 	for k in D.DATA["params"]:
 		params[k] = D.DATA["params"][k]
-	for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks"]:
+	for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks", "ball", "net", "score"]:
 		params[k] = int(params[k])
 	title_screen(U.get("game_title", "Volley"), "A tournament of three matches.\nMove: A/D or arrows   Jump / spike: W, Up or Space\n" + universe_line(), [["Play", intro], ["How to play", help]])
 
@@ -48,18 +48,24 @@ func help() -> void:
 func intro() -> void:
 	round_i = 0
 	wins = 0
-	text_screen("The tournament of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))), "Walk onto the sand", begin_match)
+	text_screen("The tournament of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))) + "\n\n" + rival_line(0) + " · " + rival_line(1) + " · " + rival_line(2), "Walk onto the sand", begin_match)
 
 
 func round_ai(r: int) -> Array:
 	var lag := int(params["ai_lag"])
 	var err := float(params["ai_err"])
 	var ag := float(params["ai_aggr"])
+	var m: Dictionary = rival(r)["mod"]
+	err = maxf(0.0, err + float(m["err"]))
+	ag = clampf(ag + float(m["aggr"]), 0.05, 1.0)
+	var out := [lag, err, ag]
 	if r == 0:
-		return [lag + 8, err * 1.8, ag * 0.7]
-	if r == 2:
-		return [maxi(2, lag / 2), err * 0.4, minf(1.0, ag * 1.25)]
-	return [lag, err, ag]
+		out = [lag + 8, err * 1.8, ag * 0.7]
+	elif r == 2:
+		out = [maxi(2, lag / 2), err * 0.4, minf(1.0, ag * 1.25)]
+	out[1] = float("%.4f" % float(out[1]))      # decimal-stable values: the recorded twin (JSON) must replay the exact AI that was played
+	out[2] = float("%.4f" % float(out[2]))
+	return out
 
 
 # ---------------------------------------------------------------- 3D scene
@@ -351,7 +357,7 @@ func selftest() -> Dictionary:
 	params = V.defaults()
 	for k in D.DATA["params"]:
 		params[k] = D.DATA["params"][k]
-	for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks"]:
+	for k in ["slick", "points", "ai_lag", "serve_pause", "max_ticks", "ball", "net", "score"]:
 		params[k] = int(params[k])
 	var res := {"ok": false}
 	# 1) an expert bot plays the whole tournament through the game's own match setup and 3D view
@@ -364,6 +370,7 @@ func selftest() -> Dictionary:
 		begin_match()
 		await get_tree().process_frame
 		playing = false
+		s = V.new_match(int(U.get("seed", 1)) * 100 + round_i * 10 + attempt, params)      # the frame above may have stepped the live match: replay from a clean state
 		var n := 0
 		var ai := ai_params
 		while s["over"] == 0:

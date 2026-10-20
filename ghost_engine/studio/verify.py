@@ -205,7 +205,7 @@ def twin_volley(game, res):
     from . import volley_twin as VT
     p = dict(VT.DEFAULTS)
     for k, v in game["params"].items():
-        p[k] = int(v) if k in ("slick", "points", "ai_lag", "serve_pause", "max_ticks") else float(v)
+        p[k] = int(v) if k in ("slick", "points", "ai_lag", "serve_pause", "max_ticks", "ball", "net", "score") else float(v)
     tw = res["twin"]
     s = VT.play(tw["seed"], p, tw["left_level"], tw["right"])
     return {"digest_match": VT.digest(s) == tw["digest"], "ticks_match": s["t"] == tw["ticks"], "score_match": s["score"] == tw["score"]}

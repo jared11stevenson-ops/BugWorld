@@ -10,6 +10,11 @@ TONE = {"gust": ("wind", "gust", "lull"), "slick": ("slick", "slide", "grip"), "
         "wells": ("weight", "pull", "orbit"), "drift": ("current", "drift", "wandering")}
 
 
+TRAIT_MOD = {"ruthless": {"aggr": +0.15, "err": -10.0, "dodge": 0.0}, "beleaguered": {"aggr": -0.10, "err": +15.0, "dodge": 0.0},
+             "prosperous": {"aggr": 0.0, "err": 0.0, "dodge": +0.15}, "watchful": {"aggr": -0.05, "err": 0.0, "dodge": +0.25},
+             "restless": {"aggr": +0.10, "err": 0.0, "dodge": -0.10}, "steadfast": {"aggr": 0.0, "err": -10.0, "dodge": +0.05}}
+
+
 def make_lore(uni):
     rnd = random.Random(uni["seed"] * 3 + 11)
     tl = U.canon_world(uni)
@@ -46,7 +51,8 @@ def make_lore(uni):
     noun, motion, remedy = TONE[uni["law"]]
     prologue = [
         f"{uni['name']} was not made; it was assembled from remembered truths. " + " ".join(f"\"{f}\"" for _, f in facts[:2]),
-        f"Then came the third truth: \"{facts[2][1]}\" From the meeting of these three the law of {uni['name']} was born. {uni['law_text']}",
+        (f"Then came the third truth: \"{facts[2][1]}\" From the meeting of these three the law of {uni['name']} was born. " if len(facts) > 2
+         else f"From the meeting of these two truths, neither ever meant for the other, the law of {uni['name']} was born. ") + uni['law_text'],
         (uni["chronicle"][0] if uni["chronicle"] else "The first days are unrecorded.") + f" That was how the {motion} first showed itself to the living.",
     ]
     factions = {}
@@ -59,4 +65,5 @@ def make_lore(uni):
         towns[tn] = f"{tn}: {towns_pop[i]} souls live where {m1.replace('-', ' ')} meets {m2.replace('-', ' ')}; the {noun} is felt here first."
     ep_win = f"The {noun} of {uni['name']} did not end, but it learned your name. Those who survive will tell it as a story of {remedy}."
     ep_lose = f"The {noun} of {uni['name']} closes over the place where you stood. Perhaps the next keeper will remember what you could not."
-    return {"prologue": prologue, "factions": factions, "towns": towns, "epilogue_win": ep_win, "epilogue_lose": ep_lose, "traits": traits}
+    rivals = [{"faction": lex["factions"][f], "trait": traits[f], "mod": TRAIT_MOD[traits[f]], "blurb": factions[lex["factions"][f]]["blurb"]} for f in range(nf)]
+    return {"prologue": prologue, "factions": factions, "towns": towns, "rivals": rivals, "epilogue_win": ep_win, "epilogue_lose": ep_lose, "traits": traits}

@@ -11,17 +11,31 @@ CORDON_BOUNDS = {"beta": (30, 110, 5), "flow": (2, 16, 1), "mort": (4, 30, 2), "
 VOLLEY_BOUNDS = {"gravity": (0.30, 0.60, 0.02), "jump": (9.0, 13.0, 0.5), "restitution": (0.85, 1.2, 0.05), "ai_lag": (2, 24, 1), "ai_err": (5.0, 100.0, 5.0), "ai_aggr": (0.2, 1.0, 0.05), "points": (5, 9, 1)}
 SPLASH_BOUNDS = {"team_size": (1, 3, 1), "splash_r": (50.0, 80.0, 4.0), "splash_dmg": (30.0, 60.0, 5.0), "speed": (2.6, 3.8, 0.2), "en_lead": (0.0, 0.6, 0.1),
                  "en_err": (10.0, 90.0, 10.0), "en_aggr": (0.3, 1.0, 0.05), "en_dodge": (0.0, 1.0, 0.1), "ally_level": (0, 2, 1), "throw_cd": (20, 45, 5)}
+def _ph_splash(law, ph):
+    """Universe physics -> splash constants (falls back to the single-law mapping used before the element model)."""
+    if ph is None:
+        return {"slick": 1 if law == "slick" else 0, "wind": 0.04 if law == "gust" else 0.0}
+    return {"slick": int(ph.get("slick", 0)), "wind": float(ph.get("wind", 0.0)) * 1.3}
+
+
+def _ph_volley(law, ph):
+    if ph is None:
+        return {"wind": 0.03 if law == "gust" else 0.0, "slick": 1 if law == "slick" else 0, "gravity": 0.42, "restitution": 1.0}
+    return {"wind": float(ph.get("wind", 0.0)), "slick": int(ph.get("slick", 0)), "gravity": round(0.42 * ph.get("gravity_scale", 1.0), 3),
+            "restitution": round(1.0 * ph.get("restitution_scale", 1.0), 3), "burst_r": round(130.0 * ph.get("burst_radius", 1.0), 1)}
+
+
 SPECS = {
     "splash": {"script": "res://ghost/tune_splash.gd", "bounds": SPLASH_BOUNDS,
-               "base": lambda law: {"slick": 1 if law == "slick" else 0, "wind": 0.04 if law == "gust" else 0.0, "splash_dmg": 45.0, "splash_r": 62.0, "throw_cd": 30, "refill_ticks": 40,
+               "base": lambda law, ph=None, mod=None: {**_ph_splash(law, ph), **(mod or {}), "splash_dmg": 45.0, "splash_r": 62.0 * (ph or {}).get("burst_radius", 1.0), "throw_cd": 30, "refill_ticks": 40,
                                     "max_ammo": 3, "team_size": 2, "max_ticks": 2400, "range": 320.0, "speed": 3.4, "en_lead": 0.5, "en_err": 40.0, "en_aggr": 0.65, "en_dodge": 0.5, "ally_level": 1}},
     "volley": {"script": "res://ghost/tune_volley.gd", "bounds": VOLLEY_BOUNDS,
-               "base": lambda law: {"wind": 0.03 if law == "gust" else 0.0, "slick": 1 if law == "slick" else 0, "gravity": 0.42, "jump": 10.5, "restitution": 1.0, "points": 7,
+               "base": lambda law, ph=None, mod=None: {**_ph_volley(law, ph), **(mod or {}), "jump": 10.5, "points": 7,
                                     "ai_lag": 11, "ai_err": 40.0, "ai_aggr": 0.65, "serve_pause": 40, "max_ticks": 14400, "move_acc": 1.5}},
     "arcade": {"script": "res://ghost/tune.gd", "bounds": ARCADE_BOUNDS,
-               "base": lambda law: {"law": law, "law_strength": 1.0, "spawn_every": 14, "spawn_step": 3, "hazard_speed": 150.0, "goal": 4, "stage_secs": 32.0, "max_hazards": 22}},
+               "base": lambda law, ph=None, mod=None: {"law": law, "law_strength": 1.0, "spawn_every": 14, "spawn_step": 3, "hazard_speed": 150.0, "goal": 4, "stage_secs": 32.0, "max_hazards": 22}},
     "cordon": {"script": "res://ghost/tune_contain.gd", "bounds": CORDON_BOUNDS,
-               "base": lambda law: {"nodes": 12, "days": 30, "beta": 70, "flow": 6, "mort": 18, "rec": 10, "ap": 3, "meds": 8, "treat": 150, "q_days": 4, "seeds": 2, "win_pct": 60, "purge_cap": 15, "purge_ap": 2, "leak": 25, "jump": 4}},
+               "base": lambda law, ph=None, mod=None: {**(mod or {}), "nodes": 12, "days": 30, "beta": 70, "flow": 6, "mort": 18, "rec": 10, "ap": 3, "meds": 8, "treat": 150, "q_days": 4, "seeds": 2, "win_pct": 60, "purge_cap": 15, "purge_ap": 2, "leak": 25, "jump": 4}},
 }
 
 
@@ -114,14 +128,14 @@ def mutate(p, rnd, bounds, rate=0.4):
     return p
 
 
-def tune(project, kind, law, seed, pop=16, gens=8, init=None, bounds_override=None, log=print):
+def tune(project, kind, law, seed, pop=16, gens=8, init=None, bounds_override=None, log=print, physics=None, mods=None):
     """Winner's-curse-safe: every generation uses fresh evaluation seeds, elites are re-evaluated, ranking uses the running mean."""
     spec = SPECS[kind]
     bounds, script = dict(spec["bounds"]), spec["script"]
     if bounds_override:
         bounds.update({k: tuple(v) for k, v in bounds_override.items() if k in bounds})
     rnd = random.Random(seed)
-    base = spec["base"](law)
+    base = spec["base"](law, physics, mods)
     popn = [base] + ([dict(init)] if init else []) + [mutate(base, rnd, bounds, 0.8) for _ in range(pop)]
     popn = popn[:pop]
     hist, curve = {}, []

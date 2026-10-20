@@ -16,7 +16,7 @@ One command runs a whole cycle in about 2 minutes (4 cores, Godot 4.5 headless/x
 |---|---|---|---|
 | 1 | Inspiration | `studio/inspiration.py`: 49 real phenomena (9 fields), each with true one-line fact + abstract dynamics; 3 from distinct fields (random, or biased by prompt words) | 3 inspirations |
 | 2 | One universe | `studio/universe.py`: name, 3 factions, 6 towns, palette, physical **law** (pulse/wells/drift) derived from the dynamics; **evolutionary search** over world rules (population 16 × 12 generations × 3 worlds × 600 ticks) then **72 branching alternate histories** (fork ticks × interventions × seeds); richest history becomes canon, pivotal events are mined from causal chains | universe.json, chronicle |
-| 3 | Genre pool selection (`studio/pool.py`): 5 genres in 4 families, scored by the universe's dynamics + novelty bonus for genres not shipped in the last two cycles; one game per family | three genres |
+| 3 | **Idea exploration** (`studio/ideas.py`, replaces the old genre pool `studio/pool.py`, kept only as legacy): the universe's fused elements unlock families and modules; every simulatable candidate is played by tiered bots; scored on playability, depth, novelty vs every shipped idea, and fit to *each* inspiration; top idea of three different families is built | three ideas |
 | 3a | *Trials* (strategy duel campaign) | `ghost.foundry` discovery loop, tilted by the universe's dynamics; 3 discovered concepts themed with universe vocabulary; escalating rivals | Godot project |
 | 4 | *Steward* (world-sim) | the persistent world kernel with the evolved rules; influence points, previews on forked timelines, limited rewinds, drawn map; target = do-nothing timeline × 1.35 | Godot project |
 | 5 | *Expedition* (real-time arcade, 2D or **3D**) and *Cordon* (**epidemic containment strategy**, new) | deterministic GDScript core with the universe's law; **difficulty evolved by headless Godot simulation** of a skilled and a novice bot, re-evaluated on fresh seeds each generation and validated on held-out seeds | Godot project |
@@ -91,6 +91,44 @@ All three released; cycle wall time ~18 min (Splash and Volley tuning dominate: 
 * 3D is still procedural primitives; the beach, palms and umbrellas are boxes/cylinders/prisms. Animation is transform/sine-driven.
 * Genre selection still picks from a fixed pool of 7; the studio cannot yet invent a genre. This pass added two, by hand.
 * Splash's team size defaulted to 2; the tuner saturated at `team_size: lo, ally_level: lo` (duels make skill matter most) and the bounds were widened for next time.
+
+## Pass 4 — inspirations make the UNIVERSE; games are drawn from it (cycle 5)
+
+Correction from the user: inspirations are not game briefs. "Water balloon fight + volleyball" is fused into one universe, and that universe is searched for
+game ideas. What changed:
+
+* `studio/elements.py`: every inspiration decomposes into **elements** (projectile_arc, burst, soak, net, rally, touch_limit, wind, ...). The universe is the union.
+  Elements carry (a) a codex law, (b) **physics constants shared by every game** (gravity, wind, slick, burst radius, restitution) and (c) the game modules they unlock.
+* Game families expose **modules** that only exist when the universe holds the needed elements: Volley `ball` (rubber / water balloon), `net` (solid / porous),
+  `score` (rally / soak); Splash `barrier` (open / net), `ret` (bat balloons back), `win` (elimination / hold the fountain). A plague-only universe cannot produce them.
+  Volley modules are implemented in both `volley_core.gd` and `volley_twin.py` (digest parity-tested incl. the new state); splash modules are bot-tier tested.
+* `studio/ideas.py`: candidate enumeration -> headless bot simulation of every candidate (one batched Godot run per family) -> scores
+  (`fun` = untuned tuner fitness, `depth` = skill gradient, `novelty` = distance to the knowledge `idea_archive`, `fit` = coverage of each inspiration's elements,
+  `revolution` = novelty x fit x depth) -> three ideas from three different families. Families without per-idea simulation (concept, steward, arcade3d) get a flagged neutral prior (0.45).
+  Output is archived as `ideas.json` (full ranking and rationale).
+* Shared universe in all games: `Codex` button on every title screen (laws, physics, real-world facts, factions with traits, sibling games), rival factions whose lore trait
+  shifts the AI (offsets applied on top of the tuned rival, so they are *not* inside the validated tier bands), identical physics constants fed to every tuner base.
+
+### Cycle 5 — *Puddlespike* (water balloon fights + volleyball; law: gust, mood: bright) — verified
+Universe elements: projectile_arc, burst, soak, refill, friendly_fire, team, net, rally, touch_limit, serve, bounce, wind. Shared physics: wind 0.03, gravity x1.0, burst radius x1.0.
+Idea space: 19 candidates over 5 families (cordon not unlocked); 16 played by bots. Selected (full ranking in `archive/cycle_005/ideas.json`):
+
+| game | family | idea | score / fun / depth / novelty / fit | tuned held-out (expert / average / novice) |
+|---|---|---|---|---|
+| Puddlespike: Splash | top-down arena | net across the arena + bat balloons back + hold the fountain | 0.87 / 0.93 / 0.80 / 1.0 / 0.75 | 0.81 / 0.44 / 0.03, side bias 0.10 |
+| Puddlespike: Beach Volley | 3D sport | water balloon + porous net + soak scoring | 0.85 / 0.91 / 1.0 / 1.0 / 0.63 | 0.83 / 0.50 / 0.17, side bias 0.04, rally 3.3 |
+| Puddlespike: Trials | strategy duel | rule sets discovered by the foundry, themed from the universe | 0.41 / 0.45* / 0.45* / 0.15 / 0.54 | not tuned (*unsimulated prior) |
+
+All three pass the gate. The gate failed once on first verification (volley Python twin): `0.55 - 0.10` is `0.45000000000000007` in GDScript but prints as `0.45` in JSON,
+so the replay used a different AI. Fixed (AI values rounded to 4 decimals), the archived game patched with `studio.patch` and the failure kept in the lessons.
+Screenshot review found the splash net existed in the simulation but was not drawn; fixed and patched. Total cycle time 570 s.
+
+### Honest limits of this pass
+* "Most unique / fun / revolutionary" is a measured proxy over a *finite, hand-authored* module space; the studio recombines modules, it does not invent new mechanics.
+* No human has playtested anything. Fun is not measured.
+* Faction trait offsets are small and unvalidated by the tier gate.
+* The third game (strategy duel) is the weakest idea: concept/steward/arcade3d have no per-idea bot simulation, so they score a neutral prior and only win a slot when nothing simulated remains.
+* Volley average rally is short (3.3 hits) with soak scoring; it passes the gate (>=2.5) but is a candidate for the next pass.
 
 ## What was produced and verified (cycles 1–2, earlier pass)
 
