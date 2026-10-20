@@ -43,6 +43,7 @@ class Foundry:
         self.gen_log = []
         self.inbox_seen = set()
         self.use_inbox = use_inbox
+        self.prior = {}          # multiplicative proposal prior per atom kind (e.g. set from a universe's dynamics)
 
     # ---------------------------------------------------------------- bookkeeping
     def _uid(self, prefix):
@@ -53,7 +54,7 @@ class Foundry:
         w = {}
         for k in G.ATOM_KINDS:
             st = self.memory["atoms"].get(k, {"trials": 0, "viable": 0})
-            w[k] = (st["viable"] + 1) / (st["trials"] + 4) * 4
+            w[k] = (st["viable"] + 1) / (st["trials"] + 4) * 4 * self.prior.get(k, 1.0)
         G.KIND_W = w
 
     def _learn(self, rec):

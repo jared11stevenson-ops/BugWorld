@@ -1,5 +1,7 @@
 # GHOST ENGINE
 
+> **Studio:** `STUDIO.md` documents the repeatable three-game production cycle (`python3 -m studio new-cycle`). Archived games: `archive/`.
+>
 > **Start with `FOUNDRY.md`**: Ghost Engine is an autonomous evolutionary game foundry (propose → simulate → evolve → preserve → compile to Godot). This README documents the world-simulation foundation and the combat-mechanic experiment that preceded it.
 
 A headless game foundry: simulate a persistent RPG world, evolve one of its mechanics under measurable tests,

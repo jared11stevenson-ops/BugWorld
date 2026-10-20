@@ -1,0 +1,230 @@
+{
+ "id": "clocktimber-517896",
+ "seed": 517896,
+ "name": "Clocktimber",
+ "inspirations": [
+  "predator-prey cycles",
+  "circadian rhythms",
+  "Easter Island's deforestation"
+ ],
+ "facts": {
+  "predator-prey cycles": "Predator and prey populations often rise and fall in lagged cycles.",
+  "circadian rhythms": "Most organisms keep roughly 24-hour internal rhythms synchronized by light.",
+  "Easter Island's deforestation": "Rapa Nui lost most of its palm forest, a contested but widely discussed case of resource depletion."
+ },
+ "fields": [
+  "ecology",
+  "biology",
+  "history"
+ ],
+ "tags": {
+  "predation": 1,
+  "oscillation": 2,
+  "signal": 1,
+  "scarcity": 1,
+  "feedback": 1
+ },
+ "law": "pulse",
+ "law_text": "Everything in this universe beats with a rhythm; periodic waves sweep across the land and punish those who ignore the beat.",
+ "palette": [
+  "#282612",
+  "#464c26",
+  "#5661d8",
+  "#aaf23c",
+  "#bcf29d"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Grove Lineage",
+   "The Dawn Concord",
+   "The Dusk Covenant"
+  ],
+  "towns": [
+   "Clockspire",
+   "Timberfall",
+   "Grovehollow",
+   "Dawnhollow",
+   "Duskreach",
+   "Lynxgate"
+  ],
+  "currency": "tallies",
+  "potion": "philter",
+  "motifs": [
+   "clock",
+   "timber",
+   "grove",
+   "dawn",
+   "dusk",
+   "lynx",
+   "statue",
+   "hare",
+   "hunt"
+  ]
+ },
+ "rules": {
+  "combat": {
+   "crit_mult_pct": 150,
+   "crit_pct": 5,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 60,
+   "guard_pierce_pct": 70,
+   "guard_reduce_pct": 60,
+   "heal_vuln_pct": 20,
+   "potion_heal": 20,
+   "power_interrupt_pct": 50,
+   "power_mult_pct": 170,
+   "round_cap": 40,
+   "start_potions": 3
+  },
+  "economy": {
+   "base_price": 10,
+   "burn": 2,
+   "restock_ticks": 8,
+   "sell_pct": 80,
+   "stock_cap": 6,
+   "swing_pct": 10,
+   "tax_pct": 25,
+   "upkeep": 2,
+   "upkeep_every": 5,
+   "wage": 1
+  },
+  "name": "clocktimber-517896",
+  "world": {
+   "aggro_pct": 9,
+   "flee_pct": 60,
+   "kill_rel_penalty": 4,
+   "loot_pct": 70,
+   "regen_div": 35,
+   "respawn_delay": 35,
+   "war_threshold": -40
+  }
+ },
+ "search": {
+  "generations": 12,
+  "population": 16,
+  "seeds": [
+   1,
+   2,
+   3
+  ],
+  "ticks": 600,
+  "curve": [
+   {
+    "gen": 0,
+    "best": 0.6857424725406295,
+    "mean": 0.6067184536670593
+   },
+   {
+    "gen": 1,
+    "best": 0.6959670926898012,
+    "mean": 0.6622014901758025
+   },
+   {
+    "gen": 2,
+    "best": 0.6959670926898012,
+    "mean": 0.6733184912192324
+   },
+   {
+    "gen": 3,
+    "best": 0.6959670926898012,
+    "mean": 0.658764872492893
+   },
+   {
+    "gen": 4,
+    "best": 0.7045225872326996,
+    "mean": 0.6650522699145794
+   },
+   {
+    "gen": 5,
+    "best": 0.7045225872326996,
+    "mean": 0.6765474549444447
+   },
+   {
+    "gen": 6,
+    "best": 0.7119184547013451,
+    "mean": 0.6773657838918852
+   },
+   {
+    "gen": 7,
+    "best": 0.7119184547013451,
+    "mean": 0.6745821959894549
+   },
+   {
+    "gen": 8,
+    "best": 0.7119184547013451,
+    "mean": 0.6601256371979849
+   },
+   {
+    "gen": 9,
+    "best": 0.7119184547013451,
+    "mean": 0.6667931795592459
+   },
+   {
+    "gen": 10,
+    "best": 0.7119184547013451,
+    "mean": 0.6710603475337791
+   },
+   {
+    "gen": 11,
+    "best": 0.7119184547013451,
+    "mean": 0.6653039290808946
+   },
+   {
+    "gen": 12,
+    "best": 0.7119184547013451,
+    "mean": 0.6506130031365986
+   }
+  ],
+  "start_fitness": 0.6857424725406295,
+  "final_fitness": 0.7119184547013451,
+  "evaluations": 158
+ },
+ "canon": {
+  "seed": 103,
+  "fork_tick": 200,
+  "intervention": "kill_deadliest",
+  "richness": 0.7426777741941802,
+  "explored": 72,
+  "median_richness": 0.6740290502305741
+ },
+ "chronicle": [
+  "Day 11: Hob Reed of The Dusk Covenant fell at Clockspire to Hob Reed of The Dawn Concord. It set off 1 later events.",
+  "Day 32: Cora Marsh of The Dusk Covenant fell at Lynxgate to an unseen hand. It set off 1 later events.",
+  "Day 32: Gale Wick of The Grove Lineage fell at Lynxgate to an unseen hand. It set off 1 later events.",
+  "Day 38: Hob Marsh of The Dawn Concord fell at Timberfall to Hob Vale of The Dusk Covenant. It set off 1 later events.",
+  "Day 42: Cora Vale of The Grove Lineage fell at Duskreach to Hob Reed of The Dawn Concord. It set off 1 later events.",
+  "Day 534: Ash Wick of The Dusk Covenant fell at Timberfall to Elda Reed of The Dawn Concord. It set off 2 later events."
+ ],
+ "pivotal": [
+  {
+   "event": 131,
+   "tick": 11,
+   "cascade": 1
+  },
+  {
+   "event": 340,
+   "tick": 32,
+   "cascade": 1
+  },
+  {
+   "event": 341,
+   "tick": 32,
+   "cascade": 1
+  },
+  {
+   "event": 389,
+   "tick": 38,
+   "cascade": 1
+  },
+  {
+   "event": 421,
+   "tick": 42,
+   "cascade": 1
+  },
+  {
+   "event": 4243,
+   "tick": 534,
+   "cascade": 2
+  }
+ ]
+}

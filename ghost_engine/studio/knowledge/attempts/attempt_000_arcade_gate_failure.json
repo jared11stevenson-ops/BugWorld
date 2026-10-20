@@ -1,0 +1,303 @@
+{
+ "cycle": "cycle_001",
+ "universe": "horizonooze-786539",
+ "seed": 786539,
+ "prompt": null,
+ "games": [
+  {
+   "id": "concept_campaign",
+   "title": "Horizonooze: Trials",
+   "genre": "strategy duel campaign",
+   "evidence": [
+    {
+     "chapter": 1,
+     "source_id": "mu0169",
+     "proposer": "mutation/near-miss",
+     "fitness": 0.9611499611499611,
+     "novelty_vs_seeds": 0.8823529411764706,
+     "live_actions": 5,
+     "n_actions": 5,
+     "interaction": 1.0623595463528117,
+     "leverage": 0.37857142857142856,
+     "length": 15.431818181818182,
+     "flags": []
+    },
+    {
+     "chapter": 2,
+     "source_id": "mu0168",
+     "proposer": "mutation/near-miss",
+     "fitness": 0.9615384615384616,
+     "novelty_vs_seeds": 0.8333333333333334,
+     "live_actions": 4,
+     "n_actions": 5,
+     "interaction": 1.0912707770523307,
+     "leverage": 0.34558823529411764,
+     "length": 11.318181818181818,
+     "flags": []
+    },
+    {
+     "chapter": 3,
+     "source_id": "gr0197",
+     "proposer": "grammar",
+     "fitness": 0.9743589743589743,
+     "novelty_vs_seeds": 0.9444444444444444,
+     "live_actions": 5,
+     "n_actions": 5,
+     "interaction": 1.0551329961259912,
+     "leverage": 0.27,
+     "length": 9.098484848484848,
+     "flags": []
+    }
+   ],
+   "discovery": {
+    "evaluations": 332,
+    "viable": 137,
+    "cells": 53
+   }
+  },
+  {
+   "id": "steward",
+   "title": "The Bell Syndicate: Steward",
+   "genre": "world-sim stewardship"
+  },
+  {
+   "id": "arcade",
+   "title": "Horizonooze: Expedition",
+   "genre": "real-time arcade",
+   "params": {
+    "law": "wells",
+    "law_strength": 1.0,
+    "spawn_every": 12,
+    "spawn_step": 3,
+    "hazard_speed": 140.0,
+    "goal": 3,
+    "stage_secs": 38.0,
+    "max_hazards": 20
+   },
+   "tuning": {
+    "params": {
+     "law": "wells",
+     "law_strength": 1.0,
+     "spawn_every": 12,
+     "spawn_step": 3,
+     "hazard_speed": 140.0,
+     "goal": 3,
+     "stage_secs": 38.0,
+     "max_hazards": 20
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 1,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 2,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 3,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 4,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 5,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 6,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 7,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     },
+     {
+      "gen": 8,
+      "best_fitness": 0.6708333333333337,
+      "skilled": 0.291666666666667,
+      "novice": 0.0833333333333333
+     }
+    ],
+    "default_params": {
+     "law": "wells",
+     "law_strength": 1.0,
+     "spawn_every": 14,
+     "spawn_step": 3,
+     "hazard_speed": 150.0,
+     "goal": 4,
+     "stage_secs": 32.0,
+     "max_hazards": 22
+    },
+    "holdout_best": {
+     "novice": 0.333333333333333,
+     "skilled": 0.25,
+     "skilled_score": 3116.41666666667,
+     "skilled_stage1": 0.916666666666667
+    },
+    "holdout_default": {
+     "novice": 0.0833333333333333,
+     "skilled": 0.166666666666667,
+     "skilled_score": 2077.79166666667,
+     "skilled_stage1": 0.791666666666667
+    },
+    "start_fitness": 0.6708333333333337,
+    "final_fitness": 0.6708333333333337,
+    "evaluations": 76
+   }
+  }
+ ],
+ "verification": {
+  "concept_campaign": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "attempts": 3,
+     "audio_loaded": true,
+     "chapters_cleared": 3,
+     "matches": 9,
+     "ok": true,
+     "save_written": true,
+     "universe_loaded": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 125,
+     "title_colors": 148,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "sessions": 9,
+     "mismatches": 0
+    }
+   },
+   "released": true
+  },
+  "steward": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_score": 1375,
+     "bot_won": true,
+     "do_nothing_score": 901,
+     "final_digest": "9365b411",
+     "final_tick": 350,
+     "ok": true,
+     "rewind_restores_epoch_start": true,
+     "save_written": true,
+     "target": 1216
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 126,
+     "title_colors": 147,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "tick_match": true,
+     "score_match": true,
+     "python_score": 1375,
+     "godot_score": 1375
+    }
+   },
+   "released": true
+  },
+  "arcade": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "difficulty_tuned_on_holdout": false
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_completed_game": true,
+     "novice_full_clears_of_8": 0,
+     "ok": true,
+     "retries": 6,
+     "save_written": true,
+     "score": 4363
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 28,
+     "title_colors": 137,
+     "w": 1100,
+     "ok": true
+    },
+    "tuning_holdout": {
+     "novice": 0.333333333333333,
+     "skilled": 0.25,
+     "skilled_score": 3116.41666666667,
+     "skilled_stage1": 0.916666666666667
+    }
+   },
+   "released": false
+  }
+ },
+ "released": [
+  "concept_campaign",
+  "steward"
+ ],
+ "timings_s": {
+  "1_inspiration": 0.0,
+  "2_universe": 39.8,
+  "3_game1_concept_campaign": 34.2,
+  "4_game2_steward": 0.8,
+  "5_game3_arcade_tuning": 50.5,
+  "6_verification": 9.4,
+  "7_archive": 0.0,
+  "total": 134.7,
+  "8_retrospective_and_reset": 0.0
+ },
+ "reset": {
+  "state_dir_removed": true,
+  "grammar_priors_cleared": true,
+  "knowledge_retained": true,
+  "no_universe_leak_in_knowledge": true,
+  "ok": true
+ }
+}

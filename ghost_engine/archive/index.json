@@ -1,0 +1,30 @@
+[
+ {
+  "cycle": "cycle_001",
+  "universe": "Clocktimber",
+  "released": [
+   "concept_campaign",
+   "steward",
+   "arcade"
+  ],
+  "inspirations": [
+   "predator-prey cycles",
+   "circadian rhythms",
+   "Easter Island's deforestation"
+  ]
+ },
+ {
+  "cycle": "cycle_002",
+  "universe": "Pallorbasalt",
+  "released": [
+   "concept_campaign",
+   "steward",
+   "arcade"
+  ],
+  "inspirations": [
+   "coral reef bleaching",
+   "the telegraph",
+   "plate tectonics"
+  ]
+ }
+]

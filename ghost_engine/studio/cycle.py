@@ -1,0 +1,117 @@
+"""One production cycle: inspiration -> universe -> 3 games -> verify -> archive -> retrospective -> RESET."""
+import hashlib, json, os, shutil, time
+from . import inspiration, universe as U, games as G, tuner, verify, retro, agents
+from ghost.foundry import grammar as FG
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATE = os.path.join(ROOT, "studio", "state")
+KNOW = os.path.join(ROOT, "studio", "knowledge", "knowledge.json")
+ARCHIVE = os.path.join(ROOT, "archive")
+
+
+def load_knowledge():
+    if os.path.exists(KNOW):
+        return json.load(open(KNOW))
+    seed_lessons = os.path.join(ROOT, "studio", "knowledge", "seed_lessons.json")
+    return {"version": 1, "cycles": [], "budget": {"universe_pop": 16, "universe_gens": 12, "tune_pop": 12, "tune_gens": 8, "g1_gens": 8},
+            "universe_priors": {}, "arcade_priors": {}, "lessons": json.load(open(seed_lessons)) if os.path.exists(seed_lessons) else [], "improvements": [], "capabilities": agents.ROLES}
+
+
+def next_cycle_id():
+    os.makedirs(ARCHIVE, exist_ok=True)
+    n = len([d for d in os.listdir(ARCHIVE) if d.startswith("cycle_")])
+    return n + 1
+
+
+def run_cycle(prompt=None, seed=None, quick=False, log=print):
+    global ARCHIVE, KNOW
+    if quick:       # smoke runs never touch the real archive or the studio's accumulated knowledge
+        ARCHIVE = os.path.join("/tmp", "ghost_smoke_archive")
+        KNOW = os.path.join("/tmp", "ghost_smoke_knowledge.json")
+        shutil.rmtree(ARCHIVE, ignore_errors=True)
+        if os.path.exists(KNOW):
+            os.remove(KNOW)
+    know = load_knowledge()
+    cid = next_cycle_id()
+    cname = f"cycle_{cid:03d}"
+    timings = {}
+    t_all = time.time()
+    def stage(name):
+        class T:
+            def __enter__(s): s.t = time.time(); log(f"[{cname}] {name} ..."); return s
+            def __exit__(s, *a): timings[name] = round(time.time() - s.t, 1)
+        return T()
+    if os.path.exists(STATE):
+        shutil.rmtree(STATE)
+    os.makedirs(STATE)
+    bud = dict(know["budget"])
+    if quick:
+        bud.update(universe_pop=8, universe_gens=3, tune_pop=8, tune_gens=3, g1_gens=4)
+    with stage("1_inspiration"):
+        ins, seed = inspiration.pick(seed, prompt)
+        log("  inspirations: " + "; ".join(f"{b[0]} ({b[1]})" for b in ins))
+    with stage("2_universe"):
+        uni = U.make_universe(ins, seed)
+        U.explore(uni, know, pop=bud["universe_pop"], gens=bud["universe_gens"], seeds=(1, 2, 3) if not quick else (1, 2), ticks=600 if not quick else 300, log=log)
+        json.dump(uni, open(os.path.join(STATE, "universe.json"), "w"), indent=1)
+    games = []
+    gdir = os.path.join(STATE, "games")
+    with stage("3_game1_concept_campaign"):
+        games.append(G.build_concept_campaign(uni, os.path.join(gdir, "concept_campaign"), STATE, know, gens=bud["g1_gens"], per_gen=24 if quick else 40, log=log))
+    with stage("4_game2_steward"):
+        games.append(G.build_steward(uni, os.path.join(gdir, "steward"), target_pct=135))
+    with stage("5_game3_arcade_tuning"):
+        proj = os.path.join(gdir, "arcade")
+        G.build_arcade(uni, proj, {"law": uni["law"]})
+        tuning = tuner.tune(proj, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=know["arcade_priors"].get(uni["law"]), log=log)
+        games.append(G.build_arcade(uni, proj, tuning["params"], tuning))
+    reports = {}
+    with stage("6_verification"):
+        for g in games:
+            reports[g["id"]] = verify.verify_game(g, os.path.join(gdir, g["id"]), os.path.join(STATE, "evidence", g["id"]))
+            log(f"  {g['id']}: " + ", ".join(f"{k}={'PASS' if v else 'FAIL'}" for k, v in reports[g["id"]]["checks"].items()))
+    with stage("7_archive"):
+        dest = os.path.join(ARCHIVE, cname)
+        os.makedirs(dest)
+        for g in games:
+            shutil.copytree(os.path.join(gdir, g["id"]), os.path.join(dest, "games", g["id"]), ignore=shutil.ignore_patterns(".godot", "*.uid", "__pycache__"))
+            shutil.copytree(os.path.join(STATE, "evidence", g["id"], "screens"), os.path.join(dest, "evidence", g["id"], "screens"))
+        udoc = {k: v for k, v in uni.items()}
+        json.dump(udoc, open(os.path.join(dest, "universe.json"), "w"), indent=1)
+        with open(os.path.join(dest, "CHRONICLE.md"), "w") as f:
+            f.write(f"# {uni['name']}\n\n{uni['law_text']}\n\n## Inspirations (real world)\n" + "\n".join(f"- **{k}** — {v}" for k, v in uni["facts"].items())
+                    + "\n\n## Factions\n" + "\n".join(f"- {x}" for x in uni["lexicon"]["factions"]) + "\n\n## Canon history (from the evolved, branch-selected simulation)\n" + "\n".join(f"- {l}" for l in uni["chronicle"]) + "\n")
+        slim = [{k: v for k, v in g.items() if k not in ("data",)} for g in games]
+        manifest = {"cycle": cname, "universe": uni["id"], "seed": seed, "prompt": prompt, "games": slim, "verification": reports,
+                    "released": [g["id"] for g in games if reports[g["id"]]["released"]], "timings_s": timings}
+        json.dump(manifest, open(os.path.join(dest, "manifest.json"), "w"), indent=1)
+        idx_p = os.path.join(ARCHIVE, "index.json")
+        idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
+        idx.append({"cycle": cname, "universe": uni["name"], "released": manifest["released"], "inspirations": uni["inspirations"]})
+        json.dump(idx, open(idx_p, "w"), indent=1)
+    timings["total"] = round(time.time() - t_all, 1)
+    with stage("8_retrospective_and_reset"):
+        know_hash_before = hashlib.sha256(json.dumps(know, sort_keys=True).encode()).hexdigest()
+        retro.retrospective(know, cname, uni, games, reports, timings)
+        json.dump(know, open(KNOW, "w"), indent=1, sort_keys=True)
+        reset_report = reset_state(uni)
+    manifest["timings_s"] = timings
+    manifest["reset"] = reset_report
+    json.dump(manifest, open(os.path.join(dest, "manifest.json"), "w"), indent=1)
+    return manifest
+
+
+def reset_state(uni):
+    """Controlled reset: universe, creative assumptions and temporary simulation state are destroyed; studio knowledge is retained."""
+    shutil.rmtree(STATE, ignore_errors=True)
+    FG.KIND_W = None
+    for root, dirs, _f in os.walk(os.path.join(ROOT, "studio")):
+        for d in list(dirs):
+            if d == "__pycache__":
+                shutil.rmtree(os.path.join(root, d), ignore_errors=True)
+    know = json.load(open(KNOW))
+    ok = (not os.path.exists(STATE)) and FG.KIND_W is None and uni["name"] not in json.dumps({k: v for k, v in know.items() if k != "cycles"}) \
+        and bool(know["cycles"]) and "universe" not in know
+    return {"state_dir_removed": not os.path.exists(STATE), "grammar_priors_cleared": FG.KIND_W is None,
+            "knowledge_retained": bool(know["cycles"]), "no_universe_leak_in_knowledge": uni["name"] not in json.dumps({k: v for k, v in know.items() if k != "cycles"}),
+            "ok": ok}

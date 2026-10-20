@@ -1,0 +1,53 @@
+{
+ "id": "clocktimber-517896",
+ "seed": 517896,
+ "name": "Clocktimber",
+ "inspirations": [
+  "predator-prey cycles",
+  "circadian rhythms",
+  "Easter Island's deforestation"
+ ],
+ "facts": {
+  "predator-prey cycles": "Predator and prey populations often rise and fall in lagged cycles.",
+  "circadian rhythms": "Most organisms keep roughly 24-hour internal rhythms synchronized by light.",
+  "Easter Island's deforestation": "Rapa Nui lost most of its palm forest, a contested but widely discussed case of resource depletion."
+ },
+ "law": "pulse",
+ "law_text": "Everything in this universe beats with a rhythm; periodic waves sweep across the land and punish those who ignore the beat.",
+ "palette": [
+  "#282612",
+  "#464c26",
+  "#5661d8",
+  "#aaf23c",
+  "#bcf29d"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Grove Lineage",
+   "The Dawn Concord",
+   "The Dusk Covenant"
+  ],
+  "towns": [
+   "Clockspire",
+   "Timberfall",
+   "Grovehollow",
+   "Dawnhollow",
+   "Duskreach",
+   "Lynxgate"
+  ],
+  "currency": "tallies",
+  "potion": "philter",
+  "motifs": [
+   "clock",
+   "timber",
+   "grove",
+   "dawn",
+   "dusk",
+   "lynx",
+   "statue",
+   "hare",
+   "hunt"
+  ]
+ },
+ "game_title": "The Grove Lineage: Steward"
+}

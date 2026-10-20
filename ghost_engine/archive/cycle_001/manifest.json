@@ -1,0 +1,313 @@
+{
+ "cycle": "cycle_001",
+ "universe": "clocktimber-517896",
+ "seed": 517896,
+ "prompt": null,
+ "games": [
+  {
+   "id": "concept_campaign",
+   "title": "Clocktimber: Trials",
+   "genre": "strategy duel campaign",
+   "evidence": [
+    {
+     "chapter": 1,
+     "source_id": "cx0105",
+     "proposer": "crossover",
+     "fitness": 0.9207780725022104,
+     "novelty_vs_seeds": 0.8235294117647058,
+     "live_actions": 4,
+     "n_actions": 6,
+     "interaction": 1.0650427544377372,
+     "leverage": 0.23225806451612904,
+     "length": 9.149425287356323,
+     "flags": []
+    },
+    {
+     "chapter": 2,
+     "source_id": "mu0053",
+     "proposer": "mutation",
+     "fitness": 0.9401709401709402,
+     "novelty_vs_seeds": 0.9444444444444444,
+     "live_actions": 3,
+     "n_actions": 3,
+     "interaction": 1.1023965134708444,
+     "leverage": 0.2916666666666667,
+     "length": 13.363636363636363,
+     "flags": []
+    },
+    {
+     "chapter": 3,
+     "source_id": "cx0188",
+     "proposer": "crossover",
+     "fitness": 0.9747474747474748,
+     "novelty_vs_seeds": 0.9444444444444444,
+     "live_actions": 5,
+     "n_actions": 5,
+     "interaction": 1.1509462602563463,
+     "leverage": 0.2916666666666667,
+     "length": 9.878787878787879,
+     "flags": []
+    }
+   ],
+   "discovery": {
+    "evaluations": 332,
+    "viable": 137,
+    "cells": 54
+   }
+  },
+  {
+   "id": "steward",
+   "title": "The Grove Lineage: Steward",
+   "genre": "world-sim stewardship"
+  },
+  {
+   "id": "arcade",
+   "title": "Clocktimber: Expedition",
+   "genre": "real-time arcade",
+   "params": {
+    "law": "pulse",
+    "law_strength": 0.5,
+    "spawn_every": 15,
+    "spawn_step": 1,
+    "hazard_speed": 150.0,
+    "goal": 3,
+    "stage_secs": 30.0,
+    "max_hazards": 18
+   },
+   "tuning": {
+    "params": {
+     "law": "pulse",
+     "law_strength": 0.5,
+     "spawn_every": 15,
+     "spawn_step": 1,
+     "hazard_speed": 150.0,
+     "goal": 3,
+     "stage_secs": 30.0,
+     "max_hazards": 18
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 0.578571428571429,
+      "skilled": 0.166666666666667,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 0.8017857142857143,
+      "skilled": 0.375,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 2,
+      "best_fitness": 0.6901785714285716,
+      "skilled": 0.2708333333333335,
+      "novice": 0.0,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 3,
+      "best_fitness": 0.8017857142857143,
+      "skilled": 0.375,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 4,
+      "best_fitness": 0.8619047619047617,
+      "skilled": 0.458333333333333,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 5,
+      "best_fitness": 1.0,
+      "skilled": 0.75,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 6,
+      "best_fitness": 1.0,
+      "skilled": 0.7916666666666665,
+      "novice": 0.0,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 7,
+      "best_fitness": 1.0,
+      "skilled": 0.666666666666667,
+      "novice": 0.02083333333333335,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 8,
+      "best_fitness": 1.0,
+      "skilled": 0.666666666666667,
+      "novice": 0.0277777777777778,
+      "evals_of_best": 3
+     }
+    ],
+    "default_params": {
+     "law": "pulse",
+     "law_strength": 1.0,
+     "spawn_every": 14,
+     "spawn_step": 3,
+     "hazard_speed": 150.0,
+     "goal": 4,
+     "stage_secs": 32.0,
+     "max_hazards": 22
+    },
+    "holdout_best": {
+     "novice": 0.0416666666666667,
+     "skilled": 0.875,
+     "skilled_score": 3752.45833333333,
+     "skilled_stage1": 1.0
+    },
+    "holdout_default": {
+     "novice": 0.0,
+     "skilled": 0.0,
+     "skilled_score": 920.958333333333,
+     "skilled_stage1": 0.5
+    },
+    "start_fitness": 0.578571428571429,
+    "final_fitness": 1.0,
+    "evaluations": 108
+   }
+  }
+ ],
+ "verification": {
+  "concept_campaign": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "attempts": 3,
+     "audio_loaded": true,
+     "chapters_cleared": 3,
+     "matches": 9,
+     "ok": true,
+     "save_written": true,
+     "universe_loaded": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 129,
+     "title_colors": 148,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "sessions": 9,
+     "mismatches": 0
+    }
+   },
+   "released": true
+  },
+  "steward": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_score": 990,
+     "bot_won": true,
+     "do_nothing_score": 632,
+     "final_digest": "7fc3b8d1",
+     "final_tick": 350,
+     "ok": true,
+     "rewind_restores_epoch_start": true,
+     "save_written": true,
+     "target": 853
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 185,
+     "title_colors": 126,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "tick_match": true,
+     "score_match": true,
+     "python_score": 990,
+     "godot_score": 990
+    }
+   },
+   "released": true
+  },
+  "arcade": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "difficulty_tuned_on_holdout": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_completed_game": true,
+     "novice_full_clears_of_8": 0,
+     "ok": true,
+     "retries": 1,
+     "save_written": true,
+     "score": 3605
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 26,
+     "title_colors": 131,
+     "w": 1100,
+     "ok": true
+    },
+    "tuning_holdout": {
+     "novice": 0.0416666666666667,
+     "skilled": 0.875,
+     "skilled_score": 3752.45833333333,
+     "skilled_stage1": 1.0
+    }
+   },
+   "released": true
+  }
+ },
+ "released": [
+  "concept_campaign",
+  "steward",
+  "arcade"
+ ],
+ "timings_s": {
+  "1_inspiration": 0.0,
+  "2_universe": 34.9,
+  "3_game1_concept_campaign": 32.2,
+  "4_game2_steward": 0.9,
+  "5_game3_arcade_tuning": 38.8,
+  "6_verification": 8.4,
+  "7_archive": 0.0,
+  "total": 115.2,
+  "8_retrospective_and_reset": 0.0
+ },
+ "reset": {
+  "state_dir_removed": true,
+  "grammar_priors_cleared": true,
+  "knowledge_retained": true,
+  "no_universe_leak_in_knowledge": true,
+  "ok": true
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "id": "pallorbasalt-3030859947",
+ "seed": 3030859947,
+ "name": "Pallorbasalt",
+ "inspirations": [
+  "coral reef bleaching",
+  "the telegraph",
+  "plate tectonics"
+ ],
+ "facts": {
+  "coral reef bleaching": "Corals expel their symbiotic algae under heat stress, turning white.",
+  "the telegraph": "Electric telegraphs in the 19th century sent messages across continents in minutes.",
+  "plate tectonics": "Earth's crust moves in plates whose slow collisions build mountains and trigger earthquakes."
+ },
+ "law": "wells",
+ "law_text": "Mass bends the world here; heavy places pull wanderers toward them whether they wish it or not.",
+ "palette": [
+  "#122824",
+  "#264a4c",
+  "#d8566e",
+  "#3cbcf2",
+  "#9dc4f2"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Bloom Syndicate",
+   "The Relay Compact",
+   "The Code Host"
+  ],
+  "towns": [
+   "Pallorspire",
+   "Basaltward",
+   "Bloomspire",
+   "Relayfall",
+   "Codemark",
+   "Drifthollow"
+  ],
+  "currency": "scrip",
+  "potion": "philter",
+  "motifs": [
+   "pallor",
+   "basalt",
+   "bloom",
+   "relay",
+   "code",
+   "drift",
+   "reef",
+   "wire",
+   "fault"
+  ]
+ },
+ "game_title": "Pallorbasalt: Expedition",
+ "fact_lines": [
+  "coral reef bleaching: Corals expel their symbiotic algae under heat stress, turning white.",
+  "the telegraph: Electric telegraphs in the 19th century sent messages across continents in minutes.",
+  "plate tectonics: Earth's crust moves in plates whose slow collisions build mountains and trigger earthquakes."
+ ]
+}

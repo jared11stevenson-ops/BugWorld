@@ -1,0 +1,6 @@
+[
+ {"cycle": "attempt_000", "game": "arcade", "check": "difficulty_tuned_on_holdout",
+  "note": "Quality gate refused the arcade game: skilled bot 0.25 vs novice 0.33 on held-out seeds. Root causes found and fixed in the production tools: (1) the skilled bot used crude distance-based dodging and long-range well repulsion that outweighed shard attraction (it dithered and timed out); replaced by closest-approach collision prediction with near-field-only well avoidance. (2) the 'wells' law force was ~100x too weak to matter; rescaled. (3) the difficulty tuner suffered winner's curse (single noisy evaluation, never replaced); now re-evaluates elites on fresh seeds each generation and ranks by running mean.",
+  "validated_by": "after fixes: wells law skilled 0.92-1.0 vs novice 0.17-0.29 on identical seeds; pulse tuned 0 -> 0.67 on held-out seeds",
+  "evidence": "studio/knowledge/attempts/attempt_000_arcade_gate_failure.json"}
+]

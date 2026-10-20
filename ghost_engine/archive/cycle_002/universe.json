@@ -1,0 +1,230 @@
+{
+ "id": "pallorbasalt-3030859947",
+ "seed": 3030859947,
+ "name": "Pallorbasalt",
+ "inspirations": [
+  "coral reef bleaching",
+  "the telegraph",
+  "plate tectonics"
+ ],
+ "facts": {
+  "coral reef bleaching": "Corals expel their symbiotic algae under heat stress, turning white.",
+  "the telegraph": "Electric telegraphs in the 19th century sent messages across continents in minutes.",
+  "plate tectonics": "Earth's crust moves in plates whose slow collisions build mountains and trigger earthquakes."
+ },
+ "fields": [
+  "ecology",
+  "technology",
+  "geology"
+ ],
+ "tags": {
+  "tipping": 2,
+  "symbiosis": 1,
+  "signal": 1,
+  "network": 1,
+  "erosion": 1
+ },
+ "law": "wells",
+ "law_text": "Mass bends the world here; heavy places pull wanderers toward them whether they wish it or not.",
+ "palette": [
+  "#122824",
+  "#264a4c",
+  "#d8566e",
+  "#3cbcf2",
+  "#9dc4f2"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Bloom Syndicate",
+   "The Relay Compact",
+   "The Code Host"
+  ],
+  "towns": [
+   "Pallorspire",
+   "Basaltward",
+   "Bloomspire",
+   "Relayfall",
+   "Codemark",
+   "Drifthollow"
+  ],
+  "currency": "scrip",
+  "potion": "philter",
+  "motifs": [
+   "pallor",
+   "basalt",
+   "bloom",
+   "relay",
+   "code",
+   "drift",
+   "reef",
+   "wire",
+   "fault"
+  ]
+ },
+ "rules": {
+  "combat": {
+   "crit_mult_pct": 150,
+   "crit_pct": 5,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 60,
+   "guard_pierce_pct": 70,
+   "guard_reduce_pct": 60,
+   "heal_vuln_pct": 20,
+   "potion_heal": 20,
+   "power_interrupt_pct": 50,
+   "power_mult_pct": 170,
+   "round_cap": 40,
+   "start_potions": 3
+  },
+  "economy": {
+   "base_price": 10,
+   "burn": 3,
+   "restock_ticks": 9,
+   "sell_pct": 70,
+   "stock_cap": 6,
+   "swing_pct": 27,
+   "tax_pct": 25,
+   "upkeep": 2,
+   "upkeep_every": 5,
+   "wage": 3
+  },
+  "name": "pallorbasalt-3030859947",
+  "world": {
+   "aggro_pct": 8,
+   "flee_pct": 60,
+   "kill_rel_penalty": 7,
+   "loot_pct": 30,
+   "regen_div": 10,
+   "respawn_delay": 28,
+   "war_threshold": -40
+  }
+ },
+ "search": {
+  "generations": 12,
+  "population": 16,
+  "seeds": [
+   1,
+   2,
+   3
+  ],
+  "ticks": 600,
+  "curve": [
+   {
+    "gen": 0,
+    "best": 0.6950021070152128,
+    "mean": 0.645737518842003
+   },
+   {
+    "gen": 1,
+    "best": 0.6950021070152128,
+    "mean": 0.6556558473429722
+   },
+   {
+    "gen": 2,
+    "best": 0.7043407674912578,
+    "mean": 0.660314031262685
+   },
+   {
+    "gen": 3,
+    "best": 0.7043407674912578,
+    "mean": 0.6489054091631461
+   },
+   {
+    "gen": 4,
+    "best": 0.7043407674912578,
+    "mean": 0.6669133938075634
+   },
+   {
+    "gen": 5,
+    "best": 0.7114691589717551,
+    "mean": 0.682408053020552
+   },
+   {
+    "gen": 6,
+    "best": 0.7114691589717551,
+    "mean": 0.6763703577996975
+   },
+   {
+    "gen": 7,
+    "best": 0.7114691589717551,
+    "mean": 0.6728194898629603
+   },
+   {
+    "gen": 8,
+    "best": 0.7114691589717551,
+    "mean": 0.6767633492255974
+   },
+   {
+    "gen": 9,
+    "best": 0.7114691589717551,
+    "mean": 0.6785460339281308
+   },
+   {
+    "gen": 10,
+    "best": 0.7114691589717551,
+    "mean": 0.6746267550597328
+   },
+   {
+    "gen": 11,
+    "best": 0.7114691589717551,
+    "mean": 0.6756259094651089
+   },
+   {
+    "gen": 12,
+    "best": 0.7178788300916801,
+    "mean": 0.6841872737436665
+   }
+  ],
+  "start_fitness": 0.6950021070152128,
+  "final_fitness": 0.7178788300916801,
+  "evaluations": 160
+ },
+ "canon": {
+  "seed": 106,
+  "fork_tick": 300,
+  "intervention": "windfall",
+  "richness": 0.7429307655330932,
+  "explored": 72,
+  "median_richness": 0.7071110787729833
+ },
+ "chronicle": [
+  "Day 4: Bram Vale of The Relay Compact fell at Relayfall to Elda Wick of The Bloom Syndicate. It set off 1 later events.",
+  "Day 19: Hob Ford of The Code Host fell at Pallorspire to Elda Wick of The Bloom Syndicate. It set off 1 later events.",
+  "Day 23: Ash Reed of The Bloom Syndicate fell at Relayfall to Ash Crow of The Relay Compact. It set off 1 later events.",
+  "Day 54: Ash Marsh of The Relay Compact fell at Pallorspire to Hob Reed of The Bloom Syndicate. It set off 1 later events.",
+  "Day 170: Hob Reed of The Bloom Syndicate fell at Basaltward to Dov Stone of The Relay Compact. It set off 2 later events.",
+  "Day 173: Bram Stone of The Code Host fell at Relayfall to Hob Reed of The Bloom Syndicate. It set off 2 later events."
+ ],
+ "pivotal": [
+  {
+   "event": 39,
+   "tick": 4,
+   "cascade": 1
+  },
+  {
+   "event": 183,
+   "tick": 19,
+   "cascade": 1
+  },
+  {
+   "event": 223,
+   "tick": 23,
+   "cascade": 1
+  },
+  {
+   "event": 491,
+   "tick": 54,
+   "cascade": 1
+  },
+  {
+   "event": 1576,
+   "tick": 170,
+   "cascade": 2
+  },
+  {
+   "event": 1603,
+   "tick": 173,
+   "cascade": 2
+  }
+ ]
+}

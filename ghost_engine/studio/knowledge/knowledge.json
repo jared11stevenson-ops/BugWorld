@@ -1,0 +1,208 @@
+{
+ "arcade_priors": {
+  "pulse": {
+   "goal": 3,
+   "hazard_speed": 150.0,
+   "law": "pulse",
+   "law_strength": 0.5,
+   "max_hazards": 18,
+   "spawn_every": 15,
+   "spawn_step": 1,
+   "stage_secs": 30.0
+  },
+  "wells": {
+   "goal": 5,
+   "hazard_speed": 170.0,
+   "law": "wells",
+   "law_strength": 1.1,
+   "max_hazards": 16,
+   "spawn_every": 13,
+   "spawn_step": 4,
+   "stage_secs": 29.0
+  }
+ },
+ "budget": {
+  "g1_gens": 8,
+  "tune_gens": 8,
+  "tune_pop": 12,
+  "universe_gens": 12,
+  "universe_pop": 16
+ },
+ "capabilities": {
+  "animation": {
+   "accept": "-",
+   "status": "MISSING: no skeletal/tween animation pipeline",
+   "tool": "-"
+  },
+  "art_2d": {
+   "accept": "non-blank screens",
+   "status": "partial (procedural vector art only)",
+   "tool": "shell Emblem + _draw (procedural vector shapes, palette from universe)"
+  },
+  "art_3d": {
+   "accept": "-",
+   "status": "MISSING: no 3D asset generation exists",
+   "tool": "-"
+  },
+  "audio": {
+   "accept": "sfx + music loop per game, loaded without import",
+   "status": "implemented (basic synthesis; no composed music)",
+   "tool": "studio.audio (procedural synthesis)"
+  },
+  "balancer_optimizer": {
+   "accept": "difficulty tuned on held-out seeds",
+   "status": "implemented",
+   "tool": "studio.tuner + foundry evolution"
+  },
+  "inspiration": {
+   "accept": "3 inspirations from distinct fields",
+   "status": "implemented",
+   "tool": "studio.inspiration.pick"
+  },
+  "mechanics_designer": {
+   "accept": "viable concepts validated on held-out seeds",
+   "status": "implemented",
+   "tool": "ghost.foundry (discovery loop, agent inbox)"
+  },
+  "polish_producer": {
+   "accept": "-",
+   "status": "MISSING: no human-in-the-loop playtest feedback yet (rating hook exists in Game 1 foundry arena only)",
+   "tool": "-"
+  },
+  "programmer": {
+   "accept": "standalone Godot project per game",
+   "status": "implemented",
+   "tool": "studio.games builders + templates"
+  },
+  "tester": {
+   "accept": "self-test, no script errors, twin parity, screenshots",
+   "status": "implemented",
+   "tool": "studio.verify"
+  },
+  "universe_designer": {
+   "accept": "evolved rules + canon history chosen among explored branches",
+   "status": "implemented",
+   "tool": "studio.universe.make_universe + explore"
+  }
+ },
+ "cycles": [
+  {
+   "arcade_tuning": {
+    "final": 1.0,
+    "holdout_novice": 0.0416666666666667,
+    "holdout_skilled": 0.875,
+    "start": 0.578571428571429
+   },
+   "bottleneck": "5_game3_arcade_tuning",
+   "canon_richness": 0.7426777741941802,
+   "cycle": "cycle_001",
+   "failed_checks": [],
+   "history_branches_explored": 72,
+   "law": "pulse",
+   "median_branch_richness": 0.6740290502305741,
+   "released": [
+    "concept_campaign",
+    "steward",
+    "arcade"
+   ],
+   "timings_s": {
+    "1_inspiration": 0.0,
+    "2_universe": 34.9,
+    "3_game1_concept_campaign": 32.2,
+    "4_game2_steward": 0.9,
+    "5_game3_arcade_tuning": 38.8,
+    "6_verification": 8.4,
+    "7_archive": 0.0,
+    "total": 115.2
+   },
+   "universe_search": {
+    "evaluations": 158,
+    "final": 0.7119184547013451,
+    "start": 0.6857424725406295
+   }
+  },
+  {
+   "arcade_tuning": {
+    "final": 1.0,
+    "holdout_novice": 0.0416666666666667,
+    "holdout_skilled": 0.708333333333333,
+    "start": 1.0
+   },
+   "bottleneck": "5_game3_arcade_tuning",
+   "canon_richness": 0.7429307655330932,
+   "cycle": "cycle_002",
+   "failed_checks": [],
+   "history_branches_explored": 72,
+   "law": "wells",
+   "median_branch_richness": 0.7071110787729833,
+   "released": [
+    "concept_campaign",
+    "steward",
+    "arcade"
+   ],
+   "timings_s": {
+    "1_inspiration": 0.0,
+    "2_universe": 32.2,
+    "3_game1_concept_campaign": 24.5,
+    "4_game2_steward": 0.9,
+    "5_game3_arcade_tuning": 56.3,
+    "6_verification": 10.0,
+    "7_archive": 0.0,
+    "total": 124.0
+   },
+   "universe_search": {
+    "evaluations": 160,
+    "final": 0.7178788300916801,
+    "start": 0.6950021070152128
+   }
+  }
+ ],
+ "improvements": [
+  {
+   "actions": [
+    "stored evolved world-rule priors (search improved fitness)",
+    "stored validated arcade parameters for law 'pulse'"
+   ],
+   "cycle": "cycle_001"
+  },
+  {
+   "actions": [
+    "stored evolved world-rule priors (search improved fitness)",
+    "stored validated arcade parameters for law 'wells'"
+   ],
+   "cycle": "cycle_002"
+  }
+ ],
+ "lessons": [
+  {
+   "check": "difficulty_tuned_on_holdout",
+   "cycle": "attempt_000",
+   "evidence": "studio/knowledge/attempts/attempt_000_arcade_gate_failure.json",
+   "game": "arcade",
+   "note": "Quality gate refused the arcade game: skilled bot 0.25 vs novice 0.33 on held-out seeds. Root causes found and fixed in the production tools: (1) the skilled bot used crude distance-based dodging and long-range well repulsion that outweighed shard attraction (it dithered and timed out); replaced by closest-approach collision prediction with near-field-only well avoidance. (2) the 'wells' law force was ~100x too weak to matter; rescaled. (3) the difficulty tuner suffered winner's curse (single noisy evaluation, never replaced); now re-evaluates elites on fresh seeds each generation and ranks by running mean.",
+   "validated_by": "after fixes: wells law skilled 0.92-1.0 vs novice 0.17-0.29 on identical seeds; pulse tuned 0 -> 0.67 on held-out seeds"
+  },
+  {
+   "cycle": "cycle_001",
+   "note": "all checks passed; slowest stage was 5_game3_arcade_tuning (38.8s)"
+  },
+  {
+   "cycle": "cycle_002",
+   "note": "all checks passed; slowest stage was 5_game3_arcade_tuning (56.3s)"
+  }
+ ],
+ "universe_priors": {
+  "aggro_pct": 8,
+  "burn": 2,
+  "flee_pct": 60,
+  "kill_rel_penalty": 6,
+  "loot_pct": 50,
+  "regen_div": 22,
+  "respawn_delay": 32,
+  "restock_ticks": 8,
+  "sell_pct": 75,
+  "swing_pct": 18,
+  "wage": 2
+ },
+ "version": 1
+}

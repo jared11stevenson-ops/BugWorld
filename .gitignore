@@ -4,3 +4,5 @@ tests/artifacts/
 *connection*.json
 __pycache__/
 *.pyc
+studio/state/
+archive_smoke/
