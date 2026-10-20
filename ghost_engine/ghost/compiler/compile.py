@@ -1,0 +1,134 @@
+"""World Compiler: validated ruleset (+ its evidence) -> Godot 4 game artifacts in godot/generated/.
+Refuses to compile a ruleset whose held-out evidence does not clear the gate (use --force to override, recorded in manifest).
+Usage: python -m ghost.compiler.compile [--force]"""
+import hashlib, json, os, subprocess, sys
+from ..kernel import rules as RU, policies as P
+from .golden import golden
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+EVID = os.path.join(ROOT, "evidence", "lab")
+GEN = os.path.join(ROOT, "godot", "generated")
+
+
+def jload(p):
+    with open(p) as f:
+        return json.load(f)
+
+
+def sha(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()[:16]
+
+
+def gate(candidate_name, val):
+    """Compile gate: only mechanics that beat the baseline on held-out seeds, without stalemates."""
+    v, b = val[candidate_name], val["baseline_v0"]
+    checks = [
+        ("paired held-out fitness gain > 0", v.get("paired_gain_mean", 0) > 0),
+        ("improved on >= 7/8 held-out seeds", v.get("seeds_improved", 0) >= 7),
+        ("stalemate rate <= 10%", v["metrics"]["stalemate"] <= 0.10),
+        ("robust dominance lower than baseline", v["metrics"]["dominance"] < b["metrics"]["dominance"]),
+        ("all 4 actions live (>=5% of adaptive decisions) on average >= 3.5", v["metrics"]["live_actions"] >= 3.5),
+    ]
+    return checks
+
+
+def find_champion_name(champ_combat):
+    for r in jload(os.path.join(EVID, "evolution_runs.json")):
+        if r["best"] == champ_combat:
+            return f"evolved_run{r['seed']}"
+    return None
+
+
+def gd(obj):
+    txt = json.dumps(obj, sort_keys=True)
+    assert "true" not in txt and "false" not in txt and "null" not in txt
+    return txt
+
+
+def action_bar_tscn(rules):
+    c = rules["combat"]
+    tips = {
+        "Attack": "Deal base damage.",
+        "Guard": f"Take {c['guard_reduce_pct']}% less from Attack ({c['guard_reduce_pct'] * c['guard_pierce_pct'] // 100}% less from Power)."
+                 + (f" Counter for {c['guard_counter_pct']}% of an attacker's damage." if c["guard_counter_pct"] else ""),
+        "Power": f"Deal {c['power_mult_pct']}% damage."
+                 + (f" Only {c['power_interrupt_pct']}% lands if the foe Attacks." if c["power_interrupt_pct"] < 100 else ""),
+        "Heal": f"Restore up to {c['potion_heal']} HP (uses a potion)."
+                + (f" Take {c['heal_vuln_pct']}% extra damage while drinking." if c["heal_vuln_pct"] else ""),
+    }
+    L = ['[gd_scene load_steps=2 format=3]', '', '[ext_resource type="Script" path="res://ghost/action_bar.gd" id="1"]', '',
+         '[node name="ActionBar" type="HBoxContainer"]', 'script = ExtResource("1")']
+    for i, name in enumerate(["Attack", "Guard", "Power", "Heal"]):
+        L += ['', f'[node name="{name}" type="Button" parent="."]', 'layout_mode = 2', 'size_flags_horizontal = 3',
+              f'tooltip_text = "{tips[name]}"', f'text = "{name}"', f'metadata/action = {i}']
+    if c["fatigue_pct"]:
+        L += ['', '[node name="FatigueNote" type="Label" parent="."]', 'layout_mode = 2',
+              f'text = "Repeating an action: -{c["fatigue_pct"]}% damage each time"']
+    return "\n".join(L) + "\n", tips
+
+
+def assets_required(rules):
+    c = rules["combat"]
+    sfx = ["hit", "guard", "power_swing", "heal_sip", "death"]
+    if c["crit_pct"] > 0:
+        sfx.append("crit")
+    if c["guard_counter_pct"] > 0:
+        sfx.append("counter_strike")
+    if c["power_interrupt_pct"] < 100:
+        sfx.append("power_interrupted")
+    vfx = ["hit_flash", "guard_shield", "heal_glow"] + (["fatigue_sweat"] if c["fatigue_pct"] else []) + (["crit_burst"] if c["crit_pct"] else [])
+    return {
+        "note": "Derived from the compiled ruleset: each active mechanic implies the art/audio it needs. The Godot build renders with built-in controls until these exist.",
+        "sprites": [f"npc_{n}" for n in P.NAMES] + [f"emblem_{f}" for f in ("crown", "guild", "wilds")],
+        "icons": ["action_attack", "action_guard", "action_power", "action_heal", "potion", "gold"],
+        "backgrounds": ["town_%d" % i for i in range(6)],
+        "sfx": sfx, "vfx": vfx,
+    }
+
+
+def main(force=False):
+    val = jload(os.path.join(EVID, "holdout_validation.json"))
+    v1 = jload(os.path.join(ROOT, "rulesets", "v1_evolved.json"))
+    v0 = jload(os.path.join(ROOT, "rulesets", "v0_baseline.json"))
+    name = find_champion_name(v1["combat"])
+    if name is None:
+        sys.exit("v1_evolved ruleset does not match any recorded evolution run; refusing to compile")
+    checks = gate(name, val)
+    for text, ok in checks:
+        print(("PASS " if ok else "FAIL ") + text)
+    passed = all(ok for _, ok in checks)
+    if not passed and not force:
+        sys.exit("gate failed; not compiling (use --force to override)")
+    os.makedirs(GEN, exist_ok=True)
+    rulesets = {"v0_baseline": v0, "v1_evolved": v1}
+    with open(os.path.join(GEN, "rulesets.gd"), "w") as f:
+        f.write("# GENERATED by ghost.compiler.compile - do not edit.\nextends RefCounted\n\n")
+        f.write(f"const V0 := {gd(v0)}\nconst V1 := {gd(v1)}\n\n")
+        f.write('static func get_rules(name: String) -> Dictionary:\n\tif name == "v1_evolved":\n\t\treturn V1.duplicate(true)\n\treturn V0.duplicate(true)\n')
+    g = golden(rulesets)
+    with open(os.path.join(GEN, "golden.gd"), "w") as f:
+        f.write("# GENERATED by ghost.compiler.compile from the Python kernel - do not edit.\nextends RefCounted\n\n")
+        f.write(f"const GOLDEN := {gd(g)}\n")
+    tscn, tips = action_bar_tscn(v1)
+    with open(os.path.join(GEN, "action_bar.tscn"), "w") as f:
+        f.write(tscn)
+    with open(os.path.join(GEN, "assets_required.json"), "w") as f:
+        json.dump(assets_required(v1), f, indent=1)
+    try:
+        rev = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, text=True).strip()
+    except Exception:
+        rev = "unknown"
+    manifest = {"compiled_ruleset": "v1_evolved", "evidence_candidate": name, "git_rev": rev, "forced": force and not passed,
+                "gate": [{"check": t, "pass": ok} for t, ok in checks],
+                "holdout": {k: val[name][k] for k in ("mean", "paired_gain_mean", "seeds_improved")},
+                "baseline_holdout_mean": val["baseline_v0"]["mean"],
+                "sources": {"ruleset": sha(os.path.join(ROOT, "rulesets", "v1_evolved.json")),
+                            "validation": sha(os.path.join(EVID, "holdout_validation.json"))},
+                "outputs": sorted(os.listdir(GEN)), "action_tooltips": tips}
+    with open(os.path.join(GEN, "manifest.json"), "w") as f:
+        json.dump(manifest, f, indent=1, sort_keys=True)
+    print("compiled ->", GEN, manifest["outputs"])
+
+
+if __name__ == "__main__":
+    main("--force" in sys.argv)

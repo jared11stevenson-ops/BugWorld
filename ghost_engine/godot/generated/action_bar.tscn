@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ghost/action_bar.gd" id="1"]
+
+[node name="ActionBar" type="HBoxContainer"]
+script = ExtResource("1")
+
+[node name="Attack" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Deal base damage."
+text = "Attack"
+metadata/action = 0
+
+[node name="Guard" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Take 60% less from Attack (42% less from Power). Counter for 60% of an attacker's damage."
+text = "Guard"
+metadata/action = 1
+
+[node name="Power" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Deal 170% damage. Only 50% lands if the foe Attacks."
+text = "Power"
+metadata/action = 2
+
+[node name="Heal" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Restore up to 20 HP (uses a potion). Take 20% extra damage while drinking."
+text = "Heal"
+metadata/action = 3
+
+[node name="FatigueNote" type="Label" parent="."]
+layout_mode = 2
+text = "Repeating an action: -5% damage each time"

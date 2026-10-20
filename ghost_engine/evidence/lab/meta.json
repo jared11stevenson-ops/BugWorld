@@ -1,0 +1,30 @@
+{
+ "command": "python -m ghost.lab.experiments",
+ "elapsed_s": 224.3112452030182,
+ "git_rev": "79deb79",
+ "holdout_seeds": [
+  101,
+  102,
+  103,
+  104,
+  105,
+  106,
+  107,
+  108
+ ],
+ "params": {
+  "ab_seeds": 30,
+  "ab_ticks": 600,
+  "cf_seeds": 30,
+  "evo_runs": 3,
+  "fights": 16,
+  "fuzz": 150,
+  "gens": 20,
+  "pop": 20,
+  "seeds": 3
+ },
+ "train_seeds": [
+  1,
+  2
+ ]
+}

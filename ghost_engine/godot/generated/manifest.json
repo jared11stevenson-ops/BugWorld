@@ -1,0 +1,51 @@
+{
+ "action_tooltips": {
+  "Attack": "Deal base damage.",
+  "Guard": "Take 60% less from Attack (42% less from Power). Counter for 60% of an attacker's damage.",
+  "Heal": "Restore up to 20 HP (uses a potion). Take 20% extra damage while drinking.",
+  "Power": "Deal 170% damage. Only 50% lands if the foe Attacks."
+ },
+ "baseline_holdout_mean": 0.5294117647058824,
+ "compiled_ruleset": "v1_evolved",
+ "evidence_candidate": "evolved_run1",
+ "forced": false,
+ "gate": [
+  {
+   "check": "paired held-out fitness gain > 0",
+   "pass": true
+  },
+  {
+   "check": "improved on >= 7/8 held-out seeds",
+   "pass": true
+  },
+  {
+   "check": "stalemate rate <= 10%",
+   "pass": true
+  },
+  {
+   "check": "robust dominance lower than baseline",
+   "pass": true
+  },
+  {
+   "check": "all 4 actions live (>=5% of adaptive decisions) on average >= 3.5",
+   "pass": true
+  }
+ ],
+ "git_rev": "79deb79",
+ "holdout": {
+  "mean": 0.9677980567226891,
+  "paired_gain_mean": 0.4383862920168068,
+  "seeds_improved": 8
+ },
+ "outputs": [
+  "action_bar.tscn",
+  "assets_required.json",
+  "golden.gd",
+  "manifest.json",
+  "rulesets.gd"
+ ],
+ "sources": {
+  "ruleset": "493b6faafadc11d7",
+  "validation": "524461762c77a919"
+ }
+}

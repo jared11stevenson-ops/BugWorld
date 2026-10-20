@@ -1,0 +1,38 @@
+{
+ "combat": {
+  "crit_mult_pct": 150,
+  "crit_pct": 10,
+  "fatigue_pct": 0,
+  "guard_counter_pct": 0,
+  "guard_pierce_pct": 100,
+  "guard_reduce_pct": 20,
+  "heal_vuln_pct": 0,
+  "potion_heal": 30,
+  "power_interrupt_pct": 100,
+  "power_mult_pct": 150,
+  "round_cap": 40,
+  "start_potions": 3
+ },
+ "economy": {
+  "base_price": 10,
+  "burn": 3,
+  "restock_ticks": 6,
+  "sell_pct": 80,
+  "stock_cap": 6,
+  "swing_pct": 15,
+  "tax_pct": 25,
+  "upkeep": 2,
+  "upkeep_every": 5,
+  "wage": 2
+ },
+ "name": "v0_baseline",
+ "world": {
+  "aggro_pct": 4,
+  "flee_pct": 50,
+  "kill_rel_penalty": 4,
+  "loot_pct": 50,
+  "regen_div": 25,
+  "respawn_delay": 20,
+  "war_threshold": -40
+ }
+}

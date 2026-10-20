@@ -1,0 +1,100 @@
+{
+ "baseline_fitness": 0.9375,
+ "rows": [
+  {
+   "deltas": [
+    0.018787202380952328,
+    -0.17206101190476186
+   ],
+   "max_abs_fitness_change": 0.17206101190476186,
+   "param": "power_interrupt_pct",
+   "value": 20
+  },
+  {
+   "deltas": [
+    0.060825892857142794
+   ],
+   "max_abs_fitness_change": 0.060825892857142794,
+   "param": "fatigue_pct",
+   "value": 30
+  },
+  {
+   "deltas": [
+    -0.0016741071428572063,
+    0.046595982142857206
+   ],
+   "max_abs_fitness_change": 0.046595982142857206,
+   "param": "crit_mult_pct",
+   "value": 170
+  },
+  {
+   "deltas": [
+    -0.004185267857142794,
+    0.04241071428571419
+   ],
+   "max_abs_fitness_change": 0.04241071428571419,
+   "param": "heal_vuln_pct",
+   "value": 70
+  },
+  {
+   "deltas": [
+    -0.041015625
+   ],
+   "max_abs_fitness_change": 0.041015625,
+   "param": "potion_heal",
+   "value": 5
+  },
+  {
+   "deltas": [
+    -0.03826530612244894
+   ],
+   "max_abs_fitness_change": 0.03826530612244894,
+   "param": "guard_counter_pct",
+   "value": 0
+  },
+  {
+   "deltas": [
+    -0.004185267857142794,
+    0.025111607142857206
+   ],
+   "max_abs_fitness_change": 0.025111607142857206,
+   "param": "power_mult_pct",
+   "value": 260
+  },
+  {
+   "deltas": [
+    -0.014229910714285698
+   ],
+   "max_abs_fitness_change": 0.014229910714285698,
+   "param": "start_potions",
+   "value": 5
+  },
+  {
+   "deltas": [
+    -0.0016741071428572063,
+    -0.004185267857142794
+   ],
+   "max_abs_fitness_change": 0.004185267857142794,
+   "param": "crit_pct",
+   "value": 10
+  },
+  {
+   "deltas": [
+    0.0,
+    0.0
+   ],
+   "max_abs_fitness_change": 0.0,
+   "param": "guard_reduce_pct",
+   "value": 20
+  },
+  {
+   "deltas": [
+    0.0,
+    0.0
+   ],
+   "max_abs_fitness_change": 0.0,
+   "param": "guard_pierce_pct",
+   "value": 60
+  }
+ ]
+}

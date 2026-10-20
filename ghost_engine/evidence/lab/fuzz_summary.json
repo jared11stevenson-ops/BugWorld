@@ -1,0 +1,135 @@
+{
+ "drivers": {
+  "bankrupt_economy": [
+   {
+    "flagged_mean": 0.5,
+    "param": "economy.wage",
+    "std_diff": 1.23,
+    "unflagged_mean": 4.3
+   },
+   {
+    "flagged_mean": 4.4,
+    "param": "economy.burn",
+    "std_diff": 0.97,
+    "unflagged_mean": 2.1
+   },
+   {
+    "flagged_mean": 39.1,
+    "param": "combat.heal_vuln_pct",
+    "std_diff": 0.53,
+    "unflagged_mean": 56.2
+   }
+  ],
+  "combat_stalemate": [
+   {
+    "flagged_mean": 5,
+    "param": "combat.guard_counter_pct",
+    "std_diff": 1.44,
+    "unflagged_mean": 51.2
+   },
+   {
+    "flagged_mean": 76.2,
+    "param": "combat.guard_reduce_pct",
+    "std_diff": 1.1,
+    "unflagged_mean": 43.2
+   },
+   {
+    "flagged_mean": 20.4,
+    "param": "combat.fatigue_pct",
+    "std_diff": 0.67,
+    "unflagged_mean": 13.5
+   }
+  ],
+  "dominant_strategy": [
+   {
+    "flagged_mean": 64.3,
+    "param": "combat.power_interrupt_pct",
+    "std_diff": 0.55,
+    "unflagged_mean": 46.5
+   },
+   {
+    "flagged_mean": 222.6,
+    "param": "combat.power_mult_pct",
+    "std_diff": 0.45,
+    "unflagged_mean": 196.4
+   },
+   {
+    "flagged_mean": 37.1,
+    "param": "combat.guard_reduce_pct",
+    "std_diff": 0.42,
+    "unflagged_mean": 49.8
+   }
+  ],
+  "extinction_risk": [
+   {
+    "flagged_mean": 25.3,
+    "param": "world.aggro_pct",
+    "std_diff": 1.49,
+    "unflagged_mean": 10.0
+   },
+   {
+    "flagged_mean": 46.7,
+    "param": "world.respawn_delay",
+    "std_diff": 0.88,
+    "unflagged_mean": 26.5
+   },
+   {
+    "flagged_mean": 16.7,
+    "param": "world.flee_pct",
+    "std_diff": 0.86,
+    "unflagged_mean": 45.4
+   }
+  ],
+  "money_inflation": [
+   {
+    "flagged_mean": 7.6,
+    "param": "economy.wage",
+    "std_diff": 1.88,
+    "unflagged_mean": 1.9
+   },
+   {
+    "flagged_mean": 13.4,
+    "param": "economy.base_price",
+    "std_diff": 0.44,
+    "unflagged_mean": 19.1
+   },
+   {
+    "flagged_mean": 7,
+    "param": "world.aggro_pct",
+    "std_diff": 0.43,
+    "unflagged_mean": 11.5
+   }
+  ],
+  "wealth_runaway": [
+   {
+    "flagged_mean": 77.3,
+    "param": "world.loot_pct",
+    "std_diff": 1.11,
+    "unflagged_mean": 37.9
+   },
+   {
+    "flagged_mean": 1.9,
+    "param": "economy.wage",
+    "std_diff": 0.61,
+    "unflagged_mean": 3.7
+   },
+   {
+    "flagged_mean": 24.1,
+    "param": "combat.crit_pct",
+    "std_diff": 0.41,
+    "unflagged_mean": 19.1
+   }
+  ]
+ },
+ "n": 150,
+ "summary": {
+  "bankrupt_economy": 33,
+  "combat_stalemate": 12,
+  "dominant_strategy": 46,
+  "extinction_risk": 3,
+  "ledger_violation": 0,
+  "money_inflation": 40,
+  "wealth_runaway": 22
+ },
+ "ticks": 400
+}

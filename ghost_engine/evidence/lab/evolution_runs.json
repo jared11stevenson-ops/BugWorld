@@ -1,0 +1,2993 @@
+[
+ {
+  "best": {
+   "crit_mult_pct": 150,
+   "crit_pct": 5,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 60,
+   "guard_pierce_pct": 70,
+   "guard_reduce_pct": 60,
+   "heal_vuln_pct": 20,
+   "potion_heal": 20,
+   "power_interrupt_pct": 50,
+   "power_mult_pct": 170,
+   "round_cap": 40,
+   "start_potions": 3
+  },
+  "hall": {
+   "crit": [
+    {
+     "fitness": 0.6173844537815126,
+     "gen": 0,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 15
+     }
+    },
+    {
+     "fitness": 0.6870404411764706,
+     "gen": 1,
+     "values": {
+      "crit_mult_pct": 180,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 2,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 3,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 4,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 5
+     }
+    }
+   ],
+   "fatigue": [
+    {
+     "fitness": 0.6173844537815126,
+     "gen": 0,
+     "values": {
+      "fatigue_pct": 10
+     }
+    },
+    {
+     "fitness": 0.6870404411764706,
+     "gen": 1,
+     "values": {
+      "fatigue_pct": 10
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 2,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 3,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 4,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "fatigue_pct": 5
+     }
+    }
+   ],
+   "guard": [
+    {
+     "fitness": 0.6173844537815126,
+     "gen": 0,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 30
+     }
+    },
+    {
+     "fitness": 0.6870404411764706,
+     "gen": 1,
+     "values": {
+      "guard_counter_pct": 0,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 15
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 2,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 60,
+      "guard_reduce_pct": 50
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 3,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 60,
+      "guard_reduce_pct": 50
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 4,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 60,
+      "guard_reduce_pct": 50
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 70,
+      "guard_reduce_pct": 60
+     }
+    }
+   ],
+   "heal": [
+    {
+     "fitness": 0.6173844537815126,
+     "gen": 0,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 25,
+      "start_potions": 5
+     }
+    },
+    {
+     "fitness": 0.6870404411764706,
+     "gen": 1,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 5
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 2,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 3,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 4,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 20,
+      "start_potions": 3
+     }
+    }
+   ],
+   "power": [
+    {
+     "fitness": 0.6173844537815126,
+     "gen": 0,
+     "values": {
+      "power_interrupt_pct": 100,
+      "power_mult_pct": 140
+     }
+    },
+    {
+     "fitness": 0.6870404411764706,
+     "gen": 1,
+     "values": {
+      "power_interrupt_pct": 100,
+      "power_mult_pct": 140
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 2,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 3,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.8361344537815127,
+     "gen": 4,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    }
+   ]
+  },
+  "seed": 1,
+  "train_curve": [
+   [
+    0,
+    0.6173844537815126,
+    0.5369496235994398
+   ],
+   [
+    1,
+    0.6870404411764706,
+    0.5900209719304389
+   ],
+   [
+    2,
+    0.8361344537815127,
+    0.612726314484127
+   ],
+   [
+    3,
+    0.8361344537815127,
+    0.6239118668300654
+   ],
+   [
+    4,
+    0.8361344537815127,
+    0.6245747257236228
+   ],
+   [
+    5,
+    0.9684873949579833,
+    0.6823382061157797
+   ],
+   [
+    6,
+    0.9684873949579833,
+    0.7256018032212885
+   ],
+   [
+    7,
+    0.9684873949579833,
+    0.7430015756302522
+   ],
+   [
+    8,
+    0.9684873949579833,
+    0.7959876137955183
+   ],
+   [
+    9,
+    0.9684873949579833,
+    0.8886926645658264
+   ],
+   [
+    10,
+    0.9684873949579833,
+    0.8619938287815126
+   ],
+   [
+    11,
+    0.9684873949579833,
+    0.868288508111578
+   ],
+   [
+    12,
+    0.9684873949579833,
+    0.8578934334150328
+   ],
+   [
+    13,
+    0.9684873949579833,
+    0.8270501794467788
+   ],
+   [
+    14,
+    0.9684873949579833,
+    0.8526972455648927
+   ],
+   [
+    15,
+    0.9684873949579833,
+    0.8012341707516341
+   ],
+   [
+    16,
+    0.9684873949579833,
+    0.8258107930672269
+   ],
+   [
+    17,
+    0.9684873949579833,
+    0.8354723608193277
+   ],
+   [
+    18,
+    0.9684873949579833,
+    0.8415763961834735
+   ],
+   [
+    19,
+    0.9684873949579833,
+    0.82804512429972
+   ],
+   [
+    20,
+    0.9684873949579833,
+    0.842419467787115
+   ]
+  ]
+ },
+ {
+  "best": {
+   "crit_mult_pct": 130,
+   "crit_pct": 10,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 40,
+   "guard_pierce_pct": 30,
+   "guard_reduce_pct": 80,
+   "heal_vuln_pct": 50,
+   "potion_heal": 40,
+   "power_interrupt_pct": 40,
+   "power_mult_pct": 160,
+   "round_cap": 40,
+   "start_potions": 2
+  },
+  "hall": {
+   "crit": [
+    {
+     "fitness": 0.6470588235294118,
+     "gen": 0,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 1,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 2,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 3,
+     "values": {
+      "crit_mult_pct": 120,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 4,
+     "values": {
+      "crit_mult_pct": 120,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 10
+     }
+    }
+   ],
+   "fatigue": [
+    {
+     "fitness": 0.6470588235294118,
+     "gen": 0,
+     "values": {
+      "fatigue_pct": 10
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 1,
+     "values": {
+      "fatigue_pct": 0
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 2,
+     "values": {
+      "fatigue_pct": 0
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 3,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 4,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "fatigue_pct": 5
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "fatigue_pct": 5
+     }
+    }
+   ],
+   "guard": [
+    {
+     "fitness": 0.6470588235294118,
+     "gen": 0,
+     "values": {
+      "guard_counter_pct": 0,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 25
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 1,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 70
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 2,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 70
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 3,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 4,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "guard_counter_pct": 40,
+      "guard_pierce_pct": 30,
+      "guard_reduce_pct": 80
+     }
+    }
+   ],
+   "heal": [
+    {
+     "fitness": 0.6470588235294118,
+     "gen": 0,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 30,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 1,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 4
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 2,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 4
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 3,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 4,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "heal_vuln_pct": 50,
+      "potion_heal": 40,
+      "start_potions": 2
+     }
+    }
+   ],
+   "power": [
+    {
+     "fitness": 0.6470588235294118,
+     "gen": 0,
+     "values": {
+      "power_interrupt_pct": 100,
+      "power_mult_pct": 130
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 1,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 190
+     }
+    },
+    {
+     "fitness": 0.8834690126050421,
+     "gen": 2,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 190
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 3,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.939075630252101,
+     "gen": 4,
+     "values": {
+      "power_interrupt_pct": 50,
+      "power_mult_pct": 170
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 5,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 6,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 7,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 8,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 9,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 10,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 11,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 12,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 13,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 14,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 15,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "power_interrupt_pct": 40,
+      "power_mult_pct": 160
+     }
+    }
+   ]
+  },
+  "seed": 2,
+  "train_curve": [
+   [
+    0,
+    0.6470588235294118,
+    0.5361258096988796
+   ],
+   [
+    1,
+    0.8834690126050421,
+    0.590147970646592
+   ],
+   [
+    2,
+    0.8834690126050421,
+    0.6250838512488329
+   ],
+   [
+    3,
+    0.939075630252101,
+    0.7027524290966387
+   ],
+   [
+    4,
+    0.939075630252101,
+    0.8028928863211952
+   ],
+   [
+    5,
+    0.9684873949579833,
+    0.7992290353641457
+   ],
+   [
+    6,
+    0.9684873949579833,
+    0.8188053294234361
+   ],
+   [
+    7,
+    0.9684873949579833,
+    0.8496719990079366
+   ],
+   [
+    8,
+    0.9684873949579833,
+    0.8537746921685342
+   ],
+   [
+    9,
+    0.9684873949579833,
+    0.896233806022409
+   ],
+   [
+    10,
+    0.9684873949579833,
+    0.7898749343487396
+   ],
+   [
+    11,
+    0.9684873949579833,
+    0.8000788179855276
+   ],
+   [
+    12,
+    0.9684873949579833,
+    0.8537351555205416
+   ],
+   [
+    13,
+    0.9684873949579833,
+    0.894201680672269
+   ],
+   [
+    14,
+    0.9684873949579833,
+    0.826725935165733
+   ],
+   [
+    15,
+    0.9684873949579833,
+    0.8453336178221289
+   ],
+   [
+    16,
+    0.9684873949579833,
+    0.8551373934990664
+   ],
+   [
+    17,
+    0.9684873949579833,
+    0.8866417556605977
+   ],
+   [
+    18,
+    0.9684873949579833,
+    0.8859412931839403
+   ],
+   [
+    19,
+    0.9684873949579833,
+    0.8399235892273577
+   ],
+   [
+    20,
+    0.9684873949579833,
+    0.8515211397058824
+   ]
+  ]
+ },
+ {
+  "best": {
+   "crit_mult_pct": 230,
+   "crit_pct": 20,
+   "fatigue_pct": 25,
+   "guard_counter_pct": 80,
+   "guard_pierce_pct": 50,
+   "guard_reduce_pct": 45,
+   "heal_vuln_pct": 80,
+   "potion_heal": 50,
+   "power_interrupt_pct": 30,
+   "power_mult_pct": 300,
+   "round_cap": 40,
+   "start_potions": 1
+  },
+  "hall": {
+   "crit": [
+    {
+     "fitness": 0.691140727124183,
+     "gen": 0,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 15
+     }
+    },
+    {
+     "fitness": 0.7077205882352942,
+     "gen": 1,
+     "values": {
+      "crit_mult_pct": 150,
+      "crit_pct": 10
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 2,
+     "values": {
+      "crit_mult_pct": 160,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 3,
+     "values": {
+      "crit_mult_pct": 160,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 4,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 5,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7830400910364146,
+     "gen": 6,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 7,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 8,
+     "values": {
+      "crit_mult_pct": 130,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 9,
+     "values": {
+      "crit_mult_pct": 250,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 10,
+     "values": {
+      "crit_mult_pct": 250,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 11,
+     "values": {
+      "crit_mult_pct": 250,
+      "crit_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 12,
+     "values": {
+      "crit_mult_pct": 240,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 13,
+     "values": {
+      "crit_mult_pct": 240,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 14,
+     "values": {
+      "crit_mult_pct": 240,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 15,
+     "values": {
+      "crit_mult_pct": 240,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "crit_mult_pct": 230,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "crit_mult_pct": 230,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "crit_mult_pct": 230,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "crit_mult_pct": 230,
+      "crit_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "crit_mult_pct": 230,
+      "crit_pct": 20
+     }
+    }
+   ],
+   "fatigue": [
+    {
+     "fitness": 0.691140727124183,
+     "gen": 0,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7077205882352942,
+     "gen": 1,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 2,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 3,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 4,
+     "values": {
+      "fatigue_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 5,
+     "values": {
+      "fatigue_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7830400910364146,
+     "gen": 6,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 7,
+     "values": {
+      "fatigue_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 8,
+     "values": {
+      "fatigue_pct": 20
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 9,
+     "values": {
+      "fatigue_pct": 30
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 10,
+     "values": {
+      "fatigue_pct": 30
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 11,
+     "values": {
+      "fatigue_pct": 30
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 12,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 13,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 14,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 15,
+     "values": {
+      "fatigue_pct": 15
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "fatigue_pct": 25
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "fatigue_pct": 25
+     }
+    }
+   ],
+   "guard": [
+    {
+     "fitness": 0.691140727124183,
+     "gen": 0,
+     "values": {
+      "guard_counter_pct": 0,
+      "guard_pierce_pct": 80,
+      "guard_reduce_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7077205882352942,
+     "gen": 1,
+     "values": {
+      "guard_counter_pct": 0,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 20
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 2,
+     "values": {
+      "guard_counter_pct": 20,
+      "guard_pierce_pct": 80,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 3,
+     "values": {
+      "guard_counter_pct": 20,
+      "guard_pierce_pct": 80,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 4,
+     "values": {
+      "guard_counter_pct": 30,
+      "guard_pierce_pct": 60,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 5,
+     "values": {
+      "guard_counter_pct": 30,
+      "guard_pierce_pct": 60,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.7830400910364146,
+     "gen": 6,
+     "values": {
+      "guard_counter_pct": 60,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 7,
+     "values": {
+      "guard_counter_pct": 50,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 8,
+     "values": {
+      "guard_counter_pct": 50,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 9,
+     "values": {
+      "guard_counter_pct": 50,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 10,
+     "values": {
+      "guard_counter_pct": 50,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 11,
+     "values": {
+      "guard_counter_pct": 50,
+      "guard_pierce_pct": 100,
+      "guard_reduce_pct": 35
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 12,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 13,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 14,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 15,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "guard_counter_pct": 80,
+      "guard_pierce_pct": 50,
+      "guard_reduce_pct": 45
+     }
+    }
+   ],
+   "heal": [
+    {
+     "fitness": 0.691140727124183,
+     "gen": 0,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 30,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7077205882352942,
+     "gen": 1,
+     "values": {
+      "heal_vuln_pct": 20,
+      "potion_heal": 25,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 2,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 25,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 3,
+     "values": {
+      "heal_vuln_pct": 0,
+      "potion_heal": 25,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 4,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 35,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 5,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 35,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7830400910364146,
+     "gen": 6,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 35,
+      "start_potions": 3
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 7,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 35,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 8,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 35,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 9,
+     "values": {
+      "heal_vuln_pct": 60,
+      "potion_heal": 30,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 10,
+     "values": {
+      "heal_vuln_pct": 60,
+      "potion_heal": 30,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 11,
+     "values": {
+      "heal_vuln_pct": 60,
+      "potion_heal": 30,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 12,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 13,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 14,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 15,
+     "values": {
+      "heal_vuln_pct": 40,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "heal_vuln_pct": 80,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "heal_vuln_pct": 80,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "heal_vuln_pct": 80,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "heal_vuln_pct": 80,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "heal_vuln_pct": 80,
+      "potion_heal": 50,
+      "start_potions": 1
+     }
+    }
+   ],
+   "power": [
+    {
+     "fitness": 0.691140727124183,
+     "gen": 0,
+     "values": {
+      "power_interrupt_pct": 100,
+      "power_mult_pct": 150
+     }
+    },
+    {
+     "fitness": 0.7077205882352942,
+     "gen": 1,
+     "values": {
+      "power_interrupt_pct": 90,
+      "power_mult_pct": 150
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 2,
+     "values": {
+      "power_interrupt_pct": 90,
+      "power_mult_pct": 110
+     }
+    },
+    {
+     "fitness": 0.7257994864612511,
+     "gen": 3,
+     "values": {
+      "power_interrupt_pct": 90,
+      "power_mult_pct": 110
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 4,
+     "values": {
+      "power_interrupt_pct": 90,
+      "power_mult_pct": 110
+     }
+    },
+    {
+     "fitness": 0.7582290207749767,
+     "gen": 5,
+     "values": {
+      "power_interrupt_pct": 90,
+      "power_mult_pct": 110
+     }
+    },
+    {
+     "fitness": 0.7830400910364146,
+     "gen": 6,
+     "values": {
+      "power_interrupt_pct": 80,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 7,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.7978816526610645,
+     "gen": 8,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 9,
+     "values": {
+      "power_interrupt_pct": 10,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 10,
+     "values": {
+      "power_interrupt_pct": 10,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.9196428571428572,
+     "gen": 11,
+     "values": {
+      "power_interrupt_pct": 10,
+      "power_mult_pct": 120
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 12,
+     "values": {
+      "power_interrupt_pct": 20,
+      "power_mult_pct": 290
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 13,
+     "values": {
+      "power_interrupt_pct": 20,
+      "power_mult_pct": 290
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 14,
+     "values": {
+      "power_interrupt_pct": 20,
+      "power_mult_pct": 290
+     }
+    },
+    {
+     "fitness": 0.9657300420168068,
+     "gen": 15,
+     "values": {
+      "power_interrupt_pct": 20,
+      "power_mult_pct": 290
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 16,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 300
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 17,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 300
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 18,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 300
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 19,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 300
+     }
+    },
+    {
+     "fitness": 0.9684873949579833,
+     "gen": 20,
+     "values": {
+      "power_interrupt_pct": 30,
+      "power_mult_pct": 300
+     }
+    }
+   ]
+  },
+  "seed": 3,
+  "train_curve": [
+   [
+    0,
+    0.691140727124183,
+    0.5267390654178338
+   ],
+   [
+    1,
+    0.7077205882352942,
+    0.5692219960901027
+   ],
+   [
+    2,
+    0.7257994864612511,
+    0.6119687718837535
+   ],
+   [
+    3,
+    0.7257994864612511,
+    0.6113543125583567
+   ],
+   [
+    4,
+    0.7582290207749767,
+    0.6483135285364146
+   ],
+   [
+    5,
+    0.7582290207749767,
+    0.6505718224789916
+   ],
+   [
+    6,
+    0.7830400910364146,
+    0.6707673902894491
+   ],
+   [
+    7,
+    0.7978816526610645,
+    0.700804629143324
+   ],
+   [
+    8,
+    0.7978816526610645,
+    0.6766037508753502
+   ],
+   [
+    9,
+    0.9196428571428572,
+    0.7307874868697479
+   ],
+   [
+    10,
+    0.9196428571428572,
+    0.7708303790266107
+   ],
+   [
+    11,
+    0.9196428571428572,
+    0.7569541097689076
+   ],
+   [
+    12,
+    0.9657300420168068,
+    0.7990064775910365
+   ],
+   [
+    13,
+    0.9657300420168068,
+    0.78765537464986
+   ],
+   [
+    14,
+    0.9657300420168068,
+    0.8229659051120449
+   ],
+   [
+    15,
+    0.9657300420168068,
+    0.8575258228291317
+   ],
+   [
+    16,
+    0.9684873949579833,
+    0.8158834836017741
+   ],
+   [
+    17,
+    0.9684873949579833,
+    0.8763611694677872
+   ],
+   [
+    18,
+    0.9684873949579833,
+    0.8718191964285715
+   ],
+   [
+    19,
+    0.9684873949579833,
+    0.8520373774509805
+   ],
+   [
+    20,
+    0.9684873949579833,
+    0.8729637167366948
+   ]
+  ]
+ }
+]

@@ -35,3 +35,7 @@ Godot 4.4+ (engine log capture needs 4.5+; the full test suite passes on 4.4.1 a
 `addons/claude_live/` plugin · `relay/` hosted relay (+ Dockerfile, fly.toml, render.yaml) · `tools/` connection generator ·
 `tests/` automated tests (real Godot) · `evidence/e2e/` recorded end-to-end run · docs: ARCHITECTURE, PROTOCOL, SECURITY,
 TESTING, KNOWN_LIMITATIONS, OPEN_SOURCE, DEPLOY.
+
+---
+
+**GHOST ENGINE** (headless world simulation, mechanic evolution lab, Godot 4 compiler and living twin) lives in `ghost_engine/`; see `ghost_engine/README.md`.

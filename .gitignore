@@ -2,3 +2,5 @@
 node_modules
 tests/artifacts/
 *connection*.json
+__pycache__/
+*.pyc

@@ -1,0 +1,49 @@
+{
+ "note": "Derived from the compiled ruleset: each active mechanic implies the art/audio it needs. The Godot build renders with built-in controls until these exist.",
+ "sprites": [
+  "npc_attacker",
+  "npc_turtle",
+  "npc_bruiser",
+  "npc_medic",
+  "npc_chaos",
+  "npc_adapter",
+  "npc_counter",
+  "npc_guardian",
+  "emblem_crown",
+  "emblem_guild",
+  "emblem_wilds"
+ ],
+ "icons": [
+  "action_attack",
+  "action_guard",
+  "action_power",
+  "action_heal",
+  "potion",
+  "gold"
+ ],
+ "backgrounds": [
+  "town_0",
+  "town_1",
+  "town_2",
+  "town_3",
+  "town_4",
+  "town_5"
+ ],
+ "sfx": [
+  "hit",
+  "guard",
+  "power_swing",
+  "heal_sip",
+  "death",
+  "crit",
+  "counter_strike",
+  "power_interrupted"
+ ],
+ "vfx": [
+  "hit_flash",
+  "guard_shield",
+  "heal_glow",
+  "fatigue_sweat",
+  "crit_burst"
+ ]
+}

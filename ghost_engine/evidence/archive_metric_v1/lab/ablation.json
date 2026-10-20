@@ -1,0 +1,67 @@
+{
+ "full": 0.9637276785714286,
+ "modules": {
+  "crit": {
+   "baseline": {
+    "crit_mult_pct": 150,
+    "crit_pct": 10
+   },
+   "contribution": -0.0033482142857141906,
+   "evolved": {
+    "crit_mult_pct": 170,
+    "crit_pct": 10
+   },
+   "fitness_without": 0.9670758928571428
+  },
+  "fatigue": {
+   "baseline": {
+    "fatigue_pct": 0
+   },
+   "contribution": 0.4921875,
+   "evolved": {
+    "fatigue_pct": 30
+   },
+   "fitness_without": 0.4715401785714286
+  },
+  "guard": {
+   "baseline": {
+    "guard_counter_pct": 0,
+    "guard_pierce_pct": 100,
+    "guard_reduce_pct": 20
+   },
+   "contribution": 0.002092633928571508,
+   "evolved": {
+    "guard_counter_pct": 0,
+    "guard_pierce_pct": 60,
+    "guard_reduce_pct": 20
+   },
+   "fitness_without": 0.9616350446428571
+  },
+  "heal": {
+   "baseline": {
+    "heal_vuln_pct": 0,
+    "potion_heal": 30,
+    "start_potions": 3
+   },
+   "contribution": 0.3373325892857142,
+   "evolved": {
+    "heal_vuln_pct": 70,
+    "potion_heal": 5,
+    "start_potions": 5
+   },
+   "fitness_without": 0.6263950892857144
+  },
+  "power": {
+   "baseline": {
+    "power_interrupt_pct": 100,
+    "power_mult_pct": 150
+   },
+   "contribution": 0.25930059523809534,
+   "evolved": {
+    "power_interrupt_pct": 20,
+    "power_mult_pct": 260
+   },
+   "fitness_without": 0.7044270833333333
+  }
+ }
+}
