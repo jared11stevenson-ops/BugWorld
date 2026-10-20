@@ -1,0 +1,7 @@
+{"id":"rt_dice","name":"Dice Duel","vars":[["pts",0,0,40]],
+"actions":[
+{"name":"roll","cond":0,"fx":[["+=","me","pts",["rnd",6]]]},
+{"name":"roll_hard","cond":0,"fx":[["+=","me","pts",["+",["rnd",6],["?",["==",["act","opp"],0],1,0]]]]},
+{"name":"roll_wild","cond":0,"fx":[["+=","me","pts",["+",["rnd",6],["?",["==",["act","opp"],2],1,0]]]]},
+{"name":"roll_safe","cond":0,"fx":[["+=","me","pts",["+",["rnd",6],["?",["==",["act","opp"],1],1,0]]]]}],
+"passive":[],"end":[[[">=",["v","me","pts"],25],1]],"tiebreak":"pts","max_rounds":20,"value":[["pts",1]]}

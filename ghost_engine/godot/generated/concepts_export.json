@@ -1,0 +1,1318 @@
+[
+ {
+  "spec": {
+   "id": "seed_slugfest",
+   "name": "Slugfest",
+   "vars": [
+    [
+     "hp",
+     40,
+     0,
+     40
+    ],
+    [
+     "energy",
+     2,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "strike",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "hp",
+       -6
+      ],
+      [
+       "+=",
+       "me",
+       "energy",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "guard",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "hp",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "opp",
+       "hp",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -2,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "bomb",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "energy"
+      ],
+      2
+     ],
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "hp",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -3,
+        -12
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "energy",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "rest",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "hp",
+       3
+      ],
+      [
+       "+=",
+       "me",
+       "energy",
+       1
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      "<=",
+      [
+       "v",
+       "opp",
+       "hp"
+      ],
+      0
+     ],
+     1
+    ],
+    [
+     [
+      "<=",
+      [
+       "v",
+       "me",
+       "hp"
+      ],
+      0
+     ],
+     -1
+    ]
+   ],
+   "tiebreak": "hp",
+   "max_rounds": 20,
+   "value": [
+    [
+     "hp",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "seed",
+   "summary": "hand-written seed (reference)"
+  }
+ },
+ {
+  "spec": {
+   "id": "seed_sprint",
+   "name": "Sprint",
+   "vars": [
+    [
+     "pos",
+     0,
+     0,
+     12
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ]
+   ],
+   "actions": [
+    {
+     "name": "jog",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "fuel",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "dash",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "fuel"
+      ],
+      2
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       3
+      ],
+      [
+       "+=",
+       "me",
+       "fuel",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "trip",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "pos",
+       -1
+      ]
+     ]
+    },
+    {
+     "name": "block",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "pos",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "pos"
+      ],
+      12
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "pos",
+   "max_rounds": 25,
+   "value": [
+    [
+     "pos",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "seed",
+   "summary": "hand-written seed (reference)"
+  }
+ },
+ {
+  "spec": {
+   "id": "seed_heist",
+   "name": "Heist",
+   "vars": [
+    [
+     "loot",
+     0,
+     0,
+     30
+    ],
+    [
+     "heat",
+     0,
+     0,
+     10
+    ]
+   ],
+   "actions": [
+    {
+     "name": "sneak",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "loot",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "grab",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "loot",
+       4
+      ],
+      [
+       "+=",
+       "me",
+       "heat",
+       3
+      ]
+     ]
+    },
+    {
+     "name": "frame",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "heat",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "lay_low",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "heat",
+       -3
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "heat"
+      ],
+      10
+     ],
+     -1
+    ],
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "loot"
+      ],
+      15
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "loot",
+   "max_rounds": 25,
+   "value": [
+    [
+     "loot",
+     1
+    ],
+    [
+     "heat",
+     -1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "seed",
+   "summary": "hand-written seed (reference)"
+  }
+ },
+ {
+  "spec": {
+   "id": "mu0454",
+   "name": "mu0454",
+   "vars": [
+    [
+     "gold",
+     2,
+     0,
+     20
+    ],
+    [
+     "rep",
+     2,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "trade",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        3,
+        [
+         "?",
+         [
+          "==",
+          [
+           "act",
+           "opp"
+          ],
+          1
+         ],
+         -1,
+         1
+        ]
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "swindle",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -2,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "embargo",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "rep"
+      ],
+      2
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -1,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "hoard",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        1,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "counter4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        -3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        1,
+        0
+       ]
+      ]
+     ]
+    }
+   ],
+   "passive": [
+    [
+     "+=",
+     "me",
+     "gold",
+     1
+    ]
+   ],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "gold"
+      ],
+      14
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "gold",
+   "max_rounds": 25,
+   "value": [
+    [
+     "gold",
+     1
+    ],
+    [
+     "rep",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "mutation",
+   "id": "mu0454",
+   "fitness_train": 0.9743589743589743,
+   "holdout_fitness": 0.9711538461538461,
+   "novelty_vs_seeds": 0.9047619047619048,
+   "run": "with_agents",
+   "summary": "discovered by mutation gen 9; holdout fitness 0.97; novelty 0.90"
+  }
+ },
+ {
+  "spec": {
+   "id": "mu0213",
+   "name": "mu0213",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     28
+    ],
+    [
+     "focus",
+     0,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "shield_up0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "focus",
+       2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         2
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate+cool1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "focus",
+       -3
+      ]
+     ]
+    },
+    {
+     "name": "hurt2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "shield_up3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "focus",
+       2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      24
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 17,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "mutation",
+   "id": "mu0213",
+   "fitness_train": 0.936431623931624,
+   "holdout_fitness": 0.9217414529914529,
+   "novelty_vs_seeds": 0.8888888888888888,
+   "run": "with_agents",
+   "summary": "discovered by mutation gen 4; holdout fitness 0.92; novelty 0.89"
+  }
+ },
+ {
+  "spec": {
+   "id": "mu0436",
+   "name": "mu0436",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     24
+    ],
+    [
+     "shield",
+     0,
+     0,
+     6
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ],
+    [
+     "focus",
+     0,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "steal0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "risk1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       5
+      ],
+      [
+       "+=",
+       "me",
+       "shield",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "spend+sabotage2",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "fuel"
+      ],
+      3
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "fuel",
+       -6
+      ],
+      [
+       "+=",
+       "opp",
+       "cash",
+       -9
+      ],
+      [
+       "+=",
+       "opp",
+       "shield",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "counter3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        1
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         5
+        ],
+        5,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "counter+gain2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        2,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      18
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 18,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "mutation",
+   "id": "mu0436",
+   "fitness_train": 0.9578347578347578,
+   "holdout_fitness": 0.9519464092739954,
+   "novelty_vs_seeds": 0.75,
+   "run": "with_agents",
+   "summary": "discovered by mutation gen 9; holdout fitness 0.95; novelty 0.75"
+  }
+ },
+ {
+  "spec": {
+   "id": "mu0250",
+   "name": "mu0250",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     24
+    ],
+    [
+     "shield",
+     0,
+     0,
+     6
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ],
+    [
+     "energy",
+     2,
+     0,
+     6
+    ]
+   ],
+   "actions": [
+    {
+     "name": "steal0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "risk1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       5
+      ],
+      [
+       "+=",
+       "me",
+       "shield",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "energy_play2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "energy",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "counter3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate+charge4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "fuel",
+       3
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      18
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 18,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "evidence": {
+   "source": "mutation",
+   "id": "mu0250",
+   "fitness_train": 0.8772338772338772,
+   "holdout_fitness": 0.89005439005439,
+   "novelty_vs_seeds": 0.85,
+   "run": "with_agents",
+   "summary": "discovered by mutation gen 5; holdout fitness 0.89; novelty 0.85"
+  }
+ }
+]

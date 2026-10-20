@@ -6,6 +6,8 @@ const K = preload("res://ghost/kernel.gd")
 const TL = preload("res://ghost/timeline.gd")
 const RS = preload("res://generated/rulesets.gd")
 const DuelArena = preload("res://ghost/duel_arena.gd")
+const ConceptArena = preload("res://ghost/concept_arena.gd")
+const CS = preload("res://generated/concepts.gd")
 
 var timelines: Array = []
 var cur := 0
@@ -80,6 +82,7 @@ func _build_ui() -> void:
 	_btn("Windfall (richest +500g)", func(): intervene("give_gold"), bar)
 	_btn("Force Crown-Guild war", func(): intervene("set_rel"), bar)
 	_btn("Duel selected NPC", start_duel, bar)
+	_btn("Concept games (discovered)", open_concepts, bar)
 
 
 func new_world(seed_in: int, rname: String) -> void:
@@ -227,3 +230,39 @@ func start_duel() -> void:
 	overlay.add_child(duel)
 	duel.setup(T().s, id, rules_name)
 	duel.finished.connect(func(): overlay.queue_free(); overlay = null; duel = null)
+
+
+func open_concepts() -> void:
+	if overlay != null:
+		overlay.queue_free()
+	overlay = CenterContainer.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(overlay)
+	var panel := PanelContainer.new()
+	overlay.add_child(panel)
+	var v := VBoxContainer.new()
+	panel.add_child(v)
+	var l := Label.new()
+	l.text = "Concept games found by the foundry (double-click to play against the adaptive agent):"
+	v.add_child(l)
+	var list := ItemList.new()
+	list.custom_minimum_size = Vector2(760, 260)
+	for c in CS.CONCEPTS:
+		var ev: Dictionary = c.get("evidence", {})
+		list.add_item("%s  -  %s" % [c["spec"]["name"], ev.get("summary", "")])
+	list.item_activated.connect(func(i): start_concept(i))
+	v.add_child(list)
+	_btn("Close", func(): overlay.queue_free(); overlay = null, v)
+
+
+func start_concept(i: int, opp := 8) -> Control:
+	if overlay != null:
+		overlay.queue_free()
+	overlay = CenterContainer.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(overlay)
+	var arena = ConceptArena.new()
+	overlay.add_child(arena)
+	arena.setup(CS.CONCEPTS[i], randi() % 100000 + 1, opp)
+	arena.finished.connect(func(): overlay.queue_free(); overlay = null)
+	return arena

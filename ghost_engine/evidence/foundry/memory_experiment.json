@@ -1,0 +1,51 @@
+{
+ "rows": [
+  {
+   "seed": 11,
+   "cold_viable": 0.14375,
+   "warm_viable": 0.1875,
+   "cold_fit": 0.5326000749567575,
+   "warm_fit": 0.5225907703511384
+  },
+  {
+   "seed": 12,
+   "cold_viable": 0.16875,
+   "warm_viable": 0.10625,
+   "cold_fit": 0.5510150906332287,
+   "warm_fit": 0.5463679158902042
+  },
+  {
+   "seed": 13,
+   "cold_viable": 0.16875,
+   "warm_viable": 0.15,
+   "cold_fit": 0.5247616860158306,
+   "warm_fit": 0.5313506217133712
+  },
+  {
+   "seed": 14,
+   "cold_viable": 0.1375,
+   "warm_viable": 0.175,
+   "cold_fit": 0.5179653274980174,
+   "warm_fit": 0.5357530171343249
+  },
+  {
+   "seed": 15,
+   "cold_viable": 0.15625,
+   "warm_viable": 0.19375,
+   "cold_fit": 0.5368743236191149,
+   "warm_fit": 0.5349553052128327
+  },
+  {
+   "seed": 16,
+   "cold_viable": 0.15625,
+   "warm_viable": 0.175,
+   "cold_fit": 0.5210473083819958,
+   "warm_fit": 0.5346886579169413
+  }
+ ],
+ "cold_viable_mean": 0.15520833333333334,
+ "warm_viable_mean": 0.16458333333333333,
+ "paired_gain": 0.009374999999999993,
+ "paired_gain_sd": 0.03831577949531151,
+ "memory_source": "evidence/foundry/autonomous/memory.json (549 evaluated concepts)"
+}

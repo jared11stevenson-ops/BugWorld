@@ -1,0 +1,21 @@
+{
+ "meters": [
+  "meter_loot",
+  "meter_heat"
+ ],
+ "action_icons": [
+  "icon_sneak",
+  "icon_grab",
+  "icon_frame",
+  "icon_lay_low"
+ ],
+ "sfx": [
+  "sfx_sneak",
+  "sfx_grab",
+  "sfx_frame",
+  "sfx_lay_low",
+  "sfx_win",
+  "sfx_lose"
+ ],
+ "note": "Derived from the concept's variables and actions. Godot build uses built-in controls until assets exist."
+}

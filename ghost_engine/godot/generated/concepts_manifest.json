@@ -1,0 +1,13 @@
+{
+ "concepts": [
+  "seed_slugfest",
+  "seed_sprint",
+  "seed_heist",
+  "mu0454",
+  "mu0213",
+  "mu0436",
+  "mu0250"
+ ],
+ "fuzz_specs": 13,
+ "golden_matches": 400
+}

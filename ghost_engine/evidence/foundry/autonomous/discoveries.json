@@ -1,0 +1,991 @@
+[
+ {
+  "id": "mu0250",
+  "proposer": "mutation",
+  "gen": 5,
+  "spec": {
+   "id": "mu0250",
+   "name": "mu0250",
+   "vars": [
+    [
+     "score",
+     0,
+     0,
+     26
+    ],
+    [
+     "shield",
+     0,
+     0,
+     6
+    ]
+   ],
+   "actions": [
+    {
+     "name": "negate0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "score",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "negate1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         2
+        ],
+        3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "score",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "gain2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       2
+      ]
+     ]
+    }
+   ],
+   "passive": [
+    [
+     "+=",
+     "me",
+     "shield",
+     -1
+    ]
+   ],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "score"
+      ],
+      23
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "score",
+   "max_rounds": 22,
+   "value": [
+    [
+     "score",
+     1
+    ]
+   ]
+  },
+  "text": "mu0250: score 0 [0..26], shield 0 [0..6]\n  [0] negate0: my score += ((their action == 1) ? 6 : 0); my score += 1\n  [1] negate1: my score += ((their action == 2) ? 3 : 0); my score += 1\n  [2] gain2: my score += 2\n  each round: my shield += -1\n  ends: (my score >= 23) => I win; after 22 rounds higher 'score' wins",
+  "fitness_train": 0.9401709401709402,
+  "novelty_vs_seeds": 0.9411764705882353,
+  "metrics": {
+   "dominance": 0.0,
+   "distinct_best_responses": 3,
+   "cycles": 2,
+   "live_actions": 3,
+   "n_actions": 3,
+   "timeout_rate": 0.0,
+   "length": 8.893939393939394,
+   "skill": 0.9722222222222222,
+   "interaction": 1.0123456784938272,
+   "leverage": 0.30434782608695654,
+   "action_shares": [
+    0.5903225806451613,
+    0.0967741935483871,
+    0.31290322580645163
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9401709401709402,
+   "fitness_std": 0.0,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.0,
+   "extended_top": 0
+  },
+  "lineage": [
+   {
+    "id": "gr0224",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.9273504273504274,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0250",
+    "proposer": "mutation",
+    "op": "goal",
+    "holdout_fitness": 0.9401709401709402,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:1:>=:me.score",
+   "fx:me.score+",
+   "n_actions:3",
+   "passive:me.shield",
+   "reactive",
+   "var:score",
+   "var:shield"
+  ]
+ },
+ {
+  "id": "mu0114",
+  "proposer": "mutation",
+  "gen": 2,
+  "spec": {
+   "id": "mu0114",
+   "name": "mu0114",
+   "vars": [
+    [
+     "pos",
+     0,
+     0,
+     21
+    ],
+    [
+     "energy",
+     2,
+     0,
+     6
+    ],
+    [
+     "heat",
+     0,
+     0,
+     10
+    ]
+   ],
+   "actions": [
+    {
+     "name": "cool+gain0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "heat",
+       -3
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "spend1",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "energy"
+      ],
+      1
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "energy",
+       -1
+      ],
+      [
+       "+=",
+       "opp",
+       "pos",
+       -5
+      ]
+     ]
+    },
+    {
+     "name": "risk2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       3
+      ],
+      [
+       "+=",
+       "me",
+       "heat",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "break+gain3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "pos",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         2
+        ],
+        -5,
+        -1
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "negate4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "heat"
+      ],
+      10
+     ],
+     -1
+    ],
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "pos"
+      ],
+      15
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "pos",
+   "max_rounds": 30,
+   "value": [
+    [
+     "pos",
+     1
+    ],
+    [
+     "heat",
+     -1
+    ]
+   ]
+  },
+  "text": "mu0114: pos 0 [0..21], energy 2 [0..6], heat 0 [0..10]\n  [0] cool+gain0: my heat += -3; my pos += 1\n  [1] spend1 only if (my energy >= 1): my energy += -1; their pos += -5\n  [2] risk2: my pos += 3; my heat += 1\n  [3] break+gain3: their pos += ((their action == 2) ? -5 : -1); my pos += 1\n  [4] negate4: my pos += ((their action == 3) ? 4 : 0); my pos += 1\n  ends: (my heat >= 10) => I lose; (my pos >= 15) => I win; after 30 rounds higher 'pos' wins",
+  "fitness_train": 0.9658119658119657,
+  "novelty_vs_seeds": 0.6842105263157895,
+  "metrics": {
+   "dominance": 0.16666666666666663,
+   "distinct_best_responses": 3,
+   "cycles": 3,
+   "live_actions": 5,
+   "n_actions": 5,
+   "timeout_rate": 0.0,
+   "length": 12.712121212121213,
+   "skill": 0.888888888888889,
+   "interaction": 0.8334476896595684,
+   "leverage": 0.39814814814814814,
+   "action_shares": [
+    0.06883365200764818,
+    0.13766730401529637,
+    0.06883365200764818,
+    0.34990439770554493,
+    0.37476099426386233
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9787296037296037,
+   "fitness_std": 0.021503724619045844,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.16666666666666666,
+   "extended_top": 7
+  },
+  "lineage": [
+   {
+    "id": "gr0086",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.8958333333333333,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0114",
+    "proposer": "mutation",
+    "op": "passive",
+    "holdout_fitness": 0.9787296037296037,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:-1:>=:me.heat",
+   "end:1:>=:me.pos",
+   "fx:me.energy-",
+   "fx:me.heat+",
+   "fx:me.heat-",
+   "fx:me.pos+",
+   "fx:opp.pos-",
+   "gated_action",
+   "n_actions:5",
+   "reactive",
+   "reads:me.energy",
+   "var:energy",
+   "var:heat",
+   "var:pos"
+  ]
+ },
+ {
+  "id": "mu0108",
+  "proposer": "mutation",
+  "gen": 2,
+  "spec": {
+   "id": "mu0108",
+   "name": "mu0108",
+   "vars": [
+    [
+     "pos",
+     0,
+     0,
+     21
+    ],
+    [
+     "energy",
+     2,
+     0,
+     6
+    ],
+    [
+     "heat",
+     0,
+     0,
+     10
+    ]
+   ],
+   "actions": [
+    {
+     "name": "cool+gain0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "heat",
+       -3
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "spend1",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "energy"
+      ],
+      1
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "energy",
+       -1
+      ],
+      [
+       "+=",
+       "opp",
+       "pos",
+       -5
+      ]
+     ]
+    },
+    {
+     "name": "risk2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       3
+      ],
+      [
+       "+=",
+       "me",
+       "heat",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "break+gain3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "pos",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         2
+        ],
+        -5,
+        -1
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "negate4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "pos",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "pos",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "sabotage5",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "energy",
+       2
+      ]
+     ]
+    }
+   ],
+   "passive": [
+    [
+     "+=",
+     "me",
+     "pos",
+     1
+    ]
+   ],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "heat"
+      ],
+      10
+     ],
+     -1
+    ],
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "pos"
+      ],
+      15
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "pos",
+   "max_rounds": 30,
+   "value": [
+    [
+     "pos",
+     1
+    ],
+    [
+     "heat",
+     -1
+    ]
+   ]
+  },
+  "text": "mu0108: pos 0 [0..21], energy 2 [0..6], heat 0 [0..10]\n  [0] cool+gain0: my heat += -3; my pos += 1\n  [1] spend1 only if (my energy >= 1): my energy += -1; their pos += -5\n  [2] risk2: my pos += 3; my heat += 1\n  [3] break+gain3: their pos += ((their action == 2) ? -5 : -1); my pos += 1\n  [4] negate4: my pos += ((their action == 3) ? 4 : 0); my pos += 1\n  [5] sabotage5: their energy += 2\n  each round: my pos += 1\n  ends: (my heat >= 10) => I lose; (my pos >= 15) => I win; after 30 rounds higher 'pos' wins",
+  "fitness_train": 0.9692307692307691,
+  "novelty_vs_seeds": 0.7142857142857143,
+  "metrics": {
+   "dominance": 0.0,
+   "distinct_best_responses": 4,
+   "cycles": 4,
+   "live_actions": 5,
+   "n_actions": 6,
+   "timeout_rate": 0.0,
+   "length": 8.362068965517242,
+   "skill": 1.0,
+   "interaction": 0.6005222091048208,
+   "leverage": 0.3142857142857143,
+   "action_shares": [
+    0.04009433962264151,
+    0.3113207547169811,
+    0.04009433962264151,
+    0.3915094339622642,
+    0.2169811320754717,
+    0.0
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9628205128205127,
+   "fitness_std": 0.011102889792108148,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.75,
+   "extended_top": 9
+  },
+  "lineage": [
+   {
+    "id": "gr0086",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.8958333333333333,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0108",
+    "proposer": "mutation",
+    "op": "add_action",
+    "holdout_fitness": 0.9628205128205127,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:-1:>=:me.heat",
+   "end:1:>=:me.pos",
+   "fx:me.energy-",
+   "fx:me.heat+",
+   "fx:me.heat-",
+   "fx:me.pos+",
+   "fx:opp.energy+",
+   "fx:opp.pos-",
+   "gated_action",
+   "n_actions:6",
+   "passive:me.pos",
+   "reactive",
+   "reads:me.energy",
+   "var:energy",
+   "var:heat",
+   "var:pos"
+  ]
+ },
+ {
+  "id": "mu0294",
+  "proposer": "mutation/near-miss",
+  "gen": 6,
+  "spec": {
+   "id": "mu0294",
+   "name": "mu0294",
+   "vars": [
+    [
+     "score",
+     0,
+     0,
+     26
+    ],
+    [
+     "heat",
+     0,
+     0,
+     10
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ]
+   ],
+   "actions": [
+    {
+     "name": "gain0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "negate1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        5,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "score",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "break2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "score",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         4
+        ],
+        -4,
+        -1
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "gain3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       3
+      ]
+     ]
+    },
+    {
+     "name": "negate4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "score",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        2,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "score",
+       1
+      ]
+     ]
+    }
+   ],
+   "passive": [
+    [
+     "+=",
+     "me",
+     "heat",
+     -1
+    ]
+   ],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "heat"
+      ],
+      10
+     ],
+     -1
+    ],
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "score"
+      ],
+      20
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "score",
+   "max_rounds": 21,
+   "value": [
+    [
+     "score",
+     1
+    ],
+    [
+     "heat",
+     -1
+    ]
+   ]
+  },
+  "text": "mu0294: score 0 [0..26], heat 0 [0..10], fuel 3 [0..6]\n  [0] gain0: my score += 2\n  [1] negate1: my score += ((their action == 3) ? 5 : 0); my score += 1\n  [2] break2: their score += ((their action == 4) ? -4 : -1)\n  [3] gain3: my score += 3\n  [4] negate4: my score += ((their action == 1) ? 2 : 0); my score += 1\n  each round: my heat += -1\n  ends: (my heat >= 10) => I lose; (my score >= 20) => I win; after 21 rounds higher 'score' wins",
+  "fitness_train": 0.83993783993784,
+  "novelty_vs_seeds": 0.8823529411764706,
+  "metrics": {
+   "dominance": 0.0,
+   "distinct_best_responses": 3,
+   "cycles": 2,
+   "live_actions": 3,
+   "n_actions": 5,
+   "timeout_rate": 0.09090909090909091,
+   "length": 10.946969696969697,
+   "skill": 0.7777777777777778,
+   "interaction": 0.8330011021358457,
+   "leverage": 0.359375,
+   "action_shares": [
+    0.358695652173913,
+    0.15489130434782608,
+    0.03260869565217391,
+    0.421195652173913,
+    0.03260869565217391
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.8616938616938616,
+   "fitness_std": 0.002379069291747441,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.0,
+   "extended_top": 0
+  },
+  "lineage": [
+   {
+    "id": "gr0023",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.7249081046475221,
+    "viable_seeds": 0,
+    "flags_train": [
+     "dominant_strategy"
+    ]
+   },
+   {
+    "id": "mu0194",
+    "proposer": "mutation/near-miss",
+    "op": "tweak",
+    "holdout_fitness": 0.7249081046475221,
+    "viable_seeds": 0,
+    "flags_train": [
+     "dominant_strategy"
+    ]
+   },
+   {
+    "id": "mu0294",
+    "proposer": "mutation/near-miss",
+    "op": "swap_atom",
+    "holdout_fitness": 0.8616938616938616,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:-1:>=:me.heat",
+   "end:1:>=:me.score",
+   "fx:me.score+",
+   "fx:opp.score-",
+   "n_actions:5",
+   "passive:me.heat",
+   "reactive",
+   "var:fuel",
+   "var:heat",
+   "var:score"
+  ]
+ }
+]

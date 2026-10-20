@@ -1,0 +1,9 @@
+{"id":"rt_combo","name":"Unblockable Combo","vars":[["hp",12,0,12],["charge",0,0,2]],
+"actions":[
+{"name":"jab","cond":0,"fx":[["+=","opp","hp",["?",["==",["act","opp"],2],-1,-3]]]},
+{"name":"finisher","cond":[">=",["v","me","charge"],1],"fx":[["+=","opp","hp",-12]]},
+{"name":"guard","cond":0,"fx":[["+=","me","hp",["?",["==",["act","opp"],0],2,0]],["+=","opp","hp",["?",["==",["act","opp"],0],-1,0]]]},
+{"name":"charge","cond":0,"fx":[["=","me","charge",2]]}],
+"passive":[["+=","me","charge",-1]],
+"end":[[["<=",["v","opp","hp"],0],1],[["<=",["v","me","hp"],0],-1]],
+"tiebreak":"hp","max_rounds":20,"value":[["hp",1]]}

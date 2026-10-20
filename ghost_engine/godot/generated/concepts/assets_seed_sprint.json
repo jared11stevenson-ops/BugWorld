@@ -1,0 +1,21 @@
+{
+ "meters": [
+  "meter_pos",
+  "meter_fuel"
+ ],
+ "action_icons": [
+  "icon_jog",
+  "icon_dash",
+  "icon_trip",
+  "icon_block"
+ ],
+ "sfx": [
+  "sfx_jog",
+  "sfx_dash",
+  "sfx_trip",
+  "sfx_block",
+  "sfx_win",
+  "sfx_lose"
+ ],
+ "note": "Derived from the concept's variables and actions. Godot build uses built-in controls until assets exist."
+}

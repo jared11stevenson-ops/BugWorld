@@ -1,0 +1,23 @@
+{
+ "meters": [
+  "meter_gold",
+  "meter_rep"
+ ],
+ "action_icons": [
+  "icon_trade",
+  "icon_swindle",
+  "icon_embargo",
+  "icon_hoard",
+  "icon_counter4"
+ ],
+ "sfx": [
+  "sfx_trade",
+  "sfx_swindle",
+  "sfx_embargo",
+  "sfx_hoard",
+  "sfx_counter4",
+  "sfx_win",
+  "sfx_lose"
+ ],
+ "note": "Derived from the concept's variables and actions. Godot build uses built-in controls until assets exist."
+}

@@ -1,0 +1,9 @@
+{"id":"rt_fn_economy","name":"Foundry Economy","vars":[["gold",3,0,30],["mills",0,0,6],["army",0,0,12]],
+"actions":[
+{"name":"hoard","cond":0,"fx":[["+=","me","gold",1]]},
+{"name":"raid","cond":[">=",["v","me","army"],2],"fx":[["+=","opp","gold",["?",["==",["act","opp"],3],0,-3]],["+=","me","gold",["?",["==",["act","opp"],3],0,2]]]},
+{"name":"muster","cond":[">=",["v","me","gold"],3],"fx":[["+=","me","gold",-3],["+=","me","army",2]]},
+{"name":"build_mill","cond":[">=",["v","me","gold"],4],"fx":[["+=","me","gold",-4],["+=","me","mills",1]]}],
+"passive":[["+=","me","gold",["v","me","mills"]]],
+"end":[[[">=",["v","me","gold"],20],1],[["<=",["v","opp","army"],-1],1]],
+"tiebreak":"gold","max_rounds":30,"value":[["gold",1],["army",1]]}

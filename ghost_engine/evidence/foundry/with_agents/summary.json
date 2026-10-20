@@ -1,0 +1,64 @@
+{
+ "name": "with_agents",
+ "seed": 2,
+ "inbox": true,
+ "gens": 12,
+ "per_gen": 48,
+ "elapsed_s": 82.0,
+ "loop": {
+  "evals": 571,
+  "viable": 235,
+  "cells": 73,
+  "best_fitness_viable_novel": 0.998057498057498,
+  "mean_fitness_viable": 0.7733916106036383
+ },
+ "random_control": {
+  "evals": 571,
+  "viable": 105,
+  "cells": 52,
+  "best_fitness_viable_novel": 0.9529914529914529,
+  "mean_fitness_viable": 0.685226030108388
+ },
+ "by_proposer": {
+  "seed": {
+   "n": 3,
+   "viable": 1
+  },
+  "agent": {
+   "n": 8,
+   "viable": 6
+  },
+  "grammar": {
+   "n": 216,
+   "viable": 34
+  },
+  "mutation": {
+   "n": 272,
+   "viable": 141
+  },
+  "crossover": {
+   "n": 72,
+   "viable": 53
+  }
+ },
+ "discoveries": [
+  "mu0454",
+  "mu0213",
+  "mu0436",
+  "mu0250"
+ ],
+ "failure_taxonomy": {
+  "chaotic": 4,
+  "dead_actions": 53,
+  "dominant_line": 29,
+  "dominant_strategy": 144,
+  "inert_action": 18,
+  "misleading_value": 43,
+  "no_interaction": 40,
+  "no_skill_edge": 45,
+  "predetermined": 55,
+  "stalemate": 100,
+  "too_long": 13,
+  "too_short": 18
+ }
+}

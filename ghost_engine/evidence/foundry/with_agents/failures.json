@@ -1,0 +1,79 @@
+{
+ "examples": {
+  "chaotic": [
+   "gr0054",
+   "gr0145",
+   "mu0221"
+  ],
+  "dead_actions": [
+   "gr0009",
+   "gr0012",
+   "gr0017"
+  ],
+  "dominant_line": [
+   "gr0027",
+   "gr0048",
+   "mu0057"
+  ],
+  "dominant_strategy": [
+   "seed_slugfest",
+   "gr0009",
+   "gr0010"
+  ],
+  "inert_action": [
+   "gr0009",
+   "gr0046",
+   "gr0056"
+  ],
+  "misleading_value": [
+   "gr0028",
+   "gr0052",
+   "gr0094"
+  ],
+  "no_interaction": [
+   "gr0020",
+   "gr0023",
+   "gr0033"
+  ],
+  "no_skill_edge": [
+   "seed_sprint",
+   "ag0004",
+   "ag0005"
+  ],
+  "predetermined": [
+   "gr0010",
+   "gr0013",
+   "gr0015"
+  ],
+  "stalemate": [
+   "gr0013",
+   "gr0017",
+   "gr0019"
+  ],
+  "too_long": [
+   "gr0020",
+   "gr0030",
+   "gr0050"
+  ],
+  "too_short": [
+   "gr0012",
+   "gr0101",
+   "gr0196"
+  ]
+ },
+ "n": 336,
+ "taxonomy": {
+  "chaotic": 4,
+  "dead_actions": 53,
+  "dominant_line": 29,
+  "dominant_strategy": 144,
+  "inert_action": 18,
+  "misleading_value": 43,
+  "no_interaction": 40,
+  "no_skill_edge": 45,
+  "predetermined": 55,
+  "stalemate": 100,
+  "too_long": 13,
+  "too_short": 18
+ }
+}

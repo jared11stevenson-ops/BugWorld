@@ -1,0 +1,6 @@
+{"id":"rt_fn_rps","name":"Best of Duels RPS","vars":[["wins",0,0,5]],
+"actions":[
+{"name":"rock","cond":0,"fx":[["+=","me","wins",["?",["==",["act","opp"],2],1,0]]]},
+{"name":"paper","cond":0,"fx":[["+=","me","wins",["?",["==",["act","opp"],0],1,0]]]},
+{"name":"scissors","cond":0,"fx":[["+=","me","wins",["?",["==",["act","opp"],1],1,0]]]}],
+"passive":[],"end":[[[">=",["v","me","wins"],3],1]],"tiebreak":"wins","max_rounds":30,"value":[["wins",1]]}

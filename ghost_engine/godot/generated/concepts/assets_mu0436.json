@@ -1,0 +1,27 @@
+{
+ "meters": [
+  "meter_cash",
+  "meter_shield",
+  "meter_fuel",
+  "meter_focus"
+ ],
+ "action_icons": [
+  "icon_steal0",
+  "icon_risk1",
+  "icon_spend+sabotage2",
+  "icon_counter3",
+  "icon_negate4",
+  "icon_counter+gain2"
+ ],
+ "sfx": [
+  "sfx_steal0",
+  "sfx_risk1",
+  "sfx_spend+sabotage2",
+  "sfx_counter3",
+  "sfx_negate4",
+  "sfx_counter+gain2",
+  "sfx_win",
+  "sfx_lose"
+ ],
+ "note": "Derived from the concept's variables and actions. Godot build uses built-in controls until assets exist."
+}

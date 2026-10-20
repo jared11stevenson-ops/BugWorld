@@ -1,5 +1,7 @@
 # GHOST ENGINE
 
+> **Start with `FOUNDRY.md`**: Ghost Engine is an autonomous evolutionary game foundry (propose → simulate → evolve → preserve → compile to Godot). This README documents the world-simulation foundation and the combat-mechanic experiment that preceded it.
+
 A headless game foundry: simulate a persistent RPG world, evolve one of its mechanics under measurable tests,
 compile the validated result into a Godot 4 project, and keep the Godot build locked to the headless simulation.
 

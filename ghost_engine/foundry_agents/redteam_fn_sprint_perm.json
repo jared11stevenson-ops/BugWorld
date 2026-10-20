@@ -1,0 +1,129 @@
+{
+ "id": "rt_fn_sprint_perm",
+ "name": "Sprint relabeled",
+ "vars": [
+  [
+   "pos",
+   0,
+   0,
+   12
+  ],
+  [
+   "fuel",
+   3,
+   0,
+   6
+  ]
+ ],
+ "actions": [
+  {
+   "name": "trip",
+   "cond": 0,
+   "fx": [
+    [
+     "+=",
+     "opp",
+     "pos",
+     -1
+    ]
+   ]
+  },
+  {
+   "name": "jog",
+   "cond": 0,
+   "fx": [
+    [
+     "+=",
+     "me",
+     "pos",
+     1
+    ],
+    [
+     "+=",
+     "me",
+     "fuel",
+     1
+    ]
+   ]
+  },
+  {
+   "name": "dash",
+   "cond": [
+    ">=",
+    [
+     "v",
+     "me",
+     "fuel"
+    ],
+    2
+   ],
+   "fx": [
+    [
+     "+=",
+     "me",
+     "pos",
+     3
+    ],
+    [
+     "+=",
+     "me",
+     "fuel",
+     -2
+    ]
+   ]
+  },
+  {
+   "name": "block",
+   "cond": 0,
+   "fx": [
+    [
+     "+=",
+     "opp",
+     "pos",
+     [
+      "?",
+      [
+       "==",
+       [
+        "act",
+        "opp"
+       ],
+       2
+      ],
+      -3,
+      0
+     ]
+    ],
+    [
+     "+=",
+     "me",
+     "pos",
+     1
+    ]
+   ]
+  }
+ ],
+ "passive": [],
+ "end": [
+  [
+   [
+    ">=",
+    [
+     "v",
+     "me",
+     "pos"
+    ],
+    12
+   ],
+   1
+  ]
+ ],
+ "tiebreak": "pos",
+ "max_rounds": 25,
+ "value": [
+  [
+   "pos",
+   1
+  ]
+ ]
+}

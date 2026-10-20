@@ -1,0 +1,21 @@
+{
+ "meters": [
+  "meter_hp",
+  "meter_energy"
+ ],
+ "action_icons": [
+  "icon_strike",
+  "icon_guard",
+  "icon_bomb",
+  "icon_rest"
+ ],
+ "sfx": [
+  "sfx_strike",
+  "sfx_guard",
+  "sfx_bomb",
+  "sfx_rest",
+  "sfx_win",
+  "sfx_lose"
+ ],
+ "note": "Derived from the concept's variables and actions. Godot build uses built-in controls until assets exist."
+}

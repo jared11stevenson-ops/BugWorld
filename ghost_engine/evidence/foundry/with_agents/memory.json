@@ -1,0 +1,297 @@
+{
+ "atoms": {
+  "?": {
+   "flags": {
+    "dominant_strategy": 2,
+    "inert_action": 1,
+    "misleading_value": 1,
+    "no_skill_edge": 1,
+    "stalemate": 1
+   },
+   "trials": 23,
+   "viable": 18
+  },
+  "break": {
+   "flags": {
+    "dead_actions": 6,
+    "dominant_line": 2,
+    "dominant_strategy": 20,
+    "misleading_value": 3,
+    "no_interaction": 2,
+    "no_skill_edge": 3,
+    "predetermined": 15,
+    "stalemate": 18,
+    "too_long": 1,
+    "too_short": 2
+   },
+   "trials": 57,
+   "viable": 11
+  },
+  "charge": {
+   "flags": {
+    "dead_actions": 35,
+    "dominant_line": 18,
+    "dominant_strategy": 76,
+    "inert_action": 10,
+    "misleading_value": 12,
+    "no_interaction": 25,
+    "no_skill_edge": 19,
+    "predetermined": 32,
+    "stalemate": 49,
+    "too_long": 6,
+    "too_short": 6
+   },
+   "trials": 299,
+   "viable": 133
+  },
+  "cool": {
+   "flags": {
+    "dead_actions": 28,
+    "dominant_line": 8,
+    "dominant_strategy": 71,
+    "inert_action": 11,
+    "misleading_value": 36,
+    "no_interaction": 12,
+    "no_skill_edge": 14,
+    "predetermined": 18,
+    "stalemate": 34,
+    "too_long": 3,
+    "too_short": 11
+   },
+   "trials": 237,
+   "viable": 82
+  },
+  "counter": {
+   "flags": {
+    "chaotic": 2,
+    "dead_actions": 27,
+    "dominant_line": 17,
+    "dominant_strategy": 66,
+    "misleading_value": 50,
+    "no_interaction": 10,
+    "no_skill_edge": 26,
+    "predetermined": 28,
+    "stalemate": 54,
+    "too_long": 8,
+    "too_short": 8
+   },
+   "trials": 338,
+   "viable": 143
+  },
+  "gain": {
+   "flags": {
+    "chaotic": 2,
+    "dead_actions": 28,
+    "dominant_line": 1,
+    "dominant_strategy": 61,
+    "inert_action": 5,
+    "misleading_value": 29,
+    "no_interaction": 13,
+    "no_skill_edge": 22,
+    "predetermined": 20,
+    "stalemate": 46,
+    "too_long": 3,
+    "too_short": 14
+   },
+   "trials": 235,
+   "viable": 76
+  },
+  "hurt": {
+   "flags": {
+    "dead_actions": 24,
+    "dominant_line": 6,
+    "dominant_strategy": 46,
+    "inert_action": 2,
+    "misleading_value": 11,
+    "no_interaction": 12,
+    "no_skill_edge": 13,
+    "predetermined": 35,
+    "stalemate": 63,
+    "too_long": 7,
+    "too_short": 5
+   },
+   "trials": 203,
+   "viable": 69
+  },
+  "negate": {
+   "flags": {
+    "dead_actions": 24,
+    "dominant_line": 22,
+    "dominant_strategy": 70,
+    "misleading_value": 13,
+    "no_interaction": 10,
+    "no_skill_edge": 17,
+    "predetermined": 30,
+    "stalemate": 39,
+    "too_long": 6,
+    "too_short": 7
+   },
+   "trials": 258,
+   "viable": 104
+  },
+  "risk": {
+   "flags": {
+    "chaotic": 3,
+    "dead_actions": 29,
+    "dominant_line": 16,
+    "dominant_strategy": 73,
+    "inert_action": 15,
+    "misleading_value": 7,
+    "no_interaction": 17,
+    "no_skill_edge": 15,
+    "predetermined": 18,
+    "stalemate": 28,
+    "too_short": 13
+   },
+   "trials": 219,
+   "viable": 80
+  },
+  "sabotage": {
+   "flags": {
+    "dead_actions": 29,
+    "dominant_line": 25,
+    "dominant_strategy": 76,
+    "inert_action": 14,
+    "misleading_value": 11,
+    "no_interaction": 18,
+    "no_skill_edge": 19,
+    "predetermined": 24,
+    "stalemate": 33,
+    "too_long": 4,
+    "too_short": 6
+   },
+   "trials": 235,
+   "viable": 86
+  },
+  "shield_up": {
+   "flags": {
+    "chaotic": 2,
+    "dead_actions": 26,
+    "dominant_line": 8,
+    "dominant_strategy": 55,
+    "misleading_value": 30,
+    "no_interaction": 15,
+    "no_skill_edge": 18,
+    "predetermined": 26,
+    "stalemate": 57,
+    "too_long": 4,
+    "too_short": 9
+   },
+   "trials": 221,
+   "viable": 65
+  },
+  "spend": {
+   "flags": {
+    "chaotic": 2,
+    "dead_actions": 17,
+    "dominant_line": 28,
+    "dominant_strategy": 39,
+    "inert_action": 3,
+    "misleading_value": 4,
+    "no_interaction": 13,
+    "no_skill_edge": 23,
+    "predetermined": 20,
+    "stalemate": 31,
+    "too_long": 5,
+    "too_short": 5
+   },
+   "trials": 178,
+   "viable": 61
+  },
+  "steal": {
+   "flags": {
+    "chaotic": 1,
+    "dead_actions": 30,
+    "dominant_line": 17,
+    "dominant_strategy": 75,
+    "inert_action": 12,
+    "misleading_value": 10,
+    "no_interaction": 15,
+    "no_skill_edge": 19,
+    "predetermined": 28,
+    "stalemate": 39,
+    "too_long": 2,
+    "too_short": 14
+   },
+   "trials": 295,
+   "viable": 129
+  }
+ },
+ "ops": {
+  "add_action": {
+   "improved": 6,
+   "trials": 28,
+   "viable": 11
+  },
+  "add_var": {
+   "improved": 0,
+   "trials": 29,
+   "viable": 11
+  },
+  "crossover": {
+   "improved": 7,
+   "trials": 72,
+   "viable": 53
+  },
+  "drop_action": {
+   "improved": 8,
+   "trials": 28,
+   "viable": 10
+  },
+  "goal": {
+   "improved": 12,
+   "trials": 39,
+   "viable": 23
+  },
+  "passive": {
+   "improved": 4,
+   "trials": 24,
+   "viable": 16
+  },
+  "reactive_target": {
+   "improved": 3,
+   "trials": 26,
+   "viable": 10
+  },
+  "swap_atom": {
+   "improved": 5,
+   "trials": 25,
+   "viable": 11
+  },
+  "tweak": {
+   "improved": 13,
+   "trials": 73,
+   "viable": 49
+  }
+ },
+ "proposers": {
+  "agent:nonCombat": {
+   "trials": 4,
+   "viable": 3
+  },
+  "agent:tempo": {
+   "trials": 4,
+   "viable": 3
+  },
+  "crossover": {
+   "trials": 72,
+   "viable": 53
+  },
+  "grammar": {
+   "trials": 216,
+   "viable": 34
+  },
+  "mutation": {
+   "trials": 185,
+   "viable": 125
+  },
+  "mutation/near-miss": {
+   "trials": 87,
+   "viable": 16
+  },
+  "seed": {
+   "trials": 3,
+   "viable": 1
+  }
+ }
+}

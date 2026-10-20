@@ -1,0 +1,78 @@
+{
+ "examples": {
+  "chaotic": [
+   "gr0041",
+   "gr0324"
+  ],
+  "dead_actions": [
+   "gr0001",
+   "gr0003",
+   "gr0006"
+  ],
+  "dominant_line": [
+   "gr0016",
+   "gr0028",
+   "mu0102"
+  ],
+  "dominant_strategy": [
+   "seed_slugfest",
+   "gr0001",
+   "gr0003"
+  ],
+  "inert_action": [
+   "gr0001",
+   "gr0035",
+   "gr0037"
+  ],
+  "misleading_value": [
+   "gr0006",
+   "gr0015",
+   "gr0020"
+  ],
+  "no_interaction": [
+   "gr0001",
+   "gr0004",
+   "gr0008"
+  ],
+  "no_skill_edge": [
+   "seed_sprint",
+   "gr0004",
+   "gr0008"
+  ],
+  "predetermined": [
+   "gr0002",
+   "gr0004",
+   "gr0007"
+  ],
+  "stalemate": [
+   "gr0002",
+   "gr0004",
+   "gr0007"
+  ],
+  "too_long": [
+   "gr0002",
+   "gr0004",
+   "gr0008"
+  ],
+  "too_short": [
+   "gr0012",
+   "gr0014",
+   "gr0017"
+  ]
+ },
+ "n": 327,
+ "taxonomy": {
+  "chaotic": 2,
+  "dead_actions": 69,
+  "dominant_line": 15,
+  "dominant_strategy": 159,
+  "inert_action": 15,
+  "misleading_value": 19,
+  "no_interaction": 45,
+  "no_skill_edge": 50,
+  "predetermined": 51,
+  "stalemate": 105,
+  "too_long": 17,
+  "too_short": 29
+ }
+}

@@ -1,0 +1,8 @@
+{"id":"rt_fn_fencing","name":"Fencing Salle","vars":[["hp",5,0,5],["poise",0,0,3]],
+"actions":[
+{"name":"lunge","cond":0,"fx":[["+=","opp","hp",["?",["==",["act","opp"],1],0,["?",["==",["act","opp"],3],-2,-1]]]]},
+{"name":"parry","cond":0,"fx":[["+=","me","poise",["?",["==",["act","opp"],0],1,0]],["+=","opp","hp",["?",["==",["act","opp"],0],-1,0]]]},
+{"name":"feint","cond":0,"fx":[["+=","opp","hp",["?",["==",["act","opp"],1],-1,0]],["+=","me","hp",["?",["==",["act","opp"],0],-1,0]]]},
+{"name":"reset","cond":0,"fx":[["+=","me","poise",1]]},
+{"name":"fleche","cond":[">=",["v","me","poise"],2],"fx":[["+=","opp","hp",["?",["==",["act","opp"],1],-1,-3]],["+=","me","poise",-2]]}],
+"passive":[],"end":[[["<=",["v","opp","hp"],0],1],[["<=",["v","me","hp"],0],-1]],"tiebreak":"hp","max_rounds":30,"value":[["hp",2],["poise",1]]}

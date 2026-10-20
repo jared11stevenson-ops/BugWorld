@@ -1,0 +1,1174 @@
+[
+ {
+  "id": "mu0454",
+  "proposer": "mutation",
+  "gen": 9,
+  "spec": {
+   "id": "mu0454",
+   "name": "mu0454",
+   "vars": [
+    [
+     "gold",
+     2,
+     0,
+     20
+    ],
+    [
+     "rep",
+     2,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "trade",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        3,
+        [
+         "?",
+         [
+          "==",
+          [
+           "act",
+           "opp"
+          ],
+          1
+         ],
+         -1,
+         1
+        ]
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "swindle",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -2,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "embargo",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "rep"
+      ],
+      2
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -1,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "hoard",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "gold",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "rep",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        1,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "counter4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        -3,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "gold",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        1,
+        0
+       ]
+      ]
+     ]
+    }
+   ],
+   "passive": [
+    [
+     "+=",
+     "me",
+     "gold",
+     1
+    ]
+   ],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "gold"
+      ],
+      14
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "gold",
+   "max_rounds": 25,
+   "value": [
+    [
+     "gold",
+     1
+    ],
+    [
+     "rep",
+     1
+    ]
+   ]
+  },
+  "text": "mu0454: gold 2 [0..20], rep 2 [0..5]\n  [0] trade: my gold += ((their action == 0) ? 3 : ((their action == 1) ? -1 : 1)); my rep += 1\n  [1] swindle: my gold += ((their action == 0) ? 4 : 0); their gold += ((their action == 0) ? -2 : 0); my rep += -2\n  [2] embargo only if (my rep >= 2): my gold += ((their action == 1) ? 3 : 0); their gold += ((their action == 0) ? -1 : 0)\n  [3] hoard: my gold += 1; my rep += ((their action == 1) ? 1 : 0)\n  [4] counter4: their gold += ((their action == 3) ? -3 : 0); my gold += ((their action == 3) ? 1 : 0)\n  each round: my gold += 1\n  ends: (my gold >= 14) => I win; after 25 rounds higher 'gold' wins",
+  "fitness_train": 0.9743589743589743,
+  "novelty_vs_seeds": 0.9047619047619048,
+  "metrics": {
+   "dominance": 0.0,
+   "distinct_best_responses": 5,
+   "cycles": 2,
+   "live_actions": 5,
+   "n_actions": 5,
+   "timeout_rate": 0.0,
+   "length": 6.992424242424242,
+   "skill": 1.0,
+   "interaction": 0.8939559844820852,
+   "leverage": 0.4146341463414634,
+   "action_shares": [
+    0.16428571428571428,
+    0.04285714285714286,
+    0.4142857142857143,
+    0.12857142857142856,
+    0.25
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9711538461538461,
+   "fitness_std": 0.0292001076254625,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.5,
+   "extended_top": 9
+  },
+  "lineage": [
+   {
+    "id": "ag0001",
+    "proposer": "agent:nonCombat",
+    "op": "",
+    "holdout_fitness": 0.8294604700854702,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0312",
+    "proposer": "mutation",
+    "op": "add_action",
+    "holdout_fitness": 0.9507575757575758,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0454",
+    "proposer": "mutation",
+    "op": "passive",
+    "holdout_fitness": 0.9711538461538461,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:1:>=:me.gold",
+   "fx:me.gold+",
+   "fx:me.rep+",
+   "fx:me.rep-",
+   "fx:opp.gold-",
+   "gated_action",
+   "n_actions:5",
+   "passive:me.gold",
+   "reactive",
+   "reads:me.rep",
+   "var:gold",
+   "var:rep"
+  ]
+ },
+ {
+  "id": "mu0213",
+  "proposer": "mutation",
+  "gen": 4,
+  "spec": {
+   "id": "mu0213",
+   "name": "mu0213",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     28
+    ],
+    [
+     "focus",
+     0,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "shield_up0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "focus",
+       2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         2
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate+cool1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "focus",
+       -3
+      ]
+     ]
+    },
+    {
+     "name": "hurt2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ]
+     ]
+    },
+    {
+     "name": "shield_up3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "focus",
+       2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      24
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 17,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "text": "mu0213: cash 5 [0..28], focus 0 [0..5]\n  [0] shield_up0: my focus += 2; my cash += ((their action == 2) ? 3 : 0)\n  [1] negate+cool1: my cash += ((their action == 1) ? 4 : 0); my cash += 1; my focus += -3\n  [2] hurt2: their cash += -2\n  [3] shield_up3: my focus += 2; my cash += ((their action == 0) ? 3 : 0)\n  ends: (my cash >= 24) => I win; after 17 rounds higher 'cash' wins",
+  "fitness_train": 0.936431623931624,
+  "novelty_vs_seeds": 0.8888888888888888,
+  "metrics": {
+   "dominance": 0.25,
+   "distinct_best_responses": 3,
+   "cycles": 3,
+   "live_actions": 4,
+   "n_actions": 4,
+   "timeout_rate": 0.11458333333333333,
+   "length": 15.385416666666666,
+   "skill": 1.0,
+   "interaction": 0.8464052280007689,
+   "leverage": 0.25925925925925924,
+   "action_shares": [
+    0.14054054054054055,
+    0.29009009009009007,
+    0.44324324324324327,
+    0.12612612612612611
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9217414529914529,
+   "fitness_std": 0.01529914902950824,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.0,
+   "extended_top": 0
+  },
+  "lineage": [
+   {
+    "id": "gr0103",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.9313568376068375,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0213",
+    "proposer": "mutation",
+    "op": "goal",
+    "holdout_fitness": 0.9217414529914529,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:1:>=:me.cash",
+   "fx:me.cash+",
+   "fx:me.focus+",
+   "fx:me.focus-",
+   "fx:opp.cash-",
+   "n_actions:4",
+   "reactive",
+   "var:cash",
+   "var:focus"
+  ]
+ },
+ {
+  "id": "mu0436",
+  "proposer": "mutation",
+  "gen": 9,
+  "spec": {
+   "id": "mu0436",
+   "name": "mu0436",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     24
+    ],
+    [
+     "shield",
+     0,
+     0,
+     6
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ],
+    [
+     "focus",
+     0,
+     0,
+     5
+    ]
+   ],
+   "actions": [
+    {
+     "name": "steal0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "risk1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       5
+      ],
+      [
+       "+=",
+       "me",
+       "shield",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "spend+sabotage2",
+     "cond": [
+      ">=",
+      [
+       "v",
+       "me",
+       "fuel"
+      ],
+      3
+     ],
+     "fx": [
+      [
+       "+=",
+       "me",
+       "fuel",
+       -6
+      ],
+      [
+       "+=",
+       "opp",
+       "cash",
+       -9
+      ],
+      [
+       "+=",
+       "opp",
+       "shield",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "counter3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        1
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         5
+        ],
+        5,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "counter+gain2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        -4,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         0
+        ],
+        2,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      18
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 18,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "text": "mu0436: cash 5 [0..24], shield 0 [0..6], fuel 3 [0..6], focus 0 [0..5]\n  [0] steal0: their cash += -2; my cash += 2\n  [1] risk1: my cash += 5; my shield += 1\n  [2] spend+sabotage2 only if (my fuel >= 3): my fuel += -6; their cash += -9; their shield += 2\n  [3] counter3: their cash += ((their action == 1) ? -6 : 0); my cash += ((their action == 1) ? 3 : 1)\n  [4] negate4: my cash += ((their action == 5) ? 5 : 0); my cash += 1\n  [5] counter+gain2: their cash += ((their action == 0) ? -4 : 0); my cash += ((their action == 0) ? 2 : 0); my cash += 2\n  ends: (my cash >= 18) => I win; after 18 rounds higher 'cash' wins",
+  "fitness_train": 0.9578347578347578,
+  "novelty_vs_seeds": 0.75,
+  "metrics": {
+   "dominance": 0.08333333333333337,
+   "distinct_best_responses": 4,
+   "cycles": 8,
+   "live_actions": 5,
+   "n_actions": 6,
+   "timeout_rate": 0.0,
+   "length": 6.5,
+   "skill": 0.7222222222222223,
+   "interaction": 0.6067303995850413,
+   "leverage": 0.20634920634920634,
+   "action_shares": [
+    0.18867924528301888,
+    0.539622641509434,
+    0.1811320754716981,
+    0.022641509433962263,
+    0.0,
+    0.06792452830188679
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.9519464092739954,
+   "fitness_std": 0.029092814347623563,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.5,
+   "extended_top": 9
+  },
+  "lineage": [
+   {
+    "id": "gr0025",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.9525058275058275,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0069",
+    "proposer": "mutation",
+    "op": "tweak",
+    "holdout_fitness": 0.9616355866355866,
+    "viable_seeds": 3,
+    "flags_train": []
+   },
+   {
+    "id": "mu0152",
+    "proposer": "mutation",
+    "op": "tweak",
+    "holdout_fitness": 0.9591103341103341,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0295",
+    "proposer": "mutation",
+    "op": "tweak",
+    "holdout_fitness": 0.951048951048951,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "cx0369",
+    "proposer": "crossover",
+    "op": "crossover",
+    "holdout_fitness": 0.9718538166814028,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0436",
+    "proposer": "mutation",
+    "op": "swap_atom",
+    "holdout_fitness": 0.9519464092739954,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:1:>=:me.cash",
+   "fx:me.cash+",
+   "fx:me.fuel-",
+   "fx:me.shield+",
+   "fx:opp.cash-",
+   "fx:opp.shield+",
+   "gated_action",
+   "n_actions:6",
+   "reactive",
+   "reads:me.fuel",
+   "var:cash",
+   "var:focus",
+   "var:fuel",
+   "var:shield"
+  ]
+ },
+ {
+  "id": "mu0250",
+  "proposer": "mutation",
+  "gen": 5,
+  "spec": {
+   "id": "mu0250",
+   "name": "mu0250",
+   "vars": [
+    [
+     "cash",
+     5,
+     0,
+     24
+    ],
+    [
+     "shield",
+     0,
+     0,
+     6
+    ],
+    [
+     "fuel",
+     3,
+     0,
+     6
+    ],
+    [
+     "energy",
+     2,
+     0,
+     6
+    ]
+   ],
+   "actions": [
+    {
+     "name": "steal0",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       -2
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "risk1",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       5
+      ],
+      [
+       "+=",
+       "me",
+       "shield",
+       1
+      ]
+     ]
+    },
+    {
+     "name": "energy_play2",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "energy",
+       2
+      ]
+     ]
+    },
+    {
+     "name": "counter3",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "opp",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        -6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         1
+        ],
+        3,
+        0
+       ]
+      ]
+     ]
+    },
+    {
+     "name": "negate+charge4",
+     "cond": 0,
+     "fx": [
+      [
+       "+=",
+       "me",
+       "cash",
+       [
+        "?",
+        [
+         "==",
+         [
+          "act",
+          "opp"
+         ],
+         3
+        ],
+        6,
+        0
+       ]
+      ],
+      [
+       "+=",
+       "me",
+       "cash",
+       1
+      ],
+      [
+       "+=",
+       "me",
+       "fuel",
+       3
+      ]
+     ]
+    }
+   ],
+   "passive": [],
+   "end": [
+    [
+     [
+      ">=",
+      [
+       "v",
+       "me",
+       "cash"
+      ],
+      18
+     ],
+     1
+    ]
+   ],
+   "tiebreak": "cash",
+   "max_rounds": 18,
+   "value": [
+    [
+     "cash",
+     1
+    ]
+   ]
+  },
+  "text": "mu0250: cash 5 [0..24], shield 0 [0..6], fuel 3 [0..6], energy 2 [0..6]\n  [0] steal0: their cash += -2; my cash += 2\n  [1] risk1: my cash += 5; my shield += 1\n  [2] energy_play2: their energy += 2\n  [3] counter3: their cash += ((their action == 1) ? -6 : 0); my cash += ((their action == 1) ? 3 : 0)\n  [4] negate+charge4: my cash += ((their action == 3) ? 6 : 0); my cash += 1; my fuel += 3\n  ends: (my cash >= 18) => I win; after 18 rounds higher 'cash' wins",
+  "fitness_train": 0.8772338772338772,
+  "novelty_vs_seeds": 0.85,
+  "metrics": {
+   "dominance": 0.0,
+   "distinct_best_responses": 3,
+   "cycles": 3,
+   "live_actions": 3,
+   "n_actions": 5,
+   "timeout_rate": 0.045454545454545456,
+   "length": 6.871212121212121,
+   "skill": 1.0,
+   "interaction": 0.6765909088336941,
+   "leverage": 0.28125,
+   "action_shares": [
+    0.6339622641509434,
+    0.27169811320754716,
+    0.0,
+    0.045283018867924525,
+    0.04905660377358491
+   ],
+   "seat_bias": 0.0,
+   "inert_actions": [],
+   "dominant_line": null,
+   "luck": 0.0
+  },
+  "holdout": {
+   "fitness_mean": 0.89005439005439,
+   "fitness_std": 0.015701857325533183,
+   "flag_counts_over_seeds": {},
+   "viable_seeds": 4,
+   "extended_dominance": 0.0,
+   "extended_top": 0
+  },
+  "lineage": [
+   {
+    "id": "gr0025",
+    "proposer": "grammar",
+    "op": "",
+    "holdout_fitness": 0.9525058275058275,
+    "viable_seeds": 4,
+    "flags_train": []
+   },
+   {
+    "id": "mu0069",
+    "proposer": "mutation",
+    "op": "tweak",
+    "holdout_fitness": 0.9616355866355866,
+    "viable_seeds": 3,
+    "flags_train": []
+   },
+   {
+    "id": "mu0250",
+    "proposer": "mutation",
+    "op": "add_var",
+    "holdout_fitness": 0.89005439005439,
+    "viable_seeds": 4,
+    "flags_train": []
+   }
+  ],
+  "signature": [
+   "end:1:>=:me.cash",
+   "fx:me.cash+",
+   "fx:me.fuel+",
+   "fx:me.shield+",
+   "fx:opp.cash-",
+   "fx:opp.energy+",
+   "n_actions:5",
+   "reactive",
+   "var:cash",
+   "var:energy",
+   "var:fuel",
+   "var:shield"
+  ]
+ }
+]
