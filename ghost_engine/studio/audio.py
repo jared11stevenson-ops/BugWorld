@@ -57,7 +57,8 @@ def sfx(outdir, seed):
     return files
 
 
-MOODS = {"calm": {"bpm": 92, "scale": [0, 2, 4, 7, 9], "pad": [0, 4, 7], "kick": [0], "tone": "tri"},
+MOODS = {"bright": {"bpm": 118, "scale": [0, 2, 4, 7, 9], "pad": [0, 4, 7], "kick": [0], "tone": "tri"},
+         "calm": {"bpm": 92, "scale": [0, 2, 4, 7, 9], "pad": [0, 4, 7], "kick": [0], "tone": "tri"},
          "tense": {"bpm": 80, "scale": [0, 3, 5, 7, 10], "pad": [0, 3, 7], "kick": [0, 2], "tone": "tri"},
          "dread": {"bpm": 66, "scale": [0, 1, 5, 6, 10], "pad": [0, 1, 6], "kick": [0, 0.75], "tone": "sine"}}
 

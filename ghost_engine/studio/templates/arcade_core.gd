@@ -206,7 +206,11 @@ static func _nearest_shard(s: Dictionary) -> Vector2:
 
 
 # returns [ax, ay, dash]. skill 1 = avoids hazards (predictive), wells and pulse; skill 0 = walks at shards, noisy, ignores danger.
-static func bot(s: Dictionary, skill: int) -> Array:
+static func bot(s: Dictionary, skill_in: int) -> Array:
+	var skill := skill_in
+	if skill_in == 2:       # average human: attentive ~75% of 0.2 s windows, otherwise reacts like a novice
+		var window: int = int(s["t"]) / 6
+		skill = 1 if (window * 2654435761 + int(s["stage"]) * 97) % 100 < 75 else 0
 	var pos := Vector2(s["px"], s["py"])
 	var tgt := _nearest_shard(s)
 	var want := (tgt - pos).normalized()

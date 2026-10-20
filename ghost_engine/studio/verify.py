@@ -23,7 +23,10 @@ def script_errors(out):
 
 
 def selftest(project):
-    out = godot(project, ["--script", "res://tests/selftest.gd"])
+    try:
+        out = godot(project, ["--script", "res://tests/selftest.gd"], timeout=420)      # hard cap: a hung game must fail, not stall the studio
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "reason": "selftest timed out"}, ["selftest timed out"]
     line = [l for l in out.splitlines() if l.startswith("GAME_SELFTEST ")]
     res = json.loads(line[0].split(" ", 1)[1]) if line else {"ok": False, "reason": "no GAME_SELFTEST output", "tail": out[-600:]}
     return res, script_errors(out)
@@ -86,7 +89,7 @@ def twin_steward(data, res):
 def twin_cordon(game, res):
     """Python port of contain_core.gd; replays the bot's winning action script and compares the final state digest."""
     p = dict({"nodes": 12, "days": 30, "beta": 45, "flow": 6, "mort": 8, "rec": 12, "ap": 3, "meds": 8, "treat": 150, "q_days": 4,
-              "seeds": 2, "win_pct": 55, "purge_cap": 15, "purge_ap": 2}, **{k: int(v) for k, v in game["params"].items()})
+              "seeds": 2, "win_pct": 55, "purge_cap": 15, "purge_ap": 2, "leak": 25, "jump": 4}, **{k: int(v) for k, v in game["params"].items()})
     s = {"rng": RNG.seed_state(res["seed"])}
     n = p["nodes"]
     X, Y, POP, S_, I_, R_, D_, Q, B = ([] for _ in range(9))
@@ -158,8 +161,15 @@ def twin_cordon(game, res):
                 beta = p["beta"] // 2 if Q[i2] > 0 else p["beta"]
                 new[i2] += I_[i2] * S_[i2] * beta // (max(1, POP[i2]) * 100)
             for u, v in edges:
-                if Q[u] == 0 and Q[v] == 0 and B[u] == 0 and B[v] == 0:
-                    new[v] += I_[u] * p["flow"] // 100; new[u] += I_[v] * p["flow"] // 100
+                if B[u] == 0 and B[v] == 0:
+                    f = p["flow"] * p["leak"] // 100 if (Q[u] > 0 or Q[v] > 0) else p["flow"]
+                    new[v] += I_[u] * f // 100; new[u] += I_[v] * f // 100
+            for i2 in range(n):
+                if B[i2] == 0 and I_[i2] >= 30:
+                    if RNG.rand(s, 100) < p["jump"]:
+                        tgt = RNG.rand(s, n)
+                        if B[tgt] == 0:
+                            new[tgt] += 3
             for i2 in range(n):
                 if B[i2]:
                     continue
@@ -191,6 +201,21 @@ def twin_cordon(game, res):
     return {"digest_match": dg == res["final_digest"], "day_match": st["day"] == res["final_day"], "alive_match": alive_inf()[0] == res["final_alive"], "won": st["won"]}
 
 
+def twin_volley(game, res):
+    from . import volley_twin as VT
+    p = dict(VT.DEFAULTS)
+    for k, v in game["params"].items():
+        p[k] = int(v) if k in ("slick", "points", "ai_lag", "serve_pause", "max_ticks") else float(v)
+    tw = res["twin"]
+    s = VT.play(tw["seed"], p, tw["left_level"], tw["right"])
+    return {"digest_match": VT.digest(s) == tw["digest"], "ticks_match": s["t"] == tw["ticks"], "score_match": s["score"] == tw["score"]}
+
+
+def tuner_band(hb):
+    from . import tuner
+    return tuner.in_target_band(hb)
+
+
 def verify_game(game, project, out_dir):
     """Returns {"checks": {name: bool}, "details": {...}, "released": bool}"""
     os.makedirs(out_dir, exist_ok=True)
@@ -198,6 +223,8 @@ def verify_game(game, project, out_dir):
     checks = {"selftest_passes": bool(st.get("ok")), "no_script_errors": not errs}
     details = {"selftest": {k: v for k, v in st.items() if k not in ("records", "script")}, "script_errors": errs[:5]}
     files = ["project.godot", "main.tscn", "game.gd", "data/universe.json"] + [f"audio/{n}.wav" for n in ("click", "hit", "pickup", "win", "lose", "pulse", "alarm", "burn", "cure", "infect", "step", "ui_open", "music", "ambient")]
+    if st.get("perf_step_us") is not None:
+        checks["performance_budget"] = st["perf_step_us"] < 3000.0          # simulation step must stay far below a 16 ms frame
     checks["assets_present"] = all(os.path.exists(os.path.join(project, f)) for f in files)
     sh = shots(project, os.path.join(out_dir, "screens"))
     checks["screenshots_nonblank"] = bool(sh.get("ok"))
@@ -215,11 +242,25 @@ def verify_game(game, project, out_dir):
         checks["python_twin_matches"] = t["digest_match"] and t["day_match"] and t["alive_match"] and t["won"] == 1
         details["twin"] = t
         hb = (game.get("tuning") or {}).get("holdout_best", {})
-        checks["difficulty_tuned_on_holdout"] = bool(hb) and hb.get("skilled", 0) >= 0.3 and hb.get("skilled", 0) - hb.get("novice", 1) >= 0.2
+        checks["difficulty_in_target_band"] = bool(hb) and tuner_band(hb)
+        details["tuning_holdout"] = hb
+    elif game["id"] == "volley" and st.get("twin"):
+        t = twin_volley(game, st)
+        checks["python_twin_matches"] = all(t.values())
+        details["twin"] = t
+        hb = (game.get("tuning") or {}).get("holdout_best", {})
+        checks["difficulty_in_target_band"] = bool(hb) and tuner_band(hb)
+        details["tuning_holdout"] = hb
+    elif game["id"] == "splash":
+        st2, _e2 = selftest(project)          # determinism across processes: a second run must reproduce the digest
+        checks["deterministic_across_runs"] = bool(st.get("deterministic")) and st.get("det_digest") == st2.get("det_digest") and st.get("det_digest") is not None
+        details["det_digest"] = [st.get("det_digest"), st2.get("det_digest")]
+        hb = (game.get("tuning") or {}).get("holdout_best", {})
+        checks["difficulty_in_target_band"] = bool(hb) and tuner_band(hb)
         details["tuning_holdout"] = hb
     elif game["id"] in ("arcade", "arcade3d"):
         tn = game.get("tuning") or {}
         hb = tn.get("holdout_best", {})
-        checks["difficulty_tuned_on_holdout"] = bool(hb) and hb.get("skilled", 0) >= 0.3 and hb.get("skilled", 0) - hb.get("novice", 1) >= 0.2
+        checks["difficulty_in_target_band"] = bool(hb) and tuner_band(hb)
         details["tuning_holdout"] = hb
     return {"checks": checks, "details": details, "released": all(checks.values())}

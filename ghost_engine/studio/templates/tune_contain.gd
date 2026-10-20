@@ -19,11 +19,13 @@ func _init() -> void:
 		var sk := 0
 		var nov := 0
 		var ez := 0
+		var av := 0
 		for i in n:
 			sk += A.play(base + i, p, 1)["won"]
 			nov += A.play(base + i, p, 0)["won"]
 			ez += A.play(base + i, easy, 1)["won"]
-		out.append({"skilled": float(sk) / n, "novice": float(nov) / n, "skilled_stage1": float(ez) / n, "skilled_score": 0.0})
+			av += A.play(base + i, p, 2)["won"]
+		out.append({"average": float(av) / n, "skilled": float(sk) / n, "novice": float(nov) / n, "skilled_stage1": float(ez) / n, "skilled_score": 0.0})
 	var f := FileAccess.open(args[1], FileAccess.WRITE)
 	f.store_string(JSON.stringify(out))
 	f.close()

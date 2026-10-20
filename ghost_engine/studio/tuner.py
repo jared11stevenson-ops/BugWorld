@@ -7,22 +7,81 @@ GODOT = os.environ.get("GODOT_BIN", "/tmp/g/Godot_v4.5-stable_linux.x86_64")
 ARCADE_BOUNDS = {"law_strength": (0.4, 2.0, 0.1), "spawn_every": (8, 26, 1), "spawn_step": (1, 4, 1), "hazard_speed": (90.0, 230.0, 10.0),
                  "goal": (3, 6, 1), "stage_secs": (24.0, 45.0, 3.0), "max_hazards": (10, 30, 2)}
 CORDON_BOUNDS = {"beta": (30, 110, 5), "flow": (2, 16, 1), "mort": (4, 30, 2), "rec": (5, 20, 1), "meds": (3, 16, 1), "win_pct": (40, 75, 5),
-                 "q_days": (3, 6, 1), "seeds": (1, 4, 1), "ap": (2, 4, 1)}
+                 "q_days": (3, 6, 1), "seeds": (1, 4, 1), "ap": (2, 4, 1), "leak": (0, 60, 5), "jump": (0, 15, 1)}
+VOLLEY_BOUNDS = {"gravity": (0.30, 0.60, 0.02), "jump": (9.0, 13.0, 0.5), "restitution": (0.85, 1.2, 0.05), "ai_lag": (2, 24, 1), "ai_err": (5.0, 100.0, 5.0), "ai_aggr": (0.2, 1.0, 0.05), "points": (5, 9, 1)}
+SPLASH_BOUNDS = {"team_size": (1, 3, 1), "splash_r": (50.0, 80.0, 4.0), "splash_dmg": (30.0, 60.0, 5.0), "speed": (2.6, 3.8, 0.2), "en_lead": (0.0, 0.6, 0.1),
+                 "en_err": (10.0, 90.0, 10.0), "en_aggr": (0.3, 1.0, 0.05), "en_dodge": (0.0, 1.0, 0.1), "ally_level": (0, 2, 1), "throw_cd": (20, 45, 5)}
 SPECS = {
+    "splash": {"script": "res://ghost/tune_splash.gd", "bounds": SPLASH_BOUNDS,
+               "base": lambda law: {"slick": 1 if law == "slick" else 0, "wind": 0.04 if law == "gust" else 0.0, "splash_dmg": 45.0, "splash_r": 62.0, "throw_cd": 30, "refill_ticks": 40,
+                                    "max_ammo": 3, "team_size": 2, "max_ticks": 2400, "range": 320.0, "speed": 3.4, "en_lead": 0.5, "en_err": 40.0, "en_aggr": 0.65, "en_dodge": 0.5, "ally_level": 1}},
+    "volley": {"script": "res://ghost/tune_volley.gd", "bounds": VOLLEY_BOUNDS,
+               "base": lambda law: {"wind": 0.03 if law == "gust" else 0.0, "slick": 1 if law == "slick" else 0, "gravity": 0.42, "jump": 10.5, "restitution": 1.0, "points": 7,
+                                    "ai_lag": 11, "ai_err": 40.0, "ai_aggr": 0.65, "serve_pause": 40, "max_ticks": 14400, "move_acc": 1.5}},
     "arcade": {"script": "res://ghost/tune.gd", "bounds": ARCADE_BOUNDS,
                "base": lambda law: {"law": law, "law_strength": 1.0, "spawn_every": 14, "spawn_step": 3, "hazard_speed": 150.0, "goal": 4, "stage_secs": 32.0, "max_hazards": 22}},
     "cordon": {"script": "res://ghost/tune_contain.gd", "bounds": CORDON_BOUNDS,
-               "base": lambda law: {"nodes": 12, "days": 30, "beta": 70, "flow": 6, "mort": 18, "rec": 10, "ap": 3, "meds": 8, "treat": 150, "q_days": 4, "seeds": 2, "win_pct": 60, "purge_cap": 15, "purge_ap": 2}},
+               "base": lambda law: {"nodes": 12, "days": 30, "beta": 70, "flow": 6, "mort": 18, "rec": 10, "ap": 3, "meds": 8, "treat": 150, "q_days": 4, "seeds": 2, "win_pct": 60, "purge_cap": 15, "purge_ap": 2, "leak": 25, "jump": 4}},
 }
 
 
+def band(x, lo, hi, width):
+    return 1.0 if lo <= x <= hi else max(0.0, 1 - ((lo - x) if x < lo else (x - hi)) / width)
+
+
 def fitness(r):
-    sk, nov, s1 = r["skilled"], r["novice"], r["skilled_stage1"]
+    """Targets (design assumptions): expert 70-95%, average human 35-65%, novice <=10%. Older results without an 'average' tier use the legacy form."""
+    sk, nov = r["skilled"], r["novice"]
+    b = 1.0 if nov <= 0.10 else max(0.0, 1 - (nov - 0.10) / 0.4)
+    if "average" in r:
+        return _fair_pace(r) * (0.40 * band(r["average"], 0.35, 0.65, 0.35) + 0.25 * band(sk, 0.70, 0.95, 0.40) + 0.20 * b + 0.15 * min(1.0, max(0.0, (sk - nov) / 0.5)))
+    s1 = r["skilled_stage1"]
     a = max(0.0, 1 - abs(sk - 0.70) / 0.70) if not (0.55 <= sk <= 0.85) else 1.0
-    b = 1.0 if nov <= 0.10 else max(0.0, 1 - (nov - 0.10) / 0.5)
     c = min(1.0, s1 / 0.9)
-    g = min(1.0, max(0.0, (sk - nov) / 0.4))          # skill must matter: skilled bot clearly beats the novice
+    g = min(1.0, max(0.0, (sk - nov) / 0.4))
     return 0.4 * a + 0.2 * b + 0.2 * c + 0.2 * g
+
+
+def _fair_pace(r):
+    """Sports games also need side-fairness and readable rallies (multiplies fitness when the tuner reports them)."""
+    if "side_bias" not in r:
+        return 1.0
+    fair = 1.0 if r["side_bias"] <= 0.12 else max(0.0, 1 - (r["side_bias"] - 0.12) / 0.3)
+    pace = band(r.get("rally", 7.0), 3.0, 12.0, 5.0) * (1.0 if r["ticks"] <= 9000 else max(0.0, 1 - (r["ticks"] - 9000) / 6000))
+    return 0.55 + 0.25 * fair + 0.20 * pace
+
+
+def in_target_band(r):
+    """Release criterion for tuned games (stricter than the old skilled>=0.3 check)."""
+    avg = r.get("average")
+    if "side_bias" in r and not (r["side_bias"] <= 0.20 and 2.5 <= r.get("rally", 7.0) <= 16.0):
+        return False
+    return r["skilled"] >= 0.60 and r["novice"] <= 0.20 and r["skilled"] - r["novice"] >= 0.40 and (avg is None or 0.30 <= avg <= 0.75)
+
+
+HARD_CAPS = {   # widening limits per kind: bounds may grow, but never beyond what the core can express sensibly
+    "arcade": {"law_strength": (0.2, 3.0), "hazard_speed": (60.0, 320.0), "spawn_every": (5, 34), "max_hazards": (6, 40), "goal": (2, 8), "stage_secs": (18.0, 60.0), "spawn_step": (1, 5)},
+    "volley": {"gravity": (0.2, 0.8), "jump": (8.0, 15.0), "restitution": (0.7, 1.4), "ai_lag": (1, 40), "ai_err": (0.0, 160.0), "ai_aggr": (0.05, 1.0), "points": (3, 15)},
+    "splash": {"team_size": (1, 3), "splash_r": (40.0, 100.0), "splash_dmg": (25.0, 75.0), "speed": (2.2, 4.4), "en_lead": (0.0, 1.0), "en_err": (0.0, 150.0), "en_aggr": (0.1, 1.0), "en_dodge": (0.0, 1.0), "ally_level": (0, 2), "throw_cd": (12, 60)},
+    "cordon": {"beta": (20, 160), "mort": (2, 50), "flow": (1, 25), "win_pct": (30, 85), "meds": (1, 20), "ap": (1, 5), "rec": (3, 30), "q_days": (2, 8), "seeds": (1, 6), "leak": (0, 90), "jump": (0, 30)},
+}
+
+
+def widen(kind, bounds, at_bounds):
+    """Return bounds widened by 30% of the range in the saturated direction (within HARD_CAPS)."""
+    out = dict(bounds)
+    caps = HARD_CAPS.get(kind, {})
+    for k, side in at_bounds.items():
+        lo, hi, st = out[k]
+        span = hi - lo
+        clo, chi = caps.get(k, (lo, hi))
+        if side == "hi":
+            hi = min(chi, hi + span * 0.3)
+        else:
+            lo = max(clo, lo - span * 0.3)
+        isf = isinstance(st, float)
+        out[k] = (round(lo, 3) if isf else int(round(lo)), round(hi, 3) if isf else int(round(hi)), st)
+    return out
 
 
 def run_batch(project, sets, script, workers=4):
@@ -55,10 +114,12 @@ def mutate(p, rnd, bounds, rate=0.4):
     return p
 
 
-def tune(project, kind, law, seed, pop=16, gens=8, init=None, log=print):
+def tune(project, kind, law, seed, pop=16, gens=8, init=None, bounds_override=None, log=print):
     """Winner's-curse-safe: every generation uses fresh evaluation seeds, elites are re-evaluated, ranking uses the running mean."""
     spec = SPECS[kind]
-    bounds, script = spec["bounds"], spec["script"]
+    bounds, script = dict(spec["bounds"]), spec["script"]
+    if bounds_override:
+        bounds.update({k: tuple(v) for k, v in bounds_override.items() if k in bounds})
     rnd = random.Random(seed)
     base = spec["base"](law)
     popn = [base] + ([dict(init)] if init else []) + [mutate(base, rnd, bounds, 0.8) for _ in range(pop)]
@@ -90,5 +151,6 @@ def tune(project, kind, law, seed, pop=16, gens=8, init=None, log=print):
             popn.append(mutate(c, rnd, bounds))
     best = ranked[0]
     held = run_batch(project, [{"p": best, "seed_base": 7000}, {"p": base, "seed_base": 7000}], script)
-    return {"params": best, "curve": curve, "default_params": base, "holdout_best": held[0], "holdout_default": held[1],
+    at_bounds = {k: ("hi" if best[k] >= bounds[k][1] else "lo") for k in bounds if k in best and (best[k] >= bounds[k][1] or best[k] <= bounds[k][0])}
+    return {"params": best, "curve": curve, "at_bounds": at_bounds, "bounds_used": {k: list(v) for k, v in bounds.items()}, "in_band": in_target_band(held[0]), "default_params": base, "holdout_best": held[0], "holdout_default": held[1],
             "start_fitness": curve[0]["best_fitness"], "final_fitness": curve[-1]["best_fitness"], "evaluations": sum(len(v) for v in hist.values())}

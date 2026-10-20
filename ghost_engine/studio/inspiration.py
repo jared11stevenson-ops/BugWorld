@@ -63,6 +63,15 @@ BANK = [
     ("herd immunity", "medicine", ["contagion", "network", "tipping"], ["shield", "crowd", "gap"], "When enough of a population is immune, an infection struggles to spread, indirectly protecting those who are not immune.", ["plague", "epidemic", "immunity"]),
     ("the Plague of Justinian", "history", ["contagion", "network"], ["granary", "tithe", "omen"], "A major plague pandemic struck the Byzantine Empire in the 6th century CE.", ["plague", "pestilence"]),
     ("humoral medicine and purging", "history", ["purge", "selection"], ["basin", "humor", "lancet-blue"], "Historic European medicine often tried to restore the body's balance by purging and bloodletting, practices now known to be ineffective or harmful.", ["purge", "cleanse", "plague"]),
+    ("water balloon fights", "recreation", ["projectile", "splash", "team"], ["balloon", "puddle", "soak"], "A water balloon bursts on impact when its thin rubber skin is stretched past its limit.", ["water", "balloon", "splash", "fight", "soak", "waterballoon"]),
+    ("volleyball", "sport", ["rally", "team", "oscillation"], ["net", "spike", "sandline"], "Volleyball was invented in 1895 by William G. Morgan in Holyoke, Massachusetts.", ["volleyball", "volley", "beach", "rally", "spike"]),
+    ("projectile motion", "physics", ["projectile", "tipping"], ["arc", "apex", "range"], "Galileo showed that a projectile follows a parabola because its horizontal motion is steady while gravity accelerates it downward.", ["balloon", "throw", "arc", "projectile", "toss"]),
+    ("surface tension", "chemistry", ["splash", "diffusion"], ["bead", "skin", "meniscus"], "Surface tension lets water form beads and lets some insects walk on a pond's surface.", ["water", "splash", "drop"]),
+    ("the water cycle", "climate", ["diffusion", "oscillation"], ["vapor", "cloud", "downpour"], "Water evaporates, condenses into clouds and falls again as precipitation in a continuous cycle.", ["water", "rain", "cycle"]),
+    ("beach dune formation", "geology", ["migration", "erosion"], ["dune", "grain", "crest"], "Wind moves sand grains by hopping and rolling them, building dunes that slowly migrate.", ["beach", "sand", "dune"]),
+    ("wave interference", "physics", ["resonance", "splash"], ["trough", "ripple", "swell"], "When two waves meet they add together or cancel, producing patterns of bigger and smaller ripples.", ["water", "wave", "ripple", "splash"]),
+    ("rally scoring", "sport", ["rally", "tipping"], ["serve", "point", "side-out"], "Modern volleyball awards a point on every rally, whichever team served.", ["volleyball", "rally", "score"]),
+    ("tidal pools", "marine biology", ["symbiosis", "scarcity"], ["pool", "anemone", "ebb"], "Tidal pools trap seawater at low tide and shelter small communities of animals.", ["beach", "water", "pool"]),
 ]
 FIELDS = sorted({b[1] for b in BANK})
 

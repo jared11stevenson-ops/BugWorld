@@ -18,7 +18,9 @@ def retrospective(know, cname, uni, games, reports, timings, genres):
         tn = g.get("tuning")
         if tn:
             hb = tn["holdout_best"]
-            entry["tuning"][g["id"]] = {"start": tn["start_fitness"], "final": tn["final_fitness"], "holdout_skilled": hb["skilled"], "holdout_novice": hb["novice"]}
+            entry["tuning"][g["id"]] = {"start": tn["start_fitness"], "final": tn["final_fitness"], "holdout_skilled": hb["skilled"], "holdout_novice": hb["novice"],
+                                        "holdout_average": hb.get("average"), "in_band": tn.get("in_band"), "retuned": tn.get("retuned", False)}
+    entry["perf_step_us"] = {gid: r["details"]["selftest"].get("perf_step_us") for gid, r in reports.items() if r["details"].get("selftest", {}).get("perf_step_us") is not None}
     know["cycles"].append(entry)
     actions = []
     if search["final_fitness"] >= search["start_fitness"]:
@@ -32,10 +34,22 @@ def retrospective(know, cname, uni, games, reports, timings, genres):
         actions.append("stored evolved world-rule priors (search improved fitness)")
     for g in games:
         tn = g.get("tuning")
-        if tn and tn["holdout_best"]["skilled"] >= 0.3 and tn["holdout_best"]["skilled"] - tn["holdout_best"]["novice"] >= 0.2:
-            key = "cordon" if g["id"] == "cordon" else f"arcade:{uni['law']}"
+        if tn and tn.get("in_band"):
+            kind = {"arcade3d": "arcade"}.get(g["id"], g["id"])
+            key = "cordon" if kind == "cordon" else f"{kind}:{uni['law']}"
             know["tuning_priors"][key] = tn["params"]
             actions.append(f"stored validated tuning parameters '{key}' (held-out skill gap confirmed)")
+    # 2b) persist widened tuner bounds when a search saturated (the studio's tuning space itself evolves)
+    for g in games:
+        tn = g.get("tuning")
+        if tn and tn.get("at_bounds"):
+            kind = {"arcade3d": "arcade"}.get(g["id"], g["id"])
+            from studio import tuner as _t
+            wide = _t.widen(kind, {k: tuple(v) for k, v in tn["bounds_used"].items()}, tn["at_bounds"])
+            know.setdefault("tuner_bounds", {})[kind] = {k: list(v) for k, v in wide.items()}
+            actions.append(f"tuner for '{kind}' saturated at {tn['at_bounds']} -> bounds widened for future cycles")
+        if tn and tn.get("retuned"):
+            actions.append(f"'{g['id']}': first tuning missed the target band; retune with widened bounds {'succeeded' if tn['in_band'] else 'still missed'}")
     # 3) budget adaptation from measured search behaviour
     b = know["budget"]
     gain = search["final_fitness"] - search["start_fitness"]

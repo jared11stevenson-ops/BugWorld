@@ -6,7 +6,7 @@ from . import universe as U
 
 ADJ = {"ruthless": "have taken more lives than any rival", "beleaguered": "have buried the most of their own", "prosperous": "hold the fattest purses",
        "watchful": "have spilled the least blood and kept their counsel", "restless": "cannot stay out of other people's quarrels", "steadfast": "hold their ground whatever comes"}
-TONE = {"contagion": ("sickness", "ward", "cure"), "purge": ("fire", "cleansing", "ash"), "pulse": ("rhythm", "beat", "tide"),
+TONE = {"gust": ("wind", "gust", "lull"), "slick": ("slick", "slide", "grip"), "contagion": ("sickness", "ward", "cure"), "purge": ("fire", "cleansing", "ash"), "pulse": ("rhythm", "beat", "tide"),
         "wells": ("weight", "pull", "orbit"), "drift": ("current", "drift", "wandering")}
 
 

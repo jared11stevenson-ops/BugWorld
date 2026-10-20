@@ -51,7 +51,7 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
     os.makedirs(STATE)
     bud = dict(know["budget"])
     if quick:
-        bud.update(universe_pop=8, universe_gens=3, tune_pop=8, tune_gens=3, g1_gens=4)
+        bud.update(universe_pop=8, universe_gens=3, tune_pop=6, tune_gens=1, g1_gens=4)
     with stage("1_inspiration"):
         ins, seed = inspiration.pick(seed, prompt)
         log("  inspirations: " + "; ".join(f"{b[0]} ({b[1]})" for b in ins))
@@ -74,12 +74,24 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
             elif gid == "steward":
                 games.append(G.build_steward(uni, proj, target_pct=135))
             else:
-                builder = {"arcade": lambda u, d, p, t=None: G.build_arcade(u, d, p, t), "arcade3d": G.build_arcade3d, "cordon": G.build_cordon}[gid]
-                kind = "cordon" if gid == "cordon" else "arcade"
+                kind, builder = {"arcade": ("arcade", G.build_arcade), "arcade3d": ("arcade", G.build_arcade3d), "cordon": ("cordon", G.build_cordon),
+                                 "volley": ("volley", G.build_volley), "splash": ("splash", G.build_splash)}[gid]
                 base = tuner.SPECS[kind]["base"](uni["law"])
                 builder(uni, proj, base)
-                init = know["tuning_priors"].get("cordon" if kind == "cordon" else f"arcade:{uni['law']}")
-                tuning = tuner.tune(proj, kind, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=init, log=log)
+                key = "cordon" if kind == "cordon" else f"{kind}:{uni['law']}"
+                init = know["tuning_priors"].get(key)
+                override = know.get("tuner_bounds", {}).get(kind)
+                tuning = tuner.tune(proj, kind, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=init, bounds_override=override, log=log)
+                tuning["retuned"] = False
+                if not quick and not tuning["in_band"] and tuning["at_bounds"]:
+                    # evolved behaviour: the search saturated at its bounds and missed the target band -> widen those bounds (within hard caps) and retune once
+                    wide = tuner.widen(kind, {k: tuple(v) for k, v in tuning["bounds_used"].items()}, tuning["at_bounds"])
+                    log(f"  tune[{kind}] saturated at {tuning['at_bounds']} and outside target band -> widening bounds and retuning")
+                    t2 = tuner.tune(proj, kind, uni["law"], seed + 1, pop=bud["tune_pop"], gens=bud["tune_gens"], init=tuning["params"], bounds_override=wide, log=log)
+                    t2["retuned"] = True
+                    t2["first_attempt"] = {"holdout_best": tuning["holdout_best"], "at_bounds": tuning["at_bounds"], "in_band": False}
+                    if t2["in_band"] or tuner.fitness(t2["holdout_best"]) > tuner.fitness(tuning["holdout_best"]):
+                        tuning = t2
                 games.append(builder(uni, proj, tuning["params"], tuning))
     reports = {}
     with stage("6_verification"):

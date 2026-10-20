@@ -65,6 +65,11 @@ static func rnd(s: Dictionary, n: int) -> int:
 	return next_u32(s) % n
 
 
+static func rnd_pub(seed_in: int) -> int:
+	var sd := seed_in & 0x7FFFFFFF       # mask first: seeds can exceed 2^31 and the product would overflow int64
+	return (sd * 2654435761 / 7) % 2
+
+
 static func fnv_ints(h: int, vals: Array) -> int:
 	for v in vals:
 		h = ((h ^ (int(v) & M)) * 16777619) & M

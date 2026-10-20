@@ -51,7 +51,46 @@ New capabilities added in this pass, each verified:
 | Expedition 3D (held-out) | skilled 71% / novice 12%; 3D view matches state |
 | world search / history branching | 72 alternate histories explored |
 
-**Honest note on Cordon:** the tuner hit its parameter bounds and the skilled bot still wins every held-out game — it is hard for naive play, easy for a competent player; real difficulty for humans is unknown.
+**Honest note on Cordon (as shipped in cycle 3):** the tuner hit its parameter bounds and the skilled bot won every held-out game. That is exactly what the pass-3 gate and fixes address; the archived cycle-3 Cordon predates them.
+
+## Pass 3 — reset, update, evolve: "waterballoon fights / volleyball world" (cycle 4)
+
+**Reset:** cycle 3's universe was destroyed at its end; cycle 4 started from an empty `studio/state/` with only the knowledge store carried over.
+
+**The studio evolved before building (each item measured and tested):**
+
+| Weakness found in pass 2 | Change | Evidence |
+|---|---|---|
+| Difficulty judged only by *perfect* bots (Cordon: skilled 100%) | Added an **average-human tier** (inattentive ~25%) next to expert and novice; fitness and gate target expert 70–95%, average 35–65%, novice ≤10% | `tuner.fitness`, `tuner.in_target_band` + tests |
+| Gate too lenient (skilled ≥ 0.3) | **Target-band gate** (expert ≥60%, average 30–75%, novice ≤20%, expert−novice ≥40%, side-bias ≤20%, sane rally length) + **performance budget** (<3 ms/sim step) | `verify.py` |
+| Tuner saturated at its bounds and shipped anyway | Saturation is detected, bounds are **widened within hard caps and the game is retuned once**; widened bounds persist in knowledge | live in cycle 4: Volley's first tuning hit `restitution: lo`, missed the band (novice 21%), retune succeeded (novice 12%) |
+| Cordon trivially won (perfect quarantine seal) | Fog of war (reports 2 days late), leaky quarantine, long-range outbreak jumps | grid: expert 0.82 / average 0.78 / novice 0 at the extreme |
+| Palettes never checked | Contrast guarantee (text ≥7:1, accent ≥4.5:1, secondary ≥3:1) | 0 violations across 300 universes |
+| No genre for ball sports / water fights | **Two new genres**: *Volley* (3D beach volleyball tournament) and *Splash* (top-down water-balloon fight), plus new laws *gust* and *slick*, a *bright* music mood, 9 new inspirations | below |
+| Python twin only for integer sims | **Float physics twin**: Volley's core uses only + − × ÷ √ so Python reproduces Godot bit for bit | digest-exact incl. a seed > 2³¹ |
+
+**Bugs found *by the new machinery* and fixed (kept as studio lessons in `studio/knowledge/`):**
+1. The Python twin caught an **int64 overflow in GDScript for seeds > 2³¹** (`seed * 2654435761`); regression test pins the digest.
+2. A "random" hash correlated across agent indices made **identical AIs lose 20/20** on one team (seat bias). 100-match symmetric runs after the fix: 47/53 and 50/44. Lesson: bias needs ≥100 matches, 20 is noise.
+3. **Skill tiers were inverted**: leading the target *hurt* (lead 1.0 won 40%, lead 0 won 95%) because enemies stop to throw; perfect dodging produced 0 hits in 80 matches. Tiers are now validated for monotonic win rates by ablation (duels 15 / 53 / 97%).
+4. A screenshot review after release found bumpers coloured like the enemy team and sand that read as grass; fixed and the archived games were re-verified (`python -m studio.patch`, recorded in the manifest as `patches`).
+
+### Cycle 4 — *Ebbsoak* (tidal pools, water balloon fights, rally scoring; law: gust, mood: bright)
+
+| game | genre family | held-out results (tuned) | verification |
+|---|---|---|---|
+| *Splash* | arena (new) | expert 0.91 / average 0.44 / novice 0.12; side-bias 0.03 | self-test, determinism across two process runs (digest `2e004fae`), perf 24 µs/step, screenshots |
+| *Beach Volley* | 3D sport (new) | expert 0.96 / average 0.50 / novice 0.12; side-bias 0.12; rally 3.0 touches | Python twin digest/ticks/score match, perf 16 µs/step |
+| *Steward* | simulation | do-nothing loses, bot wins | Python twin digest + score match |
+
+All three released; cycle wall time ~18 min (Splash and Volley tuning dominate: ~8 min each). 60 tests pass (`python3 -m unittest discover -s tests`).
+
+**Limits of pass 3 (honest):**
+* Volley's rallies are short (about 3 touches) — playable but not rich; Splash's skill expression comes mostly from *aiming straight and dodging*, a narrower skill space than the genre could have. Both are tuned against *bots*; no human has played them (rating pipeline exists, zero ratings).
+* The "average human" tier is a model (25% inattention), not data.
+* 3D is still procedural primitives; the beach, palms and umbrellas are boxes/cylinders/prisms. Animation is transform/sine-driven.
+* Genre selection still picks from a fixed pool of 7; the studio cannot yet invent a genre. This pass added two, by hand.
+* Splash's team size defaulted to 2; the tuner saturated at `team_size: lo, ally_level: lo` (duels make skill matter most) and the bounds were widened for next time.
 
 ## What was produced and verified (cycles 1–2, earlier pass)
 

@@ -214,6 +214,65 @@
     "final": 0.7134245552318599,
     "start": 0.6969625237716452
    }
+  },
+  {
+   "bottleneck": "3_build_volley",
+   "canon_richness": 0.7381754131066934,
+   "cycle": "cycle_004",
+   "failed_checks": [],
+   "genres": [
+    "splash",
+    "volley",
+    "steward"
+   ],
+   "history_branches_explored": 72,
+   "law": "gust",
+   "median_branch_richness": 0.6864363216244049,
+   "perf_step_us": {
+    "splash": 23.6413333333333,
+    "volley": 16.2391666666667
+   },
+   "released": [
+    "splash",
+    "volley",
+    "steward"
+   ],
+   "timings_s": {
+    "1_inspiration": 0.0,
+    "2_universe": 42.4,
+    "2b_lore": 0.2,
+    "3_build_splash": 501.9,
+    "3_build_steward": 1.9,
+    "3_build_volley": 528.2,
+    "6_verification": 10.4,
+    "7_archive": 0.0,
+    "total": 1085.1
+   },
+   "tuning": {
+    "splash": {
+     "final": 0.9910156250000001,
+     "holdout_average": 0.4375,
+     "holdout_novice": 0.125,
+     "holdout_skilled": 0.90625,
+     "in_band": true,
+     "retuned": false,
+     "start": 0.9611111111111108
+    },
+    "volley": {
+     "final": 1.0,
+     "holdout_average": 0.5,
+     "holdout_novice": 0.125,
+     "holdout_skilled": 0.958333333333333,
+     "in_band": true,
+     "retuned": true,
+     "start": 1.0
+    }
+   },
+   "universe_search": {
+    "evaluations": 160,
+    "final": 0.7234825486450555,
+    "start": 0.6830296373342554
+   }
   }
  ],
  "human_feedback": {},
@@ -239,6 +298,16 @@
     "stored validated tuning parameters 'arcade:purge' (held-out skill gap confirmed)"
    ],
    "cycle": "cycle_003"
+  },
+  {
+   "actions": [
+    "stored evolved world-rule priors (search improved fitness)",
+    "stored validated tuning parameters 'splash:gust' (held-out skill gap confirmed)",
+    "stored validated tuning parameters 'volley:gust' (held-out skill gap confirmed)",
+    "tuner for 'splash' saturated at {'team_size': 'lo', 'ally_level': 'lo'} -> bounds widened for future cycles",
+    "'volley': first tuning missed the target band; retune with widened bounds succeeded"
+   ],
+   "cycle": "cycle_004"
   }
  ],
  "lessons": [
@@ -261,8 +330,100 @@
   {
    "cycle": "cycle_003",
    "note": "all checks passed; slowest stage was 3_build_arcade3d (55.0s)"
+  },
+  {
+   "check": "symmetry",
+   "cycle": "pass4-dev",
+   "game": "splash",
+   "note": "A 'random' hash correlated across agent indices ((t*K + i*7919) % 2000) gave one team systematically better throw timing: identical AIs, team 1 won 20/20. Replaced with an integer mixing hash. Lesson: seat/team symmetry must be measured with identical AIs on >=100 matches; 20 matches is noise (47/53 and 50/44 over 100 after the fix).",
+   "validated_by": "100-match symmetric runs"
+  },
+  {
+   "check": "skill_monotonic",
+   "cycle": "pass4-dev",
+   "game": "splash",
+   "note": "AI skill tiers must be validated for monotonic win rates by ablation. Leading the target (extrapolating velocity) HURT: lead 1.0 won 40%, lead 0 won 95%, because enemies stop to throw. Perfect dodging produced 0 hits in 80 matches (stalemate), so dodge must be partial and late. Expert tier now aims straight; ordering novice<average<expert holds (duels 15/53/97%).",
+   "validated_by": "60-80 match ablations per variant"
+  },
+  {
+   "check": "difficulty_reachable",
+   "cycle": "pass4-dev",
+   "game": "cordon",
+   "note": "Fog of war and an inattentive 'average player' tier were not enough: bots still won 100% because a quarantine was a perfect seal. Added leaky quarantine and long-range outbreak jumps; target band becomes reachable near the edge of bounds.",
+   "validated_by": "grid over beta/mort/leak/jump: skilled 0.82, average 0.78, novice 0.0 at the extreme"
+  },
+  {
+   "check": "python_twin_matches",
+   "cycle": "pass4-dev",
+   "game": "volley",
+   "note": "The Python twin caught an int64 overflow in GDScript for seeds > 2^31 (seed*2654435761). Mask seeds to 31 bits before arithmetic in both languages. Lesson: always test twins with large seeds.",
+   "validated_by": "seed 76533082012: Godot f0c049c0 == Python f0c049c0"
+  },
+  {
+   "check": "gate",
+   "cycle": "pass4-dev",
+   "game": "all",
+   "note": "Gate tightened: tuned games must land in the target band (expert 60+%, average 30-75%, novice <=20%, expert-novice >=40%, side bias <=20%, rally length sane) and pass a performance budget; saturated tuners automatically widen their bounds (within hard caps) and retune once, and the widened bounds persist in knowledge."
+  },
+  {
+   "cycle": "cycle_004",
+   "note": "all checks passed; slowest stage was 3_build_volley (528.2s)"
   }
  ],
+ "tuner_bounds": {
+  "splash": {
+   "ally_level": [
+    0,
+    2,
+    1
+   ],
+   "en_aggr": [
+    0.3,
+    1.0,
+    0.05
+   ],
+   "en_dodge": [
+    0.0,
+    1.0,
+    0.1
+   ],
+   "en_err": [
+    10.0,
+    90.0,
+    10.0
+   ],
+   "en_lead": [
+    0.0,
+    0.6,
+    0.1
+   ],
+   "speed": [
+    2.6,
+    3.8,
+    0.2
+   ],
+   "splash_dmg": [
+    30.0,
+    60.0,
+    5.0
+   ],
+   "splash_r": [
+    50.0,
+    80.0,
+    4.0
+   ],
+   "team_size": [
+    1,
+    3,
+    1
+   ],
+   "throw_cd": [
+    20,
+    45,
+    5
+   ]
+  }
+ },
  "tuning_priors": {
   "arcade:pulse": {
    "goal": 3,
@@ -309,20 +470,52 @@
    "seeds": 3,
    "treat": 150,
    "win_pct": 75
+  },
+  "splash:gust": {
+   "ally_level": 0,
+   "en_aggr": 0.6,
+   "en_dodge": 0.2,
+   "en_err": 40.0,
+   "en_lead": 0.3,
+   "max_ammo": 3,
+   "max_ticks": 2400,
+   "range": 320.0,
+   "refill_ticks": 40,
+   "slick": 0,
+   "speed": 3.6,
+   "splash_dmg": 55.0,
+   "splash_r": 66.0,
+   "team_size": 1,
+   "throw_cd": 30,
+   "wind": 0.04
+  },
+  "volley:gust": {
+   "ai_aggr": 0.6,
+   "ai_err": 55.0,
+   "ai_lag": 9,
+   "gravity": 0.42,
+   "jump": 10.5,
+   "max_ticks": 14400,
+   "move_acc": 1.5,
+   "points": 6,
+   "restitution": 1.0,
+   "serve_pause": 40,
+   "slick": 0,
+   "wind": 0.03
   }
  },
  "universe_priors": {
   "aggro_pct": 8,
   "burn": 2,
-  "flee_pct": 70,
-  "kill_rel_penalty": 7,
-  "loot_pct": 70,
-  "regen_div": 29,
-  "respawn_delay": 32,
-  "restock_ticks": 8,
-  "sell_pct": 76,
-  "swing_pct": 17,
-  "wage": 3
+  "flee_pct": 60,
+  "kill_rel_penalty": 6,
+  "loot_pct": 62,
+  "regen_div": 28,
+  "respawn_delay": 34,
+  "restock_ticks": 10,
+  "sell_pct": 77,
+  "swing_pct": 22,
+  "wage": 2
  },
  "version": 1
 }

@@ -1,0 +1,90 @@
+{
+ "id": "ebbsoak-765330820",
+ "seed": 765330820,
+ "name": "Ebbsoak",
+ "inspirations": [
+  "tidal pools",
+  "water balloon fights",
+  "rally scoring"
+ ],
+ "facts": {
+  "tidal pools": "Tidal pools trap seawater at low tide and shelter small communities of animals.",
+  "water balloon fights": "A water balloon bursts on impact when its thin rubber skin is stretched past its limit.",
+  "rally scoring": "Modern volleyball awards a point on every rally, whichever team served."
+ },
+ "law": "gust",
+ "law_text": "The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+ "palette": [
+  "#28121b",
+  "#4c262d",
+  "#56d8a2",
+  "#f2483c",
+  "#f2b79d"
+ ],
+ "lexicon": {
+  "factions": [
+   "The Sideout Host",
+   "The Serve Lineage",
+   "The Point Covenant"
+  ],
+  "towns": [
+   "Ebbfall",
+   "Soakspire",
+   "Sideoutward",
+   "Servereach",
+   "Pointspire",
+   "Puddlespire"
+  ],
+  "currency": "tallies",
+  "potion": "salve",
+  "motifs": [
+   "ebb",
+   "soak",
+   "side-out",
+   "serve",
+   "point",
+   "puddle",
+   "balloon",
+   "pool",
+   "anemone"
+  ]
+ },
+ "mood": "bright",
+ "lore": {
+  "prologue": [
+   "Ebbsoak was not made; it was assembled from remembered truths. \"Tidal pools trap seawater at low tide and shelter small communities of animals.\" \"A water balloon bursts on impact when its thin rubber skin is stretched past its limit.\"",
+   "Then came the third truth: \"Modern volleyball awards a point on every rally, whichever team served.\" From the meeting of these three the law of Ebbsoak was born. The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+   "Day 3: Fenn Marsh of The Sideout Host fell at Soakspire to Bram Marsh of The Serve Lineage. It set off 1 later events. That was how the gust first showed itself to the living."
+  ],
+  "factions": {
+   "The Sideout Host": {
+    "trait": "beleaguered",
+    "blurb": "The Sideout Host are beleaguered: they have buried the most of their own. In the canon history they slew 17, lost 30, and still field 5 souls with 8 tallies."
+   },
+   "The Serve Lineage": {
+    "trait": "ruthless",
+    "blurb": "The Serve Lineage are ruthless: they have taken more lives than any rival. In the canon history they slew 41, lost 31, and still field 6 souls with 8 tallies."
+   },
+   "The Point Covenant": {
+    "trait": "prosperous",
+    "blurb": "The Point Covenant are prosperous: they hold the fattest purses. In the canon history they slew 22, lost 29, and still field 6 souls with 15 tallies."
+   }
+  },
+  "towns": {
+   "Ebbfall": "Ebbfall: 4 souls live where soak meets serve; the wind is felt here first.",
+   "Soakspire": "Soakspire: 3 souls live where pool meets ebb; the wind is felt here first.",
+   "Sideoutward": "Sideoutward: 2 souls live where balloon meets soak; the wind is felt here first.",
+   "Servereach": "Servereach: 3 souls live where soak meets puddle; the wind is felt here first.",
+   "Pointspire": "Pointspire: 4 souls live where anemone meets serve; the wind is felt here first.",
+   "Puddlespire": "Puddlespire: 1 souls live where balloon meets puddle; the wind is felt here first."
+  },
+  "epilogue_win": "The wind of Ebbsoak did not end, but it learned your name. Those who survive will tell it as a story of lull.",
+  "epilogue_lose": "The wind of Ebbsoak closes over the place where you stood. Perhaps the next keeper will remember what you could not.",
+  "traits": {
+   "1": "ruthless",
+   "0": "beleaguered",
+   "2": "prosperous"
+  }
+ },
+ "game_title": "Ebbsoak: Splash"
+}

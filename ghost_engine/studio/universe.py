@@ -7,20 +7,23 @@ from ghost.kernel.timeline import Timeline
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-TAG_LAW = {"contagion": {"contagion", "quarantine"}, "purge": {"purge"}, "pulse": {"oscillation", "resonance", "signal"}, "wells": {"predation", "network", "symbiosis", "tipping"},
+TAG_LAW = {"gust": {"rally", "projectile"}, "slick": {"splash"}, "contagion": {"contagion", "quarantine"}, "purge": {"purge"}, "pulse": {"oscillation", "resonance", "signal"}, "wells": {"predation", "network", "symbiosis", "tipping"},
            "drift": {"diffusion", "migration", "erosion", "entropy", "scarcity", "feedback", "selection"}}
-LAW_TEXT = {"contagion": "A sickness walks this land. It blooms where people gather, swells while it is ignored, and only a remedy, never courage, makes it recede.",
+LAW_TEXT = {"gust": "The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+            "slick": "Everything is wet, and wet things slide. Footing is a rumor here; momentum is the only honest thing you own.",
+            "contagion": "A sickness walks this land. It blooms where people gather, swells while it is ignored, and only a remedy, never courage, makes it recede.",
             "purge": "A cleansing line sweeps the world on a fixed cadence. Fire does not ask who is guilty; there is a narrow gap, and the wise learn where it opens.",
             "pulse": "Everything in this universe beats with a rhythm; periodic waves sweep across the land and punish those who ignore the beat.",
             "wells": "Mass bends the world here; heavy places pull wanderers toward them whether they wish it or not.",
             "drift": "A restless current runs through all things; nothing stays where it was put, and standing still is a choice with a price."}
 # tag -> shift of world-rule priors used to seed the search (genome centre)
-TAG_PRIOR = {"contagion": {"aggro_pct": -1, "flee_pct": +10, "regen_div": +5}, "purge": {"aggro_pct": +2, "loot_pct": +10, "respawn_delay": +5},
+TAG_PRIOR = {"projectile": {"aggro_pct": +1}, "splash": {"loot_pct": -10, "flee_pct": +10}, "rally": {"aggro_pct": +1, "flee_pct": -10}, "team": {"kill_rel_penalty": +1},
+             "contagion": {"aggro_pct": -1, "flee_pct": +10, "regen_div": +5}, "purge": {"aggro_pct": +2, "loot_pct": +10, "respawn_delay": +5},
              "quarantine": {"flee_pct": -10, "respawn_delay": +5},"predation": {"aggro_pct": +3, "loot_pct": +20}, "symbiosis": {"aggro_pct": -2, "kill_rel_penalty": +2},
              "scarcity": {"wage": -1, "burn": +1, "restock_ticks": +3}, "entropy": {"burn": +1, "regen_div": +10},
              "feedback": {"kill_rel_penalty": +3}, "migration": {"respawn_delay": -6}, "erosion": {"regen_div": +8},
              "network": {"flee_pct": +10}, "selection": {"aggro_pct": +1}, "tipping": {"kill_rel_penalty": +2}}
-TAG_ATOMS = {"contagion": ["sabotage", "charge", "risk"], "purge": ["hurt", "break", "cool"], "quarantine": ["shield_up", "cool", "negate"], "predation": ["hurt", "steal", "break"], "symbiosis": ["gain", "negate", "shield_up"], "scarcity": ["spend", "charge", "cool"],
+TAG_ATOMS = {"projectile": ["hurt", "counter"], "splash": ["hurt", "break"], "rally": ["counter", "negate"], "team": ["shield_up", "gain"], "contagion": ["sabotage", "charge", "risk"], "purge": ["hurt", "break", "cool"], "quarantine": ["shield_up", "cool", "negate"], "predation": ["hurt", "steal", "break"], "symbiosis": ["gain", "negate", "shield_up"], "scarcity": ["spend", "charge", "cool"],
              "feedback": ["counter", "negate", "break"], "entropy": ["cool", "sabotage"], "resonance": ["counter", "negate"],
              "oscillation": ["counter", "break"], "network": ["sabotage", "steal"], "selection": ["risk"], "tipping": ["risk", "spend"],
              "diffusion": ["charge", "gain"], "signal": ["counter", "negate"], "erosion": ["break", "sabotage"], "migration": ["gain", "charge"]}
@@ -34,6 +37,38 @@ def cap(w):
     return w[:1].upper() + w[1:]
 
 
+def _lum(hexc):
+    c = [int(hexc[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def contrast(a, b):
+    la, lb = sorted((_lum(a), _lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _shift(hexc, f):
+    """f>0 lightens toward white, f<0 darkens toward black."""
+    c = [int(hexc[i:i + 2], 16) for i in (1, 3, 5)]
+    c = [int(x + (255 - x) * f) if f > 0 else int(x * (1 + f)) for x in c]
+    return "#%02x%02x%02x" % tuple(max(0, min(255, x)) for x in c)
+
+
+def ensure_contrast(pal):
+    """Accessibility/polish guarantee: text (pal[4]) >= 7:1 and accent (pal[3]) >= 4.5:1 against the background (pal[0]); pal[2] >= 3:1."""
+    pal = list(pal)
+    for idx, need in ((4, 7.0), (3, 4.5), (2, 3.0)):
+        n = 0
+        while contrast(pal[idx], pal[0]) < need and n < 40:
+            pal[idx] = _shift(pal[idx], 0.08); n += 1
+        if contrast(pal[idx], pal[0]) < need:      # still short (very light bg): darken the background instead
+            m = 0
+            while contrast(pal[idx], pal[0]) < need and m < 40:
+                pal[0] = _shift(pal[0], -0.1); m += 1
+    return pal
+
+
 def make_universe(inspirations, seed):
     rnd = random.Random(seed * 7 + 1)
     tags = {}
@@ -43,12 +78,13 @@ def make_universe(inspirations, seed):
     motifs = [w for b in inspirations for w in b[3]]
     rnd.shuffle(motifs)
     uname = cap(motifs[0].replace("-", "")) + motifs[1].replace("-", "")
-    law = max(TAG_LAW, key=lambda l: (sum(tags.get(t, 0) for t in TAG_LAW[l]) * (2 if l in ("contagion", "purge") else 1), l))   # theme-defining laws weigh double
+    law = max(TAG_LAW, key=lambda l: (sum(tags.get(t, 0) for t in TAG_LAW[l]) * (2 if l in ("contagion", "purge", "gust", "slick") else 1), l))   # theme-defining laws weigh double
     hue = (sum(ord(c) for c in uname) % 360) / 360.0
     pal = []
     for i, (s, v) in enumerate([(0.55, 0.16), (0.5, 0.30), (0.6, 0.85), (0.75, 0.95), (0.35, 0.95)]):
         r, g, b_ = colorsys.hsv_to_rgb((hue + (0.0, 0.04, 0.5, 0.08, 0.12)[i]) % 1.0, s, v)
         pal.append("#%02x%02x%02x" % (int(r * 255), int(g * 255), int(b_ * 255)))
+    pal = ensure_contrast(pal)
     fac = [f"The {cap(motifs[i + 2].replace('-', ''))} {rnd.choice(SUFFIX_F)}" for i in range(3)]
     towns = []
     for m in motifs[:6]:
@@ -60,7 +96,7 @@ def make_universe(inspirations, seed):
     uni = {"id": f"{uname.lower()}-{seed}", "seed": seed, "name": uname, "inspirations": [b[0] for b in inspirations],
            "facts": {b[0]: b[4] for b in inspirations}, "fields": [b[1] for b in inspirations], "tags": tags, "law": law,
            "law_text": LAW_TEXT[law], "palette": pal,
-           "mood": {"contagion": "dread", "purge": "tense", "wells": "tense", "pulse": "calm", "drift": "calm"}[law],
+           "mood": {"gust": "bright", "slick": "bright", "contagion": "dread", "purge": "tense", "wells": "tense", "pulse": "calm", "drift": "calm"}[law],
            "lexicon": {"factions": fac, "towns": towns, "currency": rnd.choice(CURRENCY), "potion": rnd.choice(POTION), "motifs": motifs}}
     return uni
 

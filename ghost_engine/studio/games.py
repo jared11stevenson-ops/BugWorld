@@ -156,3 +156,19 @@ def build_arcade3d(uni, out_dir, params, tuning=None):
     title = f"{uni['name']}: Expedition 3D"
     assemble(out_dir, "arcade3d", title, uni, files, ["kernel.gd", "shell.gd"], "game_arcade3d.gd", ["arcade_core.gd", "tune.gd"])
     return {"id": "arcade3d", "title": title, "genre": "real-time 3D action", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: volley (3D beach volleyball tournament)
+def build_volley(uni, out_dir, params, tuning=None):
+    files = {"data/volley.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Beach Volley"
+    assemble(out_dir, "volley", title, uni, files, ["kernel.gd", "shell.gd"], "game_volley.gd", ["volley_core.gd", "tune_volley.gd"])
+    return {"id": "volley", "title": title, "genre": "3D sports tournament", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: splash (top-down water-balloon fight)
+def build_splash(uni, out_dir, params, tuning=None):
+    files = {"data/splash.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Splash"
+    assemble(out_dir, "splash", title, uni, files, ["kernel.gd", "shell.gd"], "game_splash.gd", ["splash_core.gd", "tune_splash.gd"])
+    return {"id": "splash", "title": title, "genre": "top-down water-balloon battle", "params": params, "tuning": tuning}

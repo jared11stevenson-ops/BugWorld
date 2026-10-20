@@ -73,7 +73,7 @@ func begin_game(seed_in: int) -> void:
 	log_lbl.scroll_following = true
 	log_lbl.custom_minimum_size = Vector2(0, 120)
 	v.add_child(log_lbl)
-	log_lbl.append_text("Day 0. Two towns report the sickness.\n")
+	log_lbl.append_text("Day 0. Two towns report the sickness. Reports arrive two days late: act on rumors, not facts.\n")
 	refresh()
 
 
@@ -84,17 +84,24 @@ func tname(i: int) -> String:
 
 func refresh() -> void:
 	var t := A.totals(s)
-	info_lbl.text = "[b]Day %d / %d[/b]   actions %d   medicine %d   alive %d%%   sick %d   purged %d%% (limit %d%%)\n%s" % [s["day"], int(params["days"]), s["ap"], s["meds"], t[0] * 100 / s["total"], t[1], s["purged"] * 100 / s["total"], int(params["purge_cap"]), _sel_text()]
+	info_lbl.text = "[b]Day %d / %d[/b]   actions %d   medicine %d   alive %d%%   reported sick %d   purged %d%% (limit %d%%)\n%s" % [s["day"], int(params["days"]), s["ap"], s["meds"], t[0] * 100 / s["total"], _reported_total(), s["purged"] * 100 / s["total"], int(params["purge_cap"]), _sel_text()]
 	for k in ["q", "t", "p"]:
 		btns[k].disabled = s["over"] != 0 or sel < 0
 	btns["end"].disabled = s["over"] != 0
 	map_view.queue_redraw()
 
 
+func _reported_total() -> int:
+	var r := 0
+	for i in s["pop"].size():
+		r += A.reported(s, i)
+	return r
+
+
 func _sel_text() -> String:
 	if sel < 0:
 		return "Select a town on the map."
-	return "[b]%s[/b]: population %d   healthy %d   sick %d   recovered %d   dead %d   quarantine %d days%s" % [tname(sel), s["pop"][sel], s["S"][sel], s["I"][sel], s["R"][sel], s["D"][sel], s["Q"][sel], "   [BURNED]" if s["B"][sel] != 0 else ""]
+	return "[b]%s[/b]: population %d   reported sick %d (2 days ago)   recovered %d   dead %d   quarantine %d days%s" % [tname(sel), s["pop"][sel], A.reported(s, sel), s["R"][sel], s["D"][sel], s["Q"][sel], "   [BURNED]" if s["B"][sel] != 0 else ""]
 
 
 func pos_of(i: int, sz: Vector2) -> Vector2:
@@ -191,9 +198,10 @@ func draw_map(c: Control) -> void:
 			c.draw_arc(p, r + 3.0 + sin(t_anim * 6.0 + i) * 1.5, 0, TAU, 20, Color(1.0, 0.45, 0.1), 2.0)
 		else:
 			c.draw_circle(p, r, pal[3].darkened(0.2))
-			if s["I"][i] > 0:
+			if A.reported(s, i) > 0:
+				var rep_ratio := float(A.reported(s, i)) / maxf(1.0, float(s["pop"][i]))
 				var pulse := 1.0 + 0.08 * sin(t_anim * 5.0 + i)
-				c.draw_circle(p, r * minf(1.0, sqrt(inf_ratio) * 1.6 + 0.12) * pulse, pal[2])
+				c.draw_circle(p, r * minf(1.0, sqrt(rep_ratio) * 1.6 + 0.12) * pulse, pal[2])
 			if s["Q"][i] > 0:
 				c.draw_arc(p, r + 6.0, 0, TAU, 24, pal[4], 3.0)
 		if i == sel:

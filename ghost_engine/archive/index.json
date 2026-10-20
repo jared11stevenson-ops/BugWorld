@@ -45,5 +45,24 @@
    "arcade3d",
    "concept_campaign"
   ]
+ },
+ {
+  "cycle": "cycle_004",
+  "universe": "Ebbsoak",
+  "released": [
+   "splash",
+   "volley",
+   "steward"
+  ],
+  "inspirations": [
+   "tidal pools",
+   "water balloon fights",
+   "rally scoring"
+  ],
+  "genres": [
+   "splash",
+   "volley",
+   "steward"
+  ]
  }
 ]

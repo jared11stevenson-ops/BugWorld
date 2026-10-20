@@ -1,6 +1,44 @@
 [
- {"cycle": "attempt_000", "game": "arcade", "check": "difficulty_tuned_on_holdout",
+ {
+  "cycle": "attempt_000",
+  "game": "arcade",
+  "check": "difficulty_tuned_on_holdout",
   "note": "Quality gate refused the arcade game: skilled bot 0.25 vs novice 0.33 on held-out seeds. Root causes found and fixed in the production tools: (1) the skilled bot used crude distance-based dodging and long-range well repulsion that outweighed shard attraction (it dithered and timed out); replaced by closest-approach collision prediction with near-field-only well avoidance. (2) the 'wells' law force was ~100x too weak to matter; rescaled. (3) the difficulty tuner suffered winner's curse (single noisy evaluation, never replaced); now re-evaluates elites on fresh seeds each generation and ranks by running mean.",
   "validated_by": "after fixes: wells law skilled 0.92-1.0 vs novice 0.17-0.29 on identical seeds; pulse tuned 0 -> 0.67 on held-out seeds",
-  "evidence": "studio/knowledge/attempts/attempt_000_arcade_gate_failure.json"}
+  "evidence": "studio/knowledge/attempts/attempt_000_arcade_gate_failure.json"
+ },
+ {
+  "cycle": "pass4-dev",
+  "game": "splash",
+  "check": "symmetry",
+  "note": "A 'random' hash correlated across agent indices ((t*K + i*7919) % 2000) gave one team systematically better throw timing: identical AIs, team 1 won 20/20. Replaced with an integer mixing hash. Lesson: seat/team symmetry must be measured with identical AIs on >=100 matches; 20 matches is noise (47/53 and 50/44 over 100 after the fix).",
+  "validated_by": "100-match symmetric runs"
+ },
+ {
+  "cycle": "pass4-dev",
+  "game": "splash",
+  "check": "skill_monotonic",
+  "note": "AI skill tiers must be validated for monotonic win rates by ablation. Leading the target (extrapolating velocity) HURT: lead 1.0 won 40%, lead 0 won 95%, because enemies stop to throw. Perfect dodging produced 0 hits in 80 matches (stalemate), so dodge must be partial and late. Expert tier now aims straight; ordering novice<average<expert holds (duels 15/53/97%).",
+  "validated_by": "60-80 match ablations per variant"
+ },
+ {
+  "cycle": "pass4-dev",
+  "game": "cordon",
+  "check": "difficulty_reachable",
+  "note": "Fog of war and an inattentive 'average player' tier were not enough: bots still won 100% because a quarantine was a perfect seal. Added leaky quarantine and long-range outbreak jumps; target band becomes reachable near the edge of bounds.",
+  "validated_by": "grid over beta/mort/leak/jump: skilled 0.82, average 0.78, novice 0.0 at the extreme"
+ },
+ {
+  "cycle": "pass4-dev",
+  "game": "volley",
+  "check": "python_twin_matches",
+  "note": "The Python twin caught an int64 overflow in GDScript for seeds > 2^31 (seed*2654435761). Mask seeds to 31 bits before arithmetic in both languages. Lesson: always test twins with large seeds.",
+  "validated_by": "seed 76533082012: Godot f0c049c0 == Python f0c049c0"
+ },
+ {
+  "cycle": "pass4-dev",
+  "game": "all",
+  "check": "gate",
+  "note": "Gate tightened: tuned games must land in the target band (expert 60+%, average 30-75%, novice <=20%, expert-novice >=40%, side bias <=20%, rally length sane) and pass a performance budget; saturated tuners automatically widen their bounds (within hard caps) and retune once, and the widened bounds persist in knowledge."
+ }
 ]

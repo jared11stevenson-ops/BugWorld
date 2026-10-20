@@ -1,0 +1,628 @@
+{
+ "cycle": "cycle_004",
+ "universe": "ebbsoak-765330820",
+ "seed": 765330820,
+ "prompt": "waterballoon fights / volleyball world",
+ "genres": [
+  "splash",
+  "volley",
+  "steward"
+ ],
+ "genre_scores": {
+  "splash": 14.2,
+  "volley": 9.32,
+  "steward": 4.15,
+  "concept_campaign": 1.31,
+  "cordon": 1.23,
+  "arcade3d": 1.01,
+  "arcade": 0.31
+ },
+ "games": [
+  {
+   "id": "splash",
+   "title": "Ebbsoak: Splash",
+   "genre": "top-down water-balloon battle",
+   "params": {
+    "slick": 0,
+    "wind": 0.04,
+    "splash_dmg": 55.0,
+    "splash_r": 66.0,
+    "throw_cd": 30,
+    "refill_ticks": 40,
+    "max_ammo": 3,
+    "team_size": 1,
+    "max_ticks": 2400,
+    "range": 320.0,
+    "speed": 3.6,
+    "en_lead": 0.3,
+    "en_err": 40.0,
+    "en_aggr": 0.6,
+    "en_dodge": 0.2,
+    "ally_level": 0
+   },
+   "tuning": {
+    "params": {
+     "slick": 0,
+     "wind": 0.04,
+     "splash_dmg": 55.0,
+     "splash_r": 66.0,
+     "throw_cd": 30,
+     "refill_ticks": 40,
+     "max_ammo": 3,
+     "team_size": 1,
+     "max_ticks": 2400,
+     "range": 320.0,
+     "speed": 3.6,
+     "en_lead": 0.3,
+     "en_err": 40.0,
+     "en_aggr": 0.6,
+     "en_dodge": 0.2,
+     "ally_level": 0
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 0.9611111111111108,
+      "skilled": 0.9375,
+      "novice": 0.0625,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 0.9875,
+      "skilled": 0.875,
+      "novice": 0.125,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 2,
+      "best_fitness": 1.0,
+      "skilled": 0.9375,
+      "novice": 0.03125,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 3,
+      "best_fitness": 0.992857142857143,
+      "skilled": 0.9375,
+      "novice": 0.09375,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 4,
+      "best_fitness": 1.0,
+      "skilled": 0.8125,
+      "novice": 0.03125,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 5,
+      "best_fitness": 1.0,
+      "skilled": 0.9375,
+      "novice": 0.0625,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 6,
+      "best_fitness": 1.0,
+      "skilled": 0.9375,
+      "novice": 0.046875,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 7,
+      "best_fitness": 1.0,
+      "skilled": 0.9375,
+      "novice": 0.052083333333333336,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 8,
+      "best_fitness": 0.9910156250000001,
+      "skilled": 0.9296875,
+      "novice": 0.0625,
+      "evals_of_best": 4
+     }
+    ],
+    "at_bounds": {
+     "team_size": "lo",
+     "ally_level": "lo"
+    },
+    "bounds_used": {
+     "team_size": [
+      1,
+      3,
+      1
+     ],
+     "splash_r": [
+      50.0,
+      80.0,
+      4.0
+     ],
+     "splash_dmg": [
+      30.0,
+      60.0,
+      5.0
+     ],
+     "speed": [
+      2.6,
+      3.8,
+      0.2
+     ],
+     "en_lead": [
+      0.0,
+      0.6,
+      0.1
+     ],
+     "en_err": [
+      10.0,
+      90.0,
+      10.0
+     ],
+     "en_aggr": [
+      0.3,
+      1.0,
+      0.05
+     ],
+     "en_dodge": [
+      0.0,
+      1.0,
+      0.1
+     ],
+     "ally_level": [
+      0,
+      2,
+      1
+     ],
+     "throw_cd": [
+      20,
+      45,
+      5
+     ]
+    },
+    "in_band": true,
+    "default_params": {
+     "slick": 0,
+     "wind": 0.04,
+     "splash_dmg": 45.0,
+     "splash_r": 62.0,
+     "throw_cd": 30,
+     "refill_ticks": 40,
+     "max_ammo": 3,
+     "team_size": 2,
+     "max_ticks": 2400,
+     "range": 320.0,
+     "speed": 3.4,
+     "en_lead": 0.5,
+     "en_err": 40.0,
+     "en_aggr": 0.65,
+     "en_dodge": 0.5,
+     "ally_level": 1
+    },
+    "holdout_best": {
+     "average": 0.4375,
+     "novice": 0.125,
+     "side_bias": 0.0333333333333333,
+     "skilled": 0.90625,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.90625,
+     "ticks": 1840.65625
+    },
+    "holdout_default": {
+     "average": 0.46875,
+     "novice": 0.1875,
+     "side_bias": 0.1,
+     "skilled": 0.90625,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.90625,
+     "ticks": 2275.0625
+    },
+    "start_fitness": 0.9611111111111108,
+    "final_fitness": 0.9910156250000001,
+    "evaluations": 108,
+    "retuned": false
+   }
+  },
+  {
+   "id": "volley",
+   "title": "Ebbsoak: Beach Volley",
+   "genre": "3D sports tournament",
+   "params": {
+    "wind": 0.03,
+    "slick": 0,
+    "gravity": 0.42,
+    "jump": 10.5,
+    "restitution": 1.0,
+    "points": 6,
+    "ai_lag": 9,
+    "ai_err": 55.0,
+    "ai_aggr": 0.6,
+    "serve_pause": 40,
+    "max_ticks": 14400,
+    "move_acc": 1.5
+   },
+   "tuning": {
+    "params": {
+     "wind": 0.03,
+     "slick": 0,
+     "gravity": 0.42,
+     "jump": 10.5,
+     "restitution": 1.0,
+     "points": 6,
+     "ai_lag": 9,
+     "ai_err": 55.0,
+     "ai_aggr": 0.6,
+     "serve_pause": 40,
+     "max_ticks": 14400,
+     "move_acc": 1.5
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 1.0,
+      "skilled": 0.916666666666667,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 1.0,
+      "skilled": 0.916666666666667,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 2,
+      "best_fitness": 0.9947916666666669,
+      "skilled": 0.958333333333333,
+      "novice": 0.0416666666666667,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 3,
+      "best_fitness": 1.0,
+      "skilled": 0.875,
+      "novice": 0.0,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 4,
+      "best_fitness": 0.9748511904761903,
+      "skilled": 0.9375,
+      "novice": 0.0,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 5,
+      "best_fitness": 1.0,
+      "skilled": 0.833333333333333,
+      "novice": 0.0416666666666667,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 6,
+      "best_fitness": 0.9875,
+      "skilled": 0.833333333333333,
+      "novice": 0.125,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 7,
+      "best_fitness": 1.0,
+      "skilled": 0.75,
+      "novice": 0.0416666666666667,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 8,
+      "best_fitness": 1.0,
+      "skilled": 0.875,
+      "novice": 0.0,
+      "evals_of_best": 1
+     }
+    ],
+    "at_bounds": {},
+    "bounds_used": {
+     "gravity": [
+      0.3,
+      0.6,
+      0.02
+     ],
+     "jump": [
+      9.0,
+      13.0,
+      0.5
+     ],
+     "restitution": [
+      0.745,
+      1.2,
+      0.05
+     ],
+     "ai_lag": [
+      2,
+      24,
+      1
+     ],
+     "ai_err": [
+      5.0,
+      100.0,
+      5.0
+     ],
+     "ai_aggr": [
+      0.2,
+      1.0,
+      0.05
+     ],
+     "points": [
+      5,
+      9,
+      1
+     ]
+    },
+    "in_band": true,
+    "default_params": {
+     "wind": 0.03,
+     "slick": 0,
+     "gravity": 0.42,
+     "jump": 10.5,
+     "restitution": 1.0,
+     "points": 7,
+     "ai_lag": 11,
+     "ai_err": 40.0,
+     "ai_aggr": 0.65,
+     "serve_pause": 40,
+     "max_ticks": 14400,
+     "move_acc": 1.5
+    },
+    "holdout_best": {
+     "average": 0.5,
+     "novice": 0.125,
+     "rally": 3.02306397306397,
+     "side_bias": 0.125,
+     "skilled": 0.958333333333333,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.958333333333333,
+     "ticks": 2095.20833333333
+    },
+    "holdout_default": {
+     "average": 0.5,
+     "novice": 0.166666666666667,
+     "rally": 3.0345473970474,
+     "side_bias": 0.125,
+     "skilled": 1.0,
+     "skilled_score": 0.0,
+     "skilled_stage1": 1.0,
+     "ticks": 2452.54166666667
+    },
+    "start_fitness": 1.0,
+    "final_fitness": 1.0,
+    "evaluations": 108,
+    "retuned": true,
+    "first_attempt": {
+     "holdout_best": {
+      "average": 0.416666666666667,
+      "novice": 0.208333333333333,
+      "rally": 2.79174783549784,
+      "side_bias": 0.125,
+      "skilled": 1.0,
+      "skilled_score": 0.0,
+      "skilled_stage1": 1.0,
+      "ticks": 1969.5
+     },
+     "at_bounds": {
+      "restitution": "lo"
+     },
+     "in_band": false
+    }
+   }
+  },
+  {
+   "id": "steward",
+   "title": "The Sideout Host: Steward",
+   "genre": "world-sim stewardship"
+  }
+ ],
+ "verification": {
+  "splash": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "deterministic_across_runs": true,
+    "difficulty_in_target_band": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "det_digest": "2e004fae",
+     "deterministic": true,
+     "feedback_written": true,
+     "matches_played": 4,
+     "novice_wins_of_12": 2,
+     "ok": true,
+     "perf_step_us": 23.7493333333333,
+     "save_written": true,
+     "tournament_completed": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 73,
+     "title_colors": 140,
+     "w": 1100,
+     "ok": true
+    },
+    "det_digest": [
+     "2e004fae",
+     "2e004fae"
+    ],
+    "tuning_holdout": {
+     "average": 0.4375,
+     "novice": 0.125,
+     "side_bias": 0.0333333333333333,
+     "skilled": 0.90625,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.90625,
+     "ticks": 1840.65625
+    }
+   },
+   "released": true
+  },
+  "volley": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true,
+    "difficulty_in_target_band": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "feedback_written": true,
+     "matches_played": 3,
+     "novice_wins_of_10": 0,
+     "ok": true,
+     "perf_step_us": 26.8633333333333,
+     "save_written": true,
+     "tournament_completed": true,
+     "twin": {
+      "digest": "bb074280",
+      "left_level": 2,
+      "right": [
+       9,
+       55.0,
+       0.6
+      ],
+      "score": [
+       6,
+       1
+      ],
+      "seed": 76533082012,
+      "ticks": 2852
+     }
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 530,
+     "title_colors": 151,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "ticks_match": true,
+     "score_match": true
+    },
+    "tuning_holdout": {
+     "average": 0.5,
+     "novice": 0.125,
+     "rally": 3.02306397306397,
+     "side_bias": 0.125,
+     "skilled": 0.958333333333333,
+     "skilled_score": 0.0,
+     "skilled_stage1": 0.958333333333333,
+     "ticks": 2095.20833333333
+    }
+   },
+   "released": true
+  },
+  "steward": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_score": 1133,
+     "bot_won": true,
+     "do_nothing_score": 760,
+     "feedback_written": true,
+     "final_digest": "ff729ecf",
+     "final_tick": 350,
+     "ok": true,
+     "rewind_restores_epoch_start": true,
+     "save_written": true,
+     "target": 1026
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 190,
+     "title_colors": 124,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "tick_match": true,
+     "score_match": true,
+     "python_score": 1133,
+     "godot_score": 1133
+    }
+   },
+   "released": true
+  }
+ },
+ "released": [
+  "splash",
+  "volley",
+  "steward"
+ ],
+ "timings_s": {
+  "1_inspiration": 0.0,
+  "2_universe": 42.4,
+  "2b_lore": 0.2,
+  "3_build_splash": 501.9,
+  "3_build_volley": 528.2,
+  "3_build_steward": 1.9,
+  "6_verification": 10.4,
+  "7_archive": 0.0,
+  "total": 1085.1,
+  "8_retrospective_and_reset": 0.0
+ },
+ "reset": {
+  "state_dir_removed": true,
+  "grammar_priors_cleared": true,
+  "knowledge_retained": true,
+  "no_universe_leak_in_knowledge": true,
+  "ok": true
+ },
+ "patches": [
+  {
+   "game": "splash",
+   "note": "visual polish: neutral bumpers / sand colour (found in screenshot review after release)",
+   "checks_after": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "deterministic_across_runs": true,
+    "difficulty_in_target_band": true
+   }
+  },
+  {
+   "game": "volley",
+   "note": "visual polish: neutral bumpers / sand colour (found in screenshot review after release)",
+   "checks_after": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "performance_budget": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true,
+    "difficulty_in_target_band": true
+   }
+  }
+ ]
+}

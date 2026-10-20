@@ -7,6 +7,10 @@ func _init() -> void:
 	root.add_child(main)
 	await process_frame
 	await process_frame
+	if not main.has_method("selftest"):
+		print("GAME_SELFTEST ", JSON.stringify({"ok": false, "reason": "game script failed to load (parse error?)"}))
+		quit(1)
+		return
 	var res: Dictionary = await main.selftest()
 	print("GAME_SELFTEST ", JSON.stringify(res))
 	quit(0 if res.get("ok", false) else 1)

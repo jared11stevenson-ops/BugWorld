@@ -1,0 +1,269 @@
+{
+ "id": "ebbsoak-765330820",
+ "seed": 765330820,
+ "name": "Ebbsoak",
+ "inspirations": [
+  "tidal pools",
+  "water balloon fights",
+  "rally scoring"
+ ],
+ "facts": {
+  "tidal pools": "Tidal pools trap seawater at low tide and shelter small communities of animals.",
+  "water balloon fights": "A water balloon bursts on impact when its thin rubber skin is stretched past its limit.",
+  "rally scoring": "Modern volleyball awards a point on every rally, whichever team served."
+ },
+ "fields": [
+  "marine biology",
+  "recreation",
+  "sport"
+ ],
+ "tags": {
+  "symbiosis": 1,
+  "scarcity": 1,
+  "projectile": 1,
+  "splash": 1,
+  "team": 1,
+  "rally": 1,
+  "tipping": 1
+ },
+ "law": "gust",
+ "law_text": "The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+ "palette": [
+  "#28121b",
+  "#4c262d",
+  "#56d8a2",
+  "#f2483c",
+  "#f2b79d"
+ ],
+ "mood": "bright",
+ "lexicon": {
+  "factions": [
+   "The Sideout Host",
+   "The Serve Lineage",
+   "The Point Covenant"
+  ],
+  "towns": [
+   "Ebbfall",
+   "Soakspire",
+   "Sideoutward",
+   "Servereach",
+   "Pointspire",
+   "Puddlespire"
+  ],
+  "currency": "tallies",
+  "potion": "salve",
+  "motifs": [
+   "ebb",
+   "soak",
+   "side-out",
+   "serve",
+   "point",
+   "puddle",
+   "balloon",
+   "pool",
+   "anemone"
+  ]
+ },
+ "rules": {
+  "combat": {
+   "crit_mult_pct": 150,
+   "crit_pct": 5,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 60,
+   "guard_pierce_pct": 70,
+   "guard_reduce_pct": 60,
+   "heal_vuln_pct": 20,
+   "potion_heal": 20,
+   "power_interrupt_pct": 50,
+   "power_mult_pct": 170,
+   "round_cap": 40,
+   "start_potions": 3
+  },
+  "economy": {
+   "base_price": 10,
+   "burn": 3,
+   "restock_ticks": 12,
+   "sell_pct": 78,
+   "stock_cap": 6,
+   "swing_pct": 26,
+   "tax_pct": 25,
+   "upkeep": 2,
+   "upkeep_every": 5,
+   "wage": 1
+  },
+  "name": "ebbsoak-765330820",
+  "world": {
+   "aggro_pct": 8,
+   "flee_pct": 50,
+   "kill_rel_penalty": 4,
+   "loot_pct": 55,
+   "regen_div": 27,
+   "respawn_delay": 36,
+   "war_threshold": -40
+  }
+ },
+ "search": {
+  "generations": 12,
+  "population": 16,
+  "seeds": [
+   1,
+   2,
+   3
+  ],
+  "ticks": 600,
+  "curve": [
+   {
+    "gen": 0,
+    "best": 0.6830296373342554,
+    "mean": 0.6411096319960263
+   },
+   {
+    "gen": 1,
+    "best": 0.7035999645399376,
+    "mean": 0.6674813258493604
+   },
+   {
+    "gen": 2,
+    "best": 0.7035999645399376,
+    "mean": 0.6621362095033816
+   },
+   {
+    "gen": 3,
+    "best": 0.7181961708668703,
+    "mean": 0.6601222615007564
+   },
+   {
+    "gen": 4,
+    "best": 0.7181961708668703,
+    "mean": 0.6713047403721414
+   },
+   {
+    "gen": 5,
+    "best": 0.7181961708668703,
+    "mean": 0.6577901279093029
+   },
+   {
+    "gen": 6,
+    "best": 0.7181961708668703,
+    "mean": 0.6589395102179801
+   },
+   {
+    "gen": 7,
+    "best": 0.7234825486450555,
+    "mean": 0.6740319659872122
+   },
+   {
+    "gen": 8,
+    "best": 0.7234825486450555,
+    "mean": 0.6538866590746367
+   },
+   {
+    "gen": 9,
+    "best": 0.7234825486450555,
+    "mean": 0.6734580671051874
+   },
+   {
+    "gen": 10,
+    "best": 0.7234825486450555,
+    "mean": 0.6828417504878146
+   },
+   {
+    "gen": 11,
+    "best": 0.7234825486450555,
+    "mean": 0.6653421259756116
+   },
+   {
+    "gen": 12,
+    "best": 0.7234825486450555,
+    "mean": 0.6508402042974196
+   }
+  ],
+  "start_fitness": 0.6830296373342554,
+  "final_fitness": 0.7234825486450555,
+  "evaluations": 160
+ },
+ "canon": {
+  "seed": 102,
+  "fork_tick": 300,
+  "intervention": "force_war",
+  "richness": 0.7381754131066934,
+  "explored": 72,
+  "median_richness": 0.6864363216244049
+ },
+ "chronicle": [
+  "Day 3: Fenn Marsh of The Sideout Host fell at Soakspire to Bram Marsh of The Serve Lineage. It set off 1 later events.",
+  "Day 14: Gale Vale of The Sideout Host fell at Servereach to Ash Ford of The Serve Lineage. It set off 1 later events.",
+  "Day 23: Bram Marsh of The Sideout Host fell at Ebbfall to Bram Vale of The Point Covenant. It set off 1 later events.",
+  "Day 36: Hob Vale of The Sideout Host fell at Ebbfall to Bram Marsh of The Serve Lineage. It set off 1 later events.",
+  "Day 40: Hob Marsh of The Sideout Host fell at Puddlespire to Cora Ford of The Point Covenant. It set off 1 later events.",
+  "Day 431: Elda Wick of The Point Covenant fell at Soakspire to Hob Crow of The Serve Lineage. It set off 2 later events."
+ ],
+ "pivotal": [
+  {
+   "event": 27,
+   "tick": 3,
+   "cascade": 1
+  },
+  {
+   "event": 136,
+   "tick": 14,
+   "cascade": 1
+  },
+  {
+   "event": 200,
+   "tick": 23,
+   "cascade": 1
+  },
+  {
+   "event": 316,
+   "tick": 36,
+   "cascade": 1
+  },
+  {
+   "event": 364,
+   "tick": 40,
+   "cascade": 1
+  },
+  {
+   "event": 3757,
+   "tick": 431,
+   "cascade": 2
+  }
+ ],
+ "lore": {
+  "prologue": [
+   "Ebbsoak was not made; it was assembled from remembered truths. \"Tidal pools trap seawater at low tide and shelter small communities of animals.\" \"A water balloon bursts on impact when its thin rubber skin is stretched past its limit.\"",
+   "Then came the third truth: \"Modern volleyball awards a point on every rally, whichever team served.\" From the meeting of these three the law of Ebbsoak was born. The air here is never still. Gusts rise without warning and carry everything that flies; the clever play the wind rather than fight it.",
+   "Day 3: Fenn Marsh of The Sideout Host fell at Soakspire to Bram Marsh of The Serve Lineage. It set off 1 later events. That was how the gust first showed itself to the living."
+  ],
+  "factions": {
+   "The Sideout Host": {
+    "trait": "beleaguered",
+    "blurb": "The Sideout Host are beleaguered: they have buried the most of their own. In the canon history they slew 17, lost 30, and still field 5 souls with 8 tallies."
+   },
+   "The Serve Lineage": {
+    "trait": "ruthless",
+    "blurb": "The Serve Lineage are ruthless: they have taken more lives than any rival. In the canon history they slew 41, lost 31, and still field 6 souls with 8 tallies."
+   },
+   "The Point Covenant": {
+    "trait": "prosperous",
+    "blurb": "The Point Covenant are prosperous: they hold the fattest purses. In the canon history they slew 22, lost 29, and still field 6 souls with 15 tallies."
+   }
+  },
+  "towns": {
+   "Ebbfall": "Ebbfall: 4 souls live where soak meets serve; the wind is felt here first.",
+   "Soakspire": "Soakspire: 3 souls live where pool meets ebb; the wind is felt here first.",
+   "Sideoutward": "Sideoutward: 2 souls live where balloon meets soak; the wind is felt here first.",
+   "Servereach": "Servereach: 3 souls live where soak meets puddle; the wind is felt here first.",
+   "Pointspire": "Pointspire: 4 souls live where anemone meets serve; the wind is felt here first.",
+   "Puddlespire": "Puddlespire: 1 souls live where balloon meets puddle; the wind is felt here first."
+  },
+  "epilogue_win": "The wind of Ebbsoak did not end, but it learned your name. Those who survive will tell it as a story of lull.",
+  "epilogue_lose": "The wind of Ebbsoak closes over the place where you stood. Perhaps the next keeper will remember what you could not.",
+  "traits": {
+   "1": "ruthless",
+   "0": "beleaguered",
+   "2": "prosperous"
+  }
+ }
+}

@@ -6,12 +6,12 @@ const K = preload("res://ghost/kernel.gd")
 
 static func defaults() -> Dictionary:
 	return {"nodes": 12, "days": 30, "beta": 45, "flow": 6, "mort": 8, "rec": 12, "ap": 3, "meds": 8, "treat": 150, "q_days": 4,
-		"seeds": 2, "win_pct": 55, "purge_cap": 15, "purge_ap": 2}
+		"seeds": 2, "win_pct": 55, "purge_cap": 15, "purge_ap": 2, "leak": 25, "jump": 4}
 
 
 static func new_game(seed_in: int, p: Dictionary) -> Dictionary:
 	var s := {"rng": K.seed_state(seed_in), "p": p, "day": 0, "ap": int(p["ap"]), "meds": int(p["meds"]), "purged": 0, "over": 0, "won": 0, "why": "",
-		"x": [], "y": [], "pop": [], "S": [], "I": [], "R": [], "D": [], "Q": [], "B": [], "edges": [], "log": []}
+		"h1": [], "h2": [], "x": [], "y": [], "pop": [], "S": [], "I": [], "R": [], "D": [], "Q": [], "B": [], "edges": [], "log": []}
 	var n: int = p["nodes"]
 	var total := 0
 	for i in n:
@@ -62,7 +62,14 @@ static func new_game(seed_in: int, p: Dictionary) -> Dictionary:
 			s["I"][i] = 20
 			s["S"][i] -= 20
 			placed += 1
+	s["h1"] = s["I"].duplicate()
+	s["h2"] = s["I"].duplicate()
 	return s
+
+
+# Fog of war: the player only knows each town's sick count from two days ago.
+static func reported(s: Dictionary, i: int) -> int:
+	return s["h2"][i]
 
 
 static func _d2(s: Dictionary, i: int, j: int) -> int:
@@ -154,6 +161,8 @@ static func end_day(s: Dictionary) -> void:
 		return
 	var p: Dictionary = s["p"]
 	var n: int = s["pop"].size()
+	s["h2"] = s["h1"].duplicate()
+	s["h1"] = s["I"].duplicate()
 	var new := []
 	for i in n:
 		new.append(0)
@@ -165,9 +174,18 @@ static func end_day(s: Dictionary) -> void:
 	for e in s["edges"]:
 		var u: int = e[0]
 		var v: int = e[1]
-		if s["Q"][u] == 0 and s["Q"][v] == 0 and s["B"][u] == 0 and s["B"][v] == 0:
-			new[v] += s["I"][u] * int(p["flow"]) / 100
-			new[u] += s["I"][v] * int(p["flow"]) / 100
+		if s["B"][u] == 0 and s["B"][v] == 0:
+			var f: int = int(p["flow"])
+			if s["Q"][u] > 0 or s["Q"][v] > 0:
+				f = f * int(p["leak"]) / 100          # sealed roads still leak (smugglers, rumours, bad luck)
+			new[v] += s["I"][u] * f / 100
+			new[u] += s["I"][v] * f / 100
+	for i in n:                                      # long-range jumps: a big outbreak sometimes seeds a distant town
+		if s["B"][i] == 0 and s["I"][i] >= 30:
+			if K.rnd(s, 100) < int(p["jump"]):
+				var tgt := K.rnd(s, n)
+				if s["B"][tgt] == 0:
+					new[tgt] += 3
 	for i in n:
 		if s["B"][i] != 0:
 			continue
@@ -215,10 +233,15 @@ static func digest(s: Dictionary) -> String:
 
 # ---------------------------------------------------------------- bots
 # Skilled: quarantine the highest-export nodes, treat the heaviest outbreaks, purge only a near-lost small node. Novice: acts randomly, rarely.
-static func bot_actions(s: Dictionary, skill: int) -> Array:
+static func bot_actions(s: Dictionary, skill_in: int) -> Array:
 	var acts := []
 	var n: int = s["pop"].size()
 	var ap: int = s["ap"]
+	var skill := skill_in
+	if skill_in == 2:       # average human: skips thinking on ~25% of days, otherwise plays like the expert
+		skill = 1 if (int(s["day"]) * 2654435761 + 31) % 100 < 75 else -1
+	if skill == -1:
+		return acts
 	if skill == 0:
 		var r := K.rnd(s, 5)
 		if r == 0:
@@ -228,19 +251,19 @@ static func bot_actions(s: Dictionary, skill: int) -> Array:
 		return acts
 	var order := []
 	for i in n:
-		if s["B"][i] == 0 and s["I"][i] > 0:
-			order.append([s["I"][i], i])
+		if s["B"][i] == 0 and reported(s, i) > 0:
+			order.append([reported(s, i), i])
 	order.sort_custom(func(a, b): return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
 	var meds: int = s["meds"]
 	for o in order:
 		var i: int = o[1]
 		if ap <= 0:
 			break
-		if meds > 0 and s["I"][i] >= 40:
+		if meds > 0 and o[0] >= 40:
 			acts.append(["t", i])
 			meds -= 1
 			ap -= 1
-		elif s["Q"][i] <= 1 and s["I"][i] >= 15:
+		elif s["Q"][i] <= 1 and o[0] >= 15:
 			acts.append(["q", i])
 			ap -= 1
 	return acts

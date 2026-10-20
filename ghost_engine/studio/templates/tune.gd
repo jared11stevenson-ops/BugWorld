@@ -17,6 +17,7 @@ func _init() -> void:
 		var base: int = int(item.get("seed_base", 1000))
 		var sk_full := 0
 		var nov_full := 0
+		var avg_full := 0
 		var sk_s1 := 0
 		var sk_score := 0
 		for i in n:
@@ -26,7 +27,8 @@ func _init() -> void:
 			sk_s1 += 1 if r["cleared"] >= 1 else 0
 			sk_score += r["score"]
 			nov_full += 1 if q["cleared"] == 3 else 0
-		out.append({"skilled": float(sk_full) / n, "novice": float(nov_full) / n, "skilled_stage1": float(sk_s1) / n, "skilled_score": float(sk_score) / n})
+			avg_full += 1 if A.play_full(base + i, p, 2)["cleared"] == 3 else 0
+		out.append({"average": float(avg_full) / n, "skilled": float(sk_full) / n, "novice": float(nov_full) / n, "skilled_stage1": float(sk_s1) / n, "skilled_score": float(sk_score) / n})
 	var f := FileAccess.open(args[1], FileAccess.WRITE)
 	f.store_string(JSON.stringify(out))
 	f.close()
