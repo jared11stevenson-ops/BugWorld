@@ -78,7 +78,9 @@ func tname(i: int) -> String:
 
 
 func intro() -> void:
-	text_screen("The charge", "%s\n\nYou are the steward of %s. %s\n\nWorld rules were found by an evolutionary search over %d candidate worlds." % [U.get("law_text", ""), fname(D.DATA["player_faction"]), "; ".join(PackedStringArray(U.get("inspirations", []))), int(D.DATA.get("evaluations", 0))], "Take the charge", begin_game)
+	var lore: Dictionary = U.get("lore", {})
+	var fb: String = lore.get("factions", {}).get(fname(D.DATA["player_faction"]), {}).get("blurb", "")
+	text_screen("The charge", "%s\n\nYou are the steward of %s. %s\n\n(World rules were found by an evolutionary search over %d candidate worlds.)" % ["\n\n".join(PackedStringArray(lore.get("prologue", []))), fname(D.DATA["player_faction"]), fb, int(D.DATA.get("evaluations", 0))], "Take the charge", begin_game)
 
 
 func metric(s: Dictionary) -> Array:
@@ -289,8 +291,9 @@ func finish(won: bool, why: String) -> void:
 	if won:
 		save["best"] = maxi(int(save.get("best", 0)), score)
 		write_save()
-	var body := "%s\nFinal score %d against a target of %d.\n\n%s" % ["The charge is fulfilled." if won else ("The charge fails. " + why), score, target, U.get("law_text", "")]
-	text_screen("Victory" if won else "Defeat", body, "Back to title", start)
+	var lore: Dictionary = U.get("lore", {})
+	var body := "%s\nFinal score %d against a target of %d.\n\n%s" % ["The charge is fulfilled." if won else ("The charge fails. " + why), score, target, lore.get("epilogue_win" if won else "epilogue_lose", U.get("law_text", ""))]
+	end_screen("Victory" if won else "Defeat", body, {"won": won, "score": score, "target": target, "epochs": epoch}, "Back to title", start)
 
 
 # ---------------------------------------------------------------- headless verification
@@ -338,7 +341,9 @@ func selftest() -> Dictionary:
 	res["audio_loaded"] = sfx_players["win"].stream.data.size() > 1000 and music_player.stream.data.size() > 10000
 	write_save()
 	res["save_written"] = FileAccess.file_exists(SAVE_PATH)
-	res["ok"] = nothing_loses and rw_ok and res["bot_won"] and res["audio_loaded"] and res["save_written"]
+	rate_run(4, {"selftest": true})
+	res["feedback_written"] = FileAccess.file_exists(FEEDBACK_PATH)
+	res["ok"] = res["feedback_written"] and nothing_loses and rw_ok and res["bot_won"] and res["audio_loaded"] and res["save_written"]
 	return res
 
 

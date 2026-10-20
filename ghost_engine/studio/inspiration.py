@@ -52,8 +52,23 @@ BANK = [
     ("tardigrades", "biology", ["selection", "scarcity"], ["bearskin", "tun", "dry"], "Tardigrades survive extreme dehydration by entering a dormant state."),
     ("the invention of the mechanical clock", "technology", ["oscillation", "signal"], ["escapement", "bell", "tower"], "Escapement mechanisms in medieval Europe regulated clockwork."),
     ("nitrogen-fixing root nodules", "biology", ["symbiosis", "scarcity"], ["nodule", "legume", "fallow"], "Legumes host bacteria in root nodules that convert atmospheric nitrogen into usable form."),
+    ("the Black Death", "history", ["contagion", "network", "tipping"], ["bubo", "flea", "cart"], "The Black Death of the mid-14th century killed a large fraction of Europe's population and spread along trade routes.", ["plague", "pestilence", "death"]),
+    ("quarantine", "public health", ["quarantine", "network"], ["lazaret", "forty-days", "harbor"], "The word quarantine comes from the Italian 'quaranta giorni', forty days, the period ships were held in isolation in medieval ports.", ["plague", "isolation", "cordon"]),
+    ("John Snow's cholera map", "medicine", ["contagion", "signal"], ["pump", "ward", "ledger"], "In 1854 John Snow mapped London cholera deaths around the Broad Street pump, helping show that the disease spread through water.", ["plague", "epidemic", "cholera"]),
+    ("the SIR epidemic model", "mathematics", ["contagion", "tipping"], ["threshold", "susceptible", "burnout"], "Kermack and McKendrick's 1927 model splits a population into susceptible, infected and recovered groups; an outbreak grows only if each case infects more than one other on average.", ["plague", "epidemic", "contagion"]),
+    ("smallpox eradication", "medicine", ["contagion", "purge"], ["ring", "lancet", "last-case"], "Smallpox was declared eradicated in 1980 after a global campaign of surveillance and ring vaccination.", ["plague", "eradicate", "purge"]),
+    ("forest fire ecology", "ecology", ["purge", "selection"], ["char", "cone", "burn-ground"], "Some forests and their species depend on periodic fire to clear undergrowth and release seeds.", ["purge", "fire", "burn", "cleanse"]),
+    ("the Great Fire of London", "history", ["purge", "erosion"], ["ember", "lane", "ruin"], "The 1666 fire destroyed much of the City of London, a year after a major plague outbreak there.", ["purge", "fire", "plague"]),
+    ("apoptosis", "cell biology", ["purge", "selection"], ["shed", "cell-song", "fragment"], "Cells can trigger their own orderly death, called apoptosis, which removes damaged or unneeded cells.", ["purge", "cleanse", "death"]),
+    ("herd immunity", "medicine", ["contagion", "network", "tipping"], ["shield", "crowd", "gap"], "When enough of a population is immune, an infection struggles to spread, indirectly protecting those who are not immune.", ["plague", "epidemic", "immunity"]),
+    ("the Plague of Justinian", "history", ["contagion", "network"], ["granary", "tithe", "omen"], "A major plague pandemic struck the Byzantine Empire in the 6th century CE.", ["plague", "pestilence"]),
+    ("humoral medicine and purging", "history", ["purge", "selection"], ["basin", "humor", "lancet-blue"], "Historic European medicine often tried to restore the body's balance by purging and bloodletting, practices now known to be ineffective or harmful.", ["purge", "cleanse", "plague"]),
 ]
 FIELDS = sorted({b[1] for b in BANK})
+
+
+def _kw(b):
+    return b[5] if len(b) > 5 else []
 
 
 def pick(seed=None, prompt=None, k=3):
@@ -65,10 +80,13 @@ def pick(seed=None, prompt=None, k=3):
     rnd = random.Random(seed)
     chosen = []
     if prompt:
-        words = set(re.findall(r"[a-z]+", prompt.lower()))
-        for b in BANK:
-            if len(chosen) < k and (b[0].lower() in prompt.lower() or any(len(m) >= 4 and (w.startswith(m) or m.startswith(w)) for w in words if len(w) >= 4 for m in b[3])) and all(b[1] != c[1] for c in chosen):
-                chosen.append(b)
+        words = [w for w in re.findall(r"[a-z]+", prompt.lower()) if len(w) >= 4]
+        def matches(b, w):
+            return w in b[0].lower() or any(m.startswith(w) or w.startswith(m) for m in list(b[3]) + _kw(b) if len(m) >= 4)
+        for w in dict.fromkeys(words):                      # one inspiration per prompt word, distinct fields, random among matches
+            cand = [b for b in BANK if matches(b, w) and b not in chosen and all(b[1] != c[1] for c in chosen)]
+            if cand and len(chosen) < k:
+                chosen.append(rnd.choice(cand))
     pool = [b for b in BANK if b not in chosen]
     rnd.shuffle(pool)
     for b in pool:

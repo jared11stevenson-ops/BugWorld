@@ -38,7 +38,7 @@ func help() -> void:
 func intro() -> void:
 	total = 0
 	stage = 1
-	text_screen("The law of %s" % U.get("name", "this world"), U.get("law_text", "") + "\n\n" + "\n".join(PackedStringArray(U.get("fact_lines", []))), "Enter stage 1", begin_stage)
+	text_screen("The law of %s" % U.get("name", "this world"), "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", [U.get("law_text", "")]))), "Enter stage 1", begin_stage)
 
 
 func begin_stage() -> void:
@@ -83,7 +83,7 @@ func _stage_end() -> void:
 		if stage >= 3:
 			save["best"] = maxi(int(save.get("best", 0)), total)
 			write_save()
-			text_screen("The expedition is complete", "You crossed all three stages of %s.\nScore: %d\n\n%s" % [U.get("name", "?"), total, "Inspired by: " + ", ".join(PackedStringArray(U.get("inspirations", [])))], "Back to title", start)
+			end_screen("The expedition is complete", "You crossed all three stages of %s.\nScore: %d\n\n%s" % [U.get("name", "?"), total, "Inspired by: " + ", ".join(PackedStringArray(U.get("inspirations", [])))], {"score": total, "stages": 3}, "Back to title", start)
 		else:
 			text_screen("Stage %d cleared" % stage, "Score so far: %d. The next stage is harder and the law grows stranger." % total, "Next stage", func(): stage += 1; begin_stage())
 	else:
@@ -111,6 +111,15 @@ func draw_field(c: Control) -> void:
 	if law == "drift":
 		var wv := Vector2(cos(s["t"] * 0.021), sin(s["t"] * 0.017)) * 40.0
 		c.draw_line(P.call(60, 60), P.call(60, 60) + wv, pal[3], 3.0)
+	if law == "contagion":
+		for z in s["zones"]:
+			c.draw_circle(P.call(z[0], z[1]), z[2] * k, Color(pal[2].r, pal[2].g, pal[2].b, 0.35))
+			c.draw_arc(P.call(z[0], z[1]), z[2] * k, 0, TAU, 24, pal[2], 2.0)
+	if law == "purge":
+		var fxp: float = s["fire_x"]
+		var gyp: float = s["gap_y"]
+		c.draw_line(P.call(fxp, 0), P.call(fxp, gyp - 70), Color(1.0, 0.45, 0.1), 6.0)
+		c.draw_line(P.call(fxp, gyp + 70), P.call(fxp, A.H), Color(1.0, 0.45, 0.1), 6.0)
 	for sh in s["shards"]:
 		var q: Vector2 = P.call(sh[0], sh[1])
 		c.draw_colored_polygon(PackedVector2Array([q + Vector2(0, -12) * k, q + Vector2(9, 0) * k, q + Vector2(0, 12) * k, q + Vector2(-9, 0) * k]), pal[3])
@@ -161,7 +170,9 @@ func selftest() -> Dictionary:
 	save["best"] = maxi(int(save.get("best", 0)), total)
 	write_save()
 	res["save_written"] = FileAccess.file_exists(SAVE_PATH)
-	res["ok"] = res["bot_completed_game"] and nov_clears <= 3 and res["audio_loaded"] and res["save_written"]
+	rate_run(4, {"selftest": true})
+	res["feedback_written"] = FileAccess.file_exists(FEEDBACK_PATH)
+	res["ok"] = res["feedback_written"] and res["bot_completed_game"] and nov_clears <= 3 and res["audio_loaded"] and res["save_written"]
 	return res
 
 

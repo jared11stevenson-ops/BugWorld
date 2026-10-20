@@ -6,9 +6,12 @@ var pal: Array = []
 var content: Control
 var sfx_players: Dictionary = {}
 var music_player: AudioStreamPlayer
+var ambient_player: AudioStreamPlayer
 var save: Dictionary = {"volume": 0.8, "best": 0}
 var game_id := "game"
 const SAVE_PATH := "user://save.json"
+const FEEDBACK_PATH := "user://feedback.jsonl"
+const SFX_NAMES := ["click", "hit", "pickup", "win", "lose", "pulse", "alarm", "burn", "cure", "infect", "step", "ui_open"]
 
 
 class Emblem extends Control:
@@ -49,7 +52,7 @@ func _ready() -> void:
 		content.add_theme_constant_override("margin_" + side, 24)
 	add_child(content)
 	theme = _make_theme()
-	for n in ["click", "hit", "pickup", "win", "lose", "pulse"]:
+	for n in SFX_NAMES:
 		var p := AudioStreamPlayer.new()
 		p.stream = load_wav("res://audio/%s.wav" % n)
 		add_child(p)
@@ -57,9 +60,14 @@ func _ready() -> void:
 	music_player = AudioStreamPlayer.new()
 	music_player.stream = load_wav("res://audio/music.wav", true)
 	add_child(music_player)
+	ambient_player = AudioStreamPlayer.new()
+	if FileAccess.file_exists("res://audio/ambient.wav"):
+		ambient_player.stream = load_wav("res://audio/ambient.wav", true)
+	add_child(ambient_player)
 	_apply_volume()
 	if not "--headless" in OS.get_cmdline_args() and DisplayServer.get_name() != "headless":
 		music_player.play()
+		ambient_player.play()
 	start()
 
 
@@ -121,6 +129,7 @@ func _apply_volume() -> void:
 	for p in sfx_players.values():
 		p.volume_db = db
 	music_player.volume_db = db - 8.0
+	ambient_player.volume_db = db - 14.0
 
 
 func _load_save() -> void:
@@ -144,6 +153,8 @@ func clear() -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	content.add_child(v)
+	v.modulate.a = 0.0
+	create_tween().tween_property(v, "modulate:a", 1.0, 0.25)     # fade-in transition
 	return v
 
 
@@ -174,7 +185,11 @@ func emblem(parent: Node, sz := 160) -> void:
 	e.colors = pal
 	e.custom_minimum_size = Vector2(sz, sz)
 	e.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	e.pivot_offset = Vector2(sz, sz) / 2.0
 	parent.add_child(e)
+	var tw := e.create_tween().set_loops()                         # breathing emblem
+	tw.tween_property(e, "scale", Vector2(1.06, 1.06), 1.6).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(e, "scale", Vector2(1.0, 1.0), 1.6).set_trans(Tween.TRANS_SINE)
 
 
 func title_screen(title: String, subtitle: String, entries: Array) -> VBoxContainer:
@@ -200,6 +215,27 @@ func text_screen(title: String, body: String, next_label: String, next: Callable
 	label(v, title, 32, 2)
 	label(v, body, 20, 4, true)
 	button(v, next_label, next)
+
+
+# Ending screen with human feedback: rating buttons write a record that studio.feedback imports into the knowledge store.
+func end_screen(title: String, body: String, ctx: Dictionary, next_label: String, next: Callable) -> void:
+	var v := clear()
+	label(v, title, 34, 2)
+	label(v, body, 20, 4, true)
+	label(v, "How was that run?  (your rating teaches the studio)", 16, 3)
+	var row := HBoxContainer.new()
+	v.add_child(row)
+	for r in range(1, 6):
+		button(row, str(r) + " ★", func(): rate_run(r, ctx); sfx("pickup"); next.call())
+	button(v, next_label, next)
+
+
+func rate_run(r: int, ctx: Dictionary) -> void:
+	var rec := {"game": game_id, "universe": U.get("id", ""), "rating": r, "ctx": ctx}
+	var f := FileAccess.open(FEEDBACK_PATH, FileAccess.READ_WRITE) if FileAccess.file_exists(FEEDBACK_PATH) else FileAccess.open(FEEDBACK_PATH, FileAccess.WRITE)
+	f.seek_end()
+	f.store_line(JSON.stringify(rec))
+	f.close()
 
 
 func universe_line() -> String:

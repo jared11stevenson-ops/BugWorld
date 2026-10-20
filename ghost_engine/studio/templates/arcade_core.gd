@@ -23,7 +23,7 @@ static func new_stage(seed_in: int, p: Dictionary, stage: int) -> Dictionary:
 		"shards": [], "hazards": [], "wells": [], "collected": 0, "stage": stage, "done": 0, "won": 0, "p": p, "score": 0,
 		"goal": int(p["goal"]) + (stage - 1) * 2, "limit": int(float(p["stage_secs"]) * 30.0), "events": [],
 		"spawn_every": maxi(6, int(p["spawn_every"]) - (stage - 1) * int(p["spawn_step"])), "speed": float(p["hazard_speed"]) * (1.0 + 0.2 * (stage - 1)),
-		"fx": 0.0, "fy": -1.0}
+		"fx": 0.0, "fy": -1.0, "zones": [], "fire_x": -100.0, "gap_y": H / 2}
 	for i in 2 + (stage - 1):
 		s["wells"].append([120.0 + fr(s) * (W - 240.0), 100.0 + fr(s) * (H - 200.0)])
 	return s
@@ -93,6 +93,33 @@ static func step(s: Dictionary, ax: float, ay: float, dash: bool) -> void:
 			_hit(s)
 		if t % period == 0:
 			s["events"].append("pulse")
+	if law == "contagion":
+		var every := int(150.0 / maxf(0.3, st))
+		if t % every == 0 and s["zones"].size() < 8:
+			var zx := 60.0 + fr(s) * (W - 120.0)
+			var zy := 60.0 + fr(s) * (H - 120.0)
+			if (zx - s["px"]) * (zx - s["px"]) + (zy - s["py"]) * (zy - s["py"]) > 19600.0:
+				s["zones"].append([zx, zy, 8.0, 0])
+				s["events"].append("pulse")
+		var kz := []
+		for z in s["zones"]:
+			z[3] += 1
+			z[2] = minf(z[2] + 0.35, 64.0) if z[3] < 240 else z[2] - 0.5
+			var dzx: float = z[0] - s["px"]
+			var dzy: float = z[1] - s["py"]
+			if dzx * dzx + dzy * dzy < (z[2] + 8.0) * (z[2] + 8.0) and s["inv"] == 0:
+				_hit(s)
+			if z[2] > 6.0:
+				kz.append(z)
+		s["zones"] = kz
+	if law == "purge":
+		var period2 := int(200.0 / maxf(0.3, st))
+		s["fire_x"] = float(t % period2) / float(period2) * (W + 160.0) - 80.0
+		s["gap_y"] = H / 2 + sin(t * 0.03) * (H * 0.3)
+		if absf(s["px"] - s["fire_x"]) < 14.0 and absf(s["py"] - s["gap_y"]) > 70.0 and s["inv"] == 0:
+			_hit(s)
+		if t % period2 == 0:
+			s["events"].append("pulse")
 	# hazards
 	var keep := []
 	for h in s["hazards"]:
@@ -140,6 +167,9 @@ static func step(s: Dictionary, ax: float, ay: float, dash: bool) -> void:
 			s["collected"] += 1
 			s["score"] += 100
 			s["events"].append("pickup")
+			if law == "contagion":          # a cure: every infection zone shrinks
+				for z in s["zones"]:
+					z[2] *= 0.6
 		else:
 			ks.append(sh)
 	s["shards"] = ks
@@ -215,6 +245,22 @@ static func bot(s: Dictionary, skill: int) -> Array:
 			var radial := (pos - c).normalized()
 			steer += (radial * (1.0 if d3 > r else -1.0)) * 2.5
 			if absf(d3 - r) < 30.0 and s["inv"] == 0 and s["dash_cd"] == 0:
+				dash = true
+	if law == "contagion":
+		for z in s["zones"]:
+			var awz := pos - Vector2(z[0], z[1])
+			var lim: float = z[2] + 55.0
+			if awz.length() < lim:
+				steer += awz.normalized() * (lim - awz.length()) / 14.0
+	if law == "purge":
+		var dxf: float = float(s["fire_x"]) - pos.x
+		if absf(dxf) < 130.0:
+			steer.y += clampf((float(s["gap_y"]) - pos.y) / 25.0, -4.0, 4.0)
+			if absf(dxf) < 40.0 and absf(pos.y - float(s["gap_y"])) < 60.0:
+				steer.x += 0.0
+			else:
+				steer.x += -signf(dxf) * (130.0 - absf(dxf)) / 40.0
+			if absf(dxf) < 22.0 and s["inv"] == 0 and s["dash_cd"] == 0:
 				dash = true
 	if pos.x < 70.0: steer.x += 1.5
 	if pos.x > W - 70.0: steer.x -= 1.5

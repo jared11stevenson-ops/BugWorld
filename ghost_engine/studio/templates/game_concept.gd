@@ -24,7 +24,7 @@ var seed_base := 1
 
 func start() -> void:
 	game_id = "concept_campaign"
-	var entries := [["New campaign", func(): chapter = 0; save["chapter"] = 0; show_intro()]]
+	var entries := [["New campaign", func(): chapter = 0; save["chapter"] = 0; text_screen("Prologue", "\n\n".join(PackedStringArray(U.get("lore", {}).get("prologue", []))), "Enter the first trial", show_intro)]]
 	if int(save.get("chapter", 0)) > 0 and int(save["chapter"]) < CAM.CAMPAIGN["chapters"].size():
 		entries.append(["Continue (trial %d)" % (int(save["chapter"]) + 1), func(): chapter = int(save["chapter"]); show_intro()])
 	entries.append(["How to play", show_help])
@@ -119,7 +119,7 @@ func after_match() -> void:
 		save["best"] = int(save.get("best", 0)) + wins
 		write_save()
 		if chapter >= CAM.CAMPAIGN["chapters"].size():
-			text_screen("The %s is yours" % U.get("name", "world"), "You mastered every trial.\n\n" + U.get("law_text", "") + "\n\nInspired by: " + ", ".join(U.get("inspirations", [])), "Back to title", start)
+			end_screen("The %s is yours" % U.get("name", "world"), "You mastered every trial.\n\n" + U.get("law_text", "") + "\n\nInspired by: " + ", ".join(U.get("inspirations", [])), {"wins": int(save.get("best", 0)), "attempts": attempt}, "Back to title", start)
 		else:
 			text_screen("Trial cleared", "You won %d of 3 duels. The next trial changes the rules entirely." % wins, "Next trial", show_intro)
 	else:
@@ -156,7 +156,9 @@ func selftest() -> Dictionary:
 	res["universe_loaded"] = U.has("name") and pal.size() == 5
 	write_save()
 	res["save_written"] = FileAccess.file_exists(SAVE_PATH)
-	res["ok"] = chapter >= n_ch and res["audio_loaded"] and res["universe_loaded"] and res["save_written"]
+	rate_run(4, {"selftest": true})
+	res["feedback_written"] = FileAccess.file_exists(FEEDBACK_PATH)
+	res["ok"] = res["feedback_written"] and chapter >= n_ch and res["audio_loaded"] and res["universe_loaded"] and res["save_written"]
 	return res
 
 

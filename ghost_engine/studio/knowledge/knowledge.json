@@ -30,9 +30,9 @@
  },
  "capabilities": {
   "animation": {
-   "accept": "-",
-   "status": "MISSING: no skeletal/tween animation pipeline",
-   "tool": "-"
+   "accept": "no script errors while animating; state sync test",
+   "status": "partial (procedural transforms; no skeletal rigs or authored clips)",
+   "tool": "procedural limb swing/bob, pulsing/spinning props, tweens, particles, camera shake, scene fades"
   },
   "art_2d": {
    "accept": "non-blank screens",
@@ -40,13 +40,13 @@
    "tool": "shell Emblem + _draw (procedural vector shapes, palette from universe)"
   },
   "art_3d": {
-   "accept": "-",
-   "status": "MISSING: no 3D asset generation exists",
-   "tool": "-"
+   "accept": "3D scene renders (screenshot non-blank) and view matches simulation state",
+   "status": "partial (procedural primitives only; no authored or sculpted assets)",
+   "tool": "game_arcade3d.gd procedural low-poly meshes (primitives), emissive materials, lighting, fog, skyline"
   },
   "audio": {
-   "accept": "sfx + music loop per game, loaded without import",
-   "status": "implemented (basic synthesis; no composed music)",
+   "accept": "12 sfx + layered mood music (drone/pad/bass/heartbeat/hats/arpeggio) + ambient bed per game, loaded without import",
+   "status": "implemented (synthesized; not composed or mixed by an artist)",
    "tool": "studio.audio (procedural synthesis)"
   },
   "balancer_optimizer": {
@@ -65,9 +65,9 @@
    "tool": "ghost.foundry (discovery loop, agent inbox)"
   },
   "polish_producer": {
-   "accept": "-",
-   "status": "MISSING: no human-in-the-loop playtest feedback yet (rating hook exists in Game 1 foundry arena only)",
-   "tool": "-"
+   "accept": "feedback record written; importer aggregates",
+   "status": "partial (pipeline exists; NO human ratings collected yet)",
+   "tool": "shell.end_screen rating hook in every game + studio.feedback import"
   },
   "programmer": {
    "accept": "standalone Godot project per game",
@@ -97,6 +97,11 @@
    "canon_richness": 0.7426777741941802,
    "cycle": "cycle_001",
    "failed_checks": [],
+   "genres": [
+    "concept_campaign",
+    "steward",
+    "arcade"
+   ],
    "history_branches_explored": 72,
    "law": "pulse",
    "median_branch_richness": 0.6740290502305741,
@@ -132,6 +137,11 @@
    "canon_richness": 0.7429307655330932,
    "cycle": "cycle_002",
    "failed_checks": [],
+   "genres": [
+    "concept_campaign",
+    "steward",
+    "arcade"
+   ],
    "history_branches_explored": 72,
    "law": "wells",
    "median_branch_richness": 0.7071110787729833,
@@ -155,8 +165,58 @@
     "final": 0.7178788300916801,
     "start": 0.6950021070152128
    }
+  },
+  {
+   "bottleneck": "3_build_arcade3d",
+   "canon_richness": 0.7320550201993906,
+   "cycle": "cycle_003",
+   "failed_checks": [],
+   "genres": [
+    "cordon",
+    "arcade3d",
+    "concept_campaign"
+   ],
+   "history_branches_explored": 72,
+   "law": "purge",
+   "median_branch_richness": 0.6846196073966189,
+   "released": [
+    "cordon",
+    "arcade3d",
+    "concept_campaign"
+   ],
+   "timings_s": {
+    "1_inspiration": 0.0,
+    "2_universe": 34.8,
+    "2b_lore": 0.2,
+    "3_build_arcade3d": 55.0,
+    "3_build_concept_campaign": 31.4,
+    "3_build_cordon": 17.0,
+    "6_verification": 8.2,
+    "7_archive": 0.0,
+    "total": 146.7
+   },
+   "tuning": {
+    "arcade3d": {
+     "final": 1.0,
+     "holdout_novice": 0.125,
+     "holdout_skilled": 0.708333333333333,
+     "start": 1.0
+    },
+    "cordon": {
+     "final": 0.8285714285714286,
+     "holdout_novice": 0.0,
+     "holdout_skilled": 1.0,
+     "start": 0.8285714285714285
+    }
+   },
+   "universe_search": {
+    "evaluations": 160,
+    "final": 0.7134245552318599,
+    "start": 0.6969625237716452
+   }
   }
  ],
+ "human_feedback": {},
  "improvements": [
   {
    "actions": [
@@ -171,6 +231,14 @@
     "stored validated arcade parameters for law 'wells'"
    ],
    "cycle": "cycle_002"
+  },
+  {
+   "actions": [
+    "stored evolved world-rule priors (search improved fitness)",
+    "stored validated tuning parameters 'cordon' (held-out skill gap confirmed)",
+    "stored validated tuning parameters 'arcade:purge' (held-out skill gap confirmed)"
+   ],
+   "cycle": "cycle_003"
   }
  ],
  "lessons": [
@@ -189,20 +257,72 @@
   {
    "cycle": "cycle_002",
    "note": "all checks passed; slowest stage was 5_game3_arcade_tuning (56.3s)"
+  },
+  {
+   "cycle": "cycle_003",
+   "note": "all checks passed; slowest stage was 3_build_arcade3d (55.0s)"
   }
  ],
+ "tuning_priors": {
+  "arcade:pulse": {
+   "goal": 3,
+   "hazard_speed": 150.0,
+   "law": "pulse",
+   "law_strength": 0.5,
+   "max_hazards": 18,
+   "spawn_every": 15,
+   "spawn_step": 1,
+   "stage_secs": 30.0
+  },
+  "arcade:purge": {
+   "goal": 5,
+   "hazard_speed": 140.0,
+   "law": "purge",
+   "law_strength": 1.1,
+   "max_hazards": 20,
+   "spawn_every": 15,
+   "spawn_step": 3,
+   "stage_secs": 29.0
+  },
+  "arcade:wells": {
+   "goal": 5,
+   "hazard_speed": 170.0,
+   "law": "wells",
+   "law_strength": 1.1,
+   "max_hazards": 16,
+   "spawn_every": 13,
+   "spawn_step": 4,
+   "stage_secs": 29.0
+  },
+  "cordon": {
+   "ap": 4,
+   "beta": 80,
+   "days": 30,
+   "flow": 6,
+   "meds": 8,
+   "mort": 22,
+   "nodes": 12,
+   "purge_ap": 2,
+   "purge_cap": 15,
+   "q_days": 3,
+   "rec": 12,
+   "seeds": 3,
+   "treat": 150,
+   "win_pct": 75
+  }
+ },
  "universe_priors": {
   "aggro_pct": 8,
   "burn": 2,
-  "flee_pct": 60,
-  "kill_rel_penalty": 6,
-  "loot_pct": 50,
-  "regen_div": 22,
+  "flee_pct": 70,
+  "kill_rel_penalty": 7,
+  "loot_pct": 70,
+  "regen_div": 29,
   "respawn_delay": 32,
   "restock_ticks": 8,
-  "sell_pct": 75,
-  "swing_pct": 18,
-  "wage": 2
+  "sell_pct": 76,
+  "swing_pct": 17,
+  "wage": 3
  },
  "version": 1
 }

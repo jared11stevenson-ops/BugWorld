@@ -4,6 +4,7 @@ import json, os, subprocess
 from ghost.kernel import world as W
 from ghost.kernel.timeline import Timeline
 from ghost.foundry import dsl, replay as R
+from ghost.kernel import rng as RNG
 
 GODOT = os.environ.get("GODOT_BIN", "/tmp/g/Godot_v4.5-stable_linux.x86_64")
 NOISE = ("ALSA", "audio_driver", "audio drivers", "dummy driver", "Godot Engine v", "init_output_device")
@@ -82,13 +83,121 @@ def twin_steward(data, res):
             "python_score": score, "godot_score": res["bot_score"]}
 
 
+def twin_cordon(game, res):
+    """Python port of contain_core.gd; replays the bot's winning action script and compares the final state digest."""
+    p = dict({"nodes": 12, "days": 30, "beta": 45, "flow": 6, "mort": 8, "rec": 12, "ap": 3, "meds": 8, "treat": 150, "q_days": 4,
+              "seeds": 2, "win_pct": 55, "purge_cap": 15, "purge_ap": 2}, **{k: int(v) for k, v in game["params"].items()})
+    s = {"rng": RNG.seed_state(res["seed"])}
+    n = p["nodes"]
+    X, Y, POP, S_, I_, R_, D_, Q, B = ([] for _ in range(9))
+    for i in range(n):
+        X.append(RNG.rand(s, 1000)); Y.append(RNG.rand(s, 1000))
+        pop = 300 + RNG.rand(s, 900)
+        POP.append(pop); S_.append(pop); I_.append(0); R_.append(0); D_.append(0); Q.append(0); B.append(0)
+    total = sum(POP)
+    d2 = lambda i, j: (X[i] - X[j]) ** 2 + (Y[i] - Y[j]) ** 2
+    edges = []
+    def add(a, b):
+        if [a, b] not in edges:
+            edges.append([a, b])
+    for i in range(n):
+        best = sorted((d2(i, j), j) for j in range(n) if j != i)
+        for k in range(2):
+            j = best[k][1]; add(min(i, j), max(i, j))
+    def comps():
+        comp = [-1] * n; c = 0
+        for i in range(n):
+            if comp[i] != -1:
+                continue
+            comp[i] = c; stack = [i]
+            while stack:
+                u = stack.pop()
+                for a, b in edges:
+                    v = b if a == u else (a if b == u else -1)
+                    if v >= 0 and comp[v] == -1:
+                        comp[v] = c; stack.append(v)
+            c += 1
+        return comp
+    while True:
+        comp = comps()
+        if max(comp) + 1 <= 1:
+            break
+        bd, bi, bj = 1 << 60, 0, 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                if comp[i] != comp[j] and d2(i, j) < bd:
+                    bd, bi, bj = d2(i, j), i, j
+        add(bi, bj)
+    placed = 0
+    while placed < p["seeds"]:
+        i = RNG.rand(s, n)
+        if I_[i] == 0:
+            I_[i] = 20; S_[i] -= 20; placed += 1
+    st = {"day": 0, "ap": p["ap"], "meds": p["meds"], "purged": 0, "over": 0, "won": 0, "why": ""}
+    def alive_inf():
+        return sum(S_[i] + I_[i] + R_[i] for i in range(n)), sum(I_)
+    for kind, i in res["script"]:
+        if kind == "q":
+            if st["over"] == 0 and st["ap"] >= 1 and B[i] == 0:
+                st["ap"] -= 1; Q[i] = p["q_days"]
+        elif kind == "t":
+            if st["over"] == 0 and st["ap"] >= 1 and st["meds"] >= 1 and B[i] == 0 and I_[i] > 0:
+                m = min(I_[i], p["treat"]); I_[i] -= m; R_[i] += m; st["meds"] -= 1; st["ap"] -= 1
+        elif kind == "p":
+            if st["over"] == 0 and st["ap"] >= p["purge_ap"] and B[i] == 0:
+                k = S_[i] + I_[i]; st["ap"] -= p["purge_ap"]; D_[i] += k; st["purged"] += k; S_[i] = I_[i] = 0; B[i] = 1
+                if st["purged"] * 100 > total * p["purge_cap"]:
+                    st["over"] = 1; st["why"] = "conscience"
+        else:   # end day
+            if st["over"]:
+                continue
+            new = [0] * n
+            for i2 in range(n):
+                if B[i2] or I_[i2] == 0:
+                    continue
+                beta = p["beta"] // 2 if Q[i2] > 0 else p["beta"]
+                new[i2] += I_[i2] * S_[i2] * beta // (max(1, POP[i2]) * 100)
+            for u, v in edges:
+                if Q[u] == 0 and Q[v] == 0 and B[u] == 0 and B[v] == 0:
+                    new[v] += I_[u] * p["flow"] // 100; new[u] += I_[v] * p["flow"] // 100
+            for i2 in range(n):
+                if B[i2]:
+                    continue
+                inf = min(S_[i2], new[i2]); S_[i2] -= inf
+                deaths = rec = 0
+                if I_[i2] > 0:
+                    deaths = (I_[i2] * p["mort"] + 99) // 100; rec = (I_[i2] * p["rec"] + 99) // 100
+                    if deaths + rec > I_[i2]:
+                        rec = max(0, I_[i2] - deaths)
+                I_[i2] = I_[i2] + inf - deaths - rec; D_[i2] += deaths; R_[i2] += rec
+                if Q[i2] > 0:
+                    Q[i2] -= 1
+            st["day"] += 1; st["ap"] = p["ap"]
+            a, inf_t = alive_inf()
+            if a * 100 < total * 30:
+                st["over"] = 1; st["why"] = "collapse"
+            elif inf_t == 0 and st["day"] >= 3:
+                st["over"] = 1; st["why"] = "extinguished"
+            elif st["day"] >= p["days"]:
+                st["over"] = 1; st["why"] = "survived"
+            if st["over"] and st["why"] not in ("collapse", "conscience"):
+                st["won"] = 1 if a * 100 >= total * p["win_pct"] else 0
+                if not st["won"]:
+                    st["why"] = "too_many_dead"
+    parts = [st["day"], st["ap"], st["meds"], st["purged"], st["over"], st["won"], s["rng"]]
+    for i in range(n):
+        parts += [S_[i], I_[i], R_[i], D_[i], Q[i], B[i]]
+    dg = "%08x" % RNG.fnv32_str(",".join(str(x) for x in parts))
+    return {"digest_match": dg == res["final_digest"], "day_match": st["day"] == res["final_day"], "alive_match": alive_inf()[0] == res["final_alive"], "won": st["won"]}
+
+
 def verify_game(game, project, out_dir):
     """Returns {"checks": {name: bool}, "details": {...}, "released": bool}"""
     os.makedirs(out_dir, exist_ok=True)
     st, errs = selftest(project)
     checks = {"selftest_passes": bool(st.get("ok")), "no_script_errors": not errs}
     details = {"selftest": {k: v for k, v in st.items() if k not in ("records", "script")}, "script_errors": errs[:5]}
-    files = ["project.godot", "main.tscn", "game.gd", "data/universe.json"] + [f"audio/{n}.wav" for n in ("click", "hit", "pickup", "win", "lose", "pulse", "music")]
+    files = ["project.godot", "main.tscn", "game.gd", "data/universe.json"] + [f"audio/{n}.wav" for n in ("click", "hit", "pickup", "win", "lose", "pulse", "alarm", "burn", "cure", "infect", "step", "ui_open", "music", "ambient")]
     checks["assets_present"] = all(os.path.exists(os.path.join(project, f)) for f in files)
     sh = shots(project, os.path.join(out_dir, "screens"))
     checks["screenshots_nonblank"] = bool(sh.get("ok"))
@@ -101,7 +210,14 @@ def verify_game(game, project, out_dir):
         t = twin_steward(game["data"], st)
         checks["python_twin_matches"] = t["digest_match"] and t["tick_match"] and t["score_match"]
         details["twin"] = t
-    elif game["id"] == "arcade":
+    elif game["id"] == "cordon" and "script" in st:
+        t = twin_cordon(game, st)
+        checks["python_twin_matches"] = t["digest_match"] and t["day_match"] and t["alive_match"] and t["won"] == 1
+        details["twin"] = t
+        hb = (game.get("tuning") or {}).get("holdout_best", {})
+        checks["difficulty_tuned_on_holdout"] = bool(hb) and hb.get("skilled", 0) >= 0.3 and hb.get("skilled", 0) - hb.get("novice", 1) >= 0.2
+        details["tuning_holdout"] = hb
+    elif game["id"] in ("arcade", "arcade3d"):
         tn = game.get("tuning") or {}
         hb = tn.get("holdout_best", {})
         checks["difficulty_tuned_on_holdout"] = bool(hb) and hb.get("skilled", 0) >= 0.3 and hb.get("skilled", 0) - hb.get("novice", 1) >= 0.2

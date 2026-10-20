@@ -1,6 +1,6 @@
 """One production cycle: inspiration -> universe -> 3 games -> verify -> archive -> retrospective -> RESET."""
 import hashlib, json, os, shutil, time
-from . import inspiration, universe as U, games as G, tuner, verify, retro, agents
+from . import inspiration, universe as U, games as G, tuner, verify, retro, agents, lore, pool
 from ghost.foundry import grammar as FG
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -11,10 +11,15 @@ ARCHIVE = os.path.join(ROOT, "archive")
 
 def load_knowledge():
     if os.path.exists(KNOW):
-        return json.load(open(KNOW))
+        k = json.load(open(KNOW))
+        k.setdefault("tuning_priors", {f"arcade:{law}": p for law, p in k.get("arcade_priors", {}).items()})
+        k.setdefault("human_feedback", {})
+        for c in k["cycles"]:
+            c.setdefault("genres", ["concept_campaign", "steward", "arcade"])
+        return k
     seed_lessons = os.path.join(ROOT, "studio", "knowledge", "seed_lessons.json")
     return {"version": 1, "cycles": [], "budget": {"universe_pop": 16, "universe_gens": 12, "tune_pop": 12, "tune_gens": 8, "g1_gens": 8},
-            "universe_priors": {}, "arcade_priors": {}, "lessons": json.load(open(seed_lessons)) if os.path.exists(seed_lessons) else [], "improvements": [], "capabilities": agents.ROLES}
+            "universe_priors": {}, "tuning_priors": {}, "human_feedback": {}, "lessons": json.load(open(seed_lessons)) if os.path.exists(seed_lessons) else [], "improvements": [], "capabilities": agents.ROLES}
 
 
 def next_cycle_id():
@@ -54,17 +59,28 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
         uni = U.make_universe(ins, seed)
         U.explore(uni, know, pop=bud["universe_pop"], gens=bud["universe_gens"], seeds=(1, 2, 3) if not quick else (1, 2), ticks=600 if not quick else 300, log=log)
         json.dump(uni, open(os.path.join(STATE, "universe.json"), "w"), indent=1)
+    with stage("2b_lore"):
+        uni["lore"] = lore.make_lore(uni)
+        json.dump(uni, open(os.path.join(STATE, "universe.json"), "w"), indent=1)
+    genres, genre_scores = pool.choose(uni, know, seed)
+    log(f"  genres chosen: {genres}  (scores {genre_scores})")
     games = []
     gdir = os.path.join(STATE, "games")
-    with stage("3_game1_concept_campaign"):
-        games.append(G.build_concept_campaign(uni, os.path.join(gdir, "concept_campaign"), STATE, know, gens=bud["g1_gens"], per_gen=24 if quick else 40, log=log))
-    with stage("4_game2_steward"):
-        games.append(G.build_steward(uni, os.path.join(gdir, "steward"), target_pct=135))
-    with stage("5_game3_arcade_tuning"):
-        proj = os.path.join(gdir, "arcade")
-        G.build_arcade(uni, proj, {"law": uni["law"]})
-        tuning = tuner.tune(proj, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=know["arcade_priors"].get(uni["law"]), log=log)
-        games.append(G.build_arcade(uni, proj, tuning["params"], tuning))
+    for gid in genres:
+        with stage(f"3_build_{gid}"):
+            proj = os.path.join(gdir, gid)
+            if gid == "concept_campaign":
+                games.append(G.build_concept_campaign(uni, proj, STATE, know, gens=bud["g1_gens"], per_gen=24 if quick else 40, log=log))
+            elif gid == "steward":
+                games.append(G.build_steward(uni, proj, target_pct=135))
+            else:
+                builder = {"arcade": lambda u, d, p, t=None: G.build_arcade(u, d, p, t), "arcade3d": G.build_arcade3d, "cordon": G.build_cordon}[gid]
+                kind = "cordon" if gid == "cordon" else "arcade"
+                base = tuner.SPECS[kind]["base"](uni["law"])
+                builder(uni, proj, base)
+                init = know["tuning_priors"].get("cordon" if kind == "cordon" else f"arcade:{uni['law']}")
+                tuning = tuner.tune(proj, kind, uni["law"], seed, pop=bud["tune_pop"], gens=bud["tune_gens"], init=init, log=log)
+                games.append(builder(uni, proj, tuning["params"], tuning))
     reports = {}
     with stage("6_verification"):
         for g in games:
@@ -82,17 +98,17 @@ def run_cycle(prompt=None, seed=None, quick=False, log=print):
             f.write(f"# {uni['name']}\n\n{uni['law_text']}\n\n## Inspirations (real world)\n" + "\n".join(f"- **{k}** — {v}" for k, v in uni["facts"].items())
                     + "\n\n## Factions\n" + "\n".join(f"- {x}" for x in uni["lexicon"]["factions"]) + "\n\n## Canon history (from the evolved, branch-selected simulation)\n" + "\n".join(f"- {l}" for l in uni["chronicle"]) + "\n")
         slim = [{k: v for k, v in g.items() if k not in ("data",)} for g in games]
-        manifest = {"cycle": cname, "universe": uni["id"], "seed": seed, "prompt": prompt, "games": slim, "verification": reports,
+        manifest = {"cycle": cname, "universe": uni["id"], "seed": seed, "prompt": prompt, "genres": genres, "genre_scores": genre_scores, "games": slim, "verification": reports,
                     "released": [g["id"] for g in games if reports[g["id"]]["released"]], "timings_s": timings}
         json.dump(manifest, open(os.path.join(dest, "manifest.json"), "w"), indent=1)
         idx_p = os.path.join(ARCHIVE, "index.json")
         idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
-        idx.append({"cycle": cname, "universe": uni["name"], "released": manifest["released"], "inspirations": uni["inspirations"]})
+        idx.append({"cycle": cname, "universe": uni["name"], "released": manifest["released"], "inspirations": uni["inspirations"], "genres": genres})
         json.dump(idx, open(idx_p, "w"), indent=1)
     timings["total"] = round(time.time() - t_all, 1)
     with stage("8_retrospective_and_reset"):
         know_hash_before = hashlib.sha256(json.dumps(know, sort_keys=True).encode()).hexdigest()
-        retro.retrospective(know, cname, uni, games, reports, timings)
+        retro.retrospective(know, cname, uni, games, reports, timings, genres)
         json.dump(know, open(KNOW, "w"), indent=1, sort_keys=True)
         reset_report = reset_state(uni)
     manifest["timings_s"] = timings

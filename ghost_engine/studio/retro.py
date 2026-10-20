@@ -3,7 +3,7 @@ Only universe-independent numbers are stored: the universe itself is archived, t
 import statistics
 
 
-def retrospective(know, cname, uni, games, reports, timings):
+def retrospective(know, cname, uni, games, reports, timings, genres):
     stages = {k: v for k, v in timings.items() if k != "total"}
     bottleneck = max(stages, key=stages.get)
     fails = [(gid, name) for gid, r in reports.items() for name, ok in r["checks"].items() if not ok]
@@ -12,11 +12,15 @@ def retrospective(know, cname, uni, games, reports, timings):
              "timings_s": timings, "bottleneck": bottleneck, "universe_search": {"start": search["start_fitness"], "final": search["final_fitness"], "evaluations": search["evaluations"]},
              "history_branches_explored": uni["canon"]["explored"], "canon_richness": uni["canon"]["richness"], "median_branch_richness": uni["canon"]["median_richness"],
              "law": uni["law"]}
-    ar = [g for g in games if g["id"] == "arcade"][0]["tuning"]
-    entry["arcade_tuning"] = {"start": ar["start_fitness"], "final": ar["final_fitness"], "holdout_skilled": ar["holdout_best"]["skilled"], "holdout_novice": ar["holdout_best"]["novice"]}
+    entry["genres"] = genres
+    entry["tuning"] = {}
+    for g in games:
+        tn = g.get("tuning")
+        if tn:
+            hb = tn["holdout_best"]
+            entry["tuning"][g["id"]] = {"start": tn["start_fitness"], "final": tn["final_fitness"], "holdout_skilled": hb["skilled"], "holdout_novice": hb["novice"]}
     know["cycles"].append(entry)
     actions = []
-    # 1) validated improvement: keep this cycle's evolved world rules as priors for future universes (only if the search actually improved)
     if search["final_fitness"] >= search["start_fitness"]:
         pri = {}
         for sec in ("world", "economy"):
@@ -26,10 +30,12 @@ def retrospective(know, cname, uni, games, reports, timings):
                     pri[k] = v if old is None else round((old + v) / 2)
         know["universe_priors"] = pri
         actions.append("stored evolved world-rule priors (search improved fitness)")
-    # 2) arcade difficulty priors per law, only if the tuned game generalized on held-out seeds
-    if ar["holdout_best"]["skilled"] >= 0.3 and ar["holdout_best"]["skilled"] - ar["holdout_best"]["novice"] >= 0.2:
-        know["arcade_priors"][uni["law"]] = ar["params"]
-        actions.append(f"stored validated arcade parameters for law '{uni['law']}'")
+    for g in games:
+        tn = g.get("tuning")
+        if tn and tn["holdout_best"]["skilled"] >= 0.3 and tn["holdout_best"]["skilled"] - tn["holdout_best"]["novice"] >= 0.2:
+            key = "cordon" if g["id"] == "cordon" else f"arcade:{uni['law']}"
+            know["tuning_priors"][key] = tn["params"]
+            actions.append(f"stored validated tuning parameters '{key}' (held-out skill gap confirmed)")
     # 3) budget adaptation from measured search behaviour
     b = know["budget"]
     gain = search["final_fitness"] - search["start_fitness"]

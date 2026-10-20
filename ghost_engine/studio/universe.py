@@ -7,17 +7,20 @@ from ghost.kernel.timeline import Timeline
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-TAG_LAW = {"pulse": {"oscillation", "resonance", "signal"}, "wells": {"predation", "network", "symbiosis", "tipping"},
+TAG_LAW = {"contagion": {"contagion", "quarantine"}, "purge": {"purge"}, "pulse": {"oscillation", "resonance", "signal"}, "wells": {"predation", "network", "symbiosis", "tipping"},
            "drift": {"diffusion", "migration", "erosion", "entropy", "scarcity", "feedback", "selection"}}
-LAW_TEXT = {"pulse": "Everything in this universe beats with a rhythm; periodic waves sweep across the land and punish those who ignore the beat.",
+LAW_TEXT = {"contagion": "A sickness walks this land. It blooms where people gather, swells while it is ignored, and only a remedy, never courage, makes it recede.",
+            "purge": "A cleansing line sweeps the world on a fixed cadence. Fire does not ask who is guilty; there is a narrow gap, and the wise learn where it opens.",
+            "pulse": "Everything in this universe beats with a rhythm; periodic waves sweep across the land and punish those who ignore the beat.",
             "wells": "Mass bends the world here; heavy places pull wanderers toward them whether they wish it or not.",
             "drift": "A restless current runs through all things; nothing stays where it was put, and standing still is a choice with a price."}
 # tag -> shift of world-rule priors used to seed the search (genome centre)
-TAG_PRIOR = {"predation": {"aggro_pct": +3, "loot_pct": +20}, "symbiosis": {"aggro_pct": -2, "kill_rel_penalty": +2},
+TAG_PRIOR = {"contagion": {"aggro_pct": -1, "flee_pct": +10, "regen_div": +5}, "purge": {"aggro_pct": +2, "loot_pct": +10, "respawn_delay": +5},
+             "quarantine": {"flee_pct": -10, "respawn_delay": +5},"predation": {"aggro_pct": +3, "loot_pct": +20}, "symbiosis": {"aggro_pct": -2, "kill_rel_penalty": +2},
              "scarcity": {"wage": -1, "burn": +1, "restock_ticks": +3}, "entropy": {"burn": +1, "regen_div": +10},
              "feedback": {"kill_rel_penalty": +3}, "migration": {"respawn_delay": -6}, "erosion": {"regen_div": +8},
              "network": {"flee_pct": +10}, "selection": {"aggro_pct": +1}, "tipping": {"kill_rel_penalty": +2}}
-TAG_ATOMS = {"predation": ["hurt", "steal", "break"], "symbiosis": ["gain", "negate", "shield_up"], "scarcity": ["spend", "charge", "cool"],
+TAG_ATOMS = {"contagion": ["sabotage", "charge", "risk"], "purge": ["hurt", "break", "cool"], "quarantine": ["shield_up", "cool", "negate"], "predation": ["hurt", "steal", "break"], "symbiosis": ["gain", "negate", "shield_up"], "scarcity": ["spend", "charge", "cool"],
              "feedback": ["counter", "negate", "break"], "entropy": ["cool", "sabotage"], "resonance": ["counter", "negate"],
              "oscillation": ["counter", "break"], "network": ["sabotage", "steal"], "selection": ["risk"], "tipping": ["risk", "spend"],
              "diffusion": ["charge", "gain"], "signal": ["counter", "negate"], "erosion": ["break", "sabotage"], "migration": ["gain", "charge"]}
@@ -40,17 +43,24 @@ def make_universe(inspirations, seed):
     motifs = [w for b in inspirations for w in b[3]]
     rnd.shuffle(motifs)
     uname = cap(motifs[0].replace("-", "")) + motifs[1].replace("-", "")
-    law = max(TAG_LAW, key=lambda l: (sum(tags.get(t, 0) for t in TAG_LAW[l]), l))
+    law = max(TAG_LAW, key=lambda l: (sum(tags.get(t, 0) for t in TAG_LAW[l]) * (2 if l in ("contagion", "purge") else 1), l))   # theme-defining laws weigh double
     hue = (sum(ord(c) for c in uname) % 360) / 360.0
     pal = []
     for i, (s, v) in enumerate([(0.55, 0.16), (0.5, 0.30), (0.6, 0.85), (0.75, 0.95), (0.35, 0.95)]):
         r, g, b_ = colorsys.hsv_to_rgb((hue + (0.0, 0.04, 0.5, 0.08, 0.12)[i]) % 1.0, s, v)
         pal.append("#%02x%02x%02x" % (int(r * 255), int(g * 255), int(b_ * 255)))
     fac = [f"The {cap(motifs[i + 2].replace('-', ''))} {rnd.choice(SUFFIX_F)}" for i in range(3)]
-    towns = [cap(m.replace("-", "")) + rnd.choice(SUFFIX_T) for m in motifs[:6]]
+    towns = []
+    for m in motifs[:6]:
+        for _ in range(20):                                   # unique town names
+            nm = cap(m.replace("-", "")) + rnd.choice(SUFFIX_T)
+            if nm not in towns:
+                break
+        towns.append(nm)
     uni = {"id": f"{uname.lower()}-{seed}", "seed": seed, "name": uname, "inspirations": [b[0] for b in inspirations],
            "facts": {b[0]: b[4] for b in inspirations}, "fields": [b[1] for b in inspirations], "tags": tags, "law": law,
            "law_text": LAW_TEXT[law], "palette": pal,
+           "mood": {"contagion": "dread", "purge": "tense", "wells": "tense", "pulse": "calm", "drift": "calm"}[law],
            "lexicon": {"factions": fac, "towns": towns, "currency": rnd.choice(CURRENCY), "potion": rnd.choice(POTION), "motifs": motifs}}
     return uni
 

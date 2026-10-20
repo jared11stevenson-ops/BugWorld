@@ -34,16 +34,18 @@ def assemble(project_dir, game_id, title, universe, extra_files, libs, template_
                 '[node name="Main" type="Control"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\nscript = ExtResource("1")\n')
     with open(os.path.join(project_dir, "project.godot"), "w") as f:
         f.write(f'config_version=5\n\n[application]\n\nconfig/name="{title}"\nrun/main_scene="res://main.tscn"\nconfig/features=PackedStringArray("4.4")\n\n'
-                '[debug]\n\ngdscript/warnings/integer_division=0\ngdscript/warnings/unused_parameter=0\ngdscript/warnings/shadowed_variable=0\n\n'
+                '[rendering]\n\nrenderer/rendering_method="gl_compatibility"\nrenderer/rendering_method.mobile="gl_compatibility"\n\n[debug]\n\ngdscript/warnings/integer_division=0\ngdscript/warnings/unused_parameter=0\ngdscript/warnings/shadowed_variable=0\n\n'
                 '[display]\n\nwindow/size/viewport_width=1100\nwindow/size/viewport_height=680\nwindow/stretch/mode="canvas_items"\n')
-    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon")}
+    uj = {k: universe[k] for k in ("id", "seed", "name", "inspirations", "facts", "law", "law_text", "palette", "lexicon", "mood")}
+    uj["lore"] = universe.get("lore", {})
     uj["game_title"] = title
     json.dump(uj, open(os.path.join(project_dir, "data", "universe.json"), "w"), indent=1)
     for rel, content in extra_files.items():
         with open(os.path.join(project_dir, rel), "w" if isinstance(content, str) else "wb") as f:
             f.write(content)
     audio.sfx(os.path.join(project_dir, "audio"), universe["seed"] * 3 + len(game_id))
-    audio.music(os.path.join(project_dir, "audio", "music.wav"), universe["seed"] * 5 + len(game_id) * 7)
+    audio.music(os.path.join(project_dir, "audio", "music.wav"), universe["seed"] * 5 + len(game_id) * 7, mood=universe.get("mood", "calm"))
+    audio.ambient(os.path.join(project_dir, "audio", "ambient.wav"), universe["seed"] + len(game_id), universe.get("mood", "calm"))
 
 
 # ---------------------------------------------------------------- G1: concept campaign
@@ -138,3 +140,19 @@ def build_arcade(uni, out_dir, params, tuning=None):
     u["fact_lines"] = [f"{k}: {v}" for k, v in uni["facts"].items()]
     json.dump(u, open(os.path.join(out_dir, "data", "universe.json"), "w"), indent=1)
     return {"id": "arcade", "title": f"{uni['name']}: Expedition", "genre": "real-time arcade", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: cordon (epidemic containment)
+def build_cordon(uni, out_dir, params, tuning=None):
+    files = {"data/contain.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Cordon"
+    assemble(out_dir, "cordon", title, uni, files, ["kernel.gd", "shell.gd"], "game_contain.gd", ["contain_core.gd", "tune_contain.gd"])
+    return {"id": "cordon", "title": title, "genre": "network containment strategy", "params": params, "tuning": tuning}
+
+
+# ---------------------------------------------------------------- G: expedition 3D
+def build_arcade3d(uni, out_dir, params, tuning=None):
+    files = {"data/arcade.gd": gd_const("DATA", {"params": params})}
+    title = f"{uni['name']}: Expedition 3D"
+    assemble(out_dir, "arcade3d", title, uni, files, ["kernel.gd", "shell.gd"], "game_arcade3d.gd", ["arcade_core.gd", "tune.gd"])
+    return {"id": "arcade3d", "title": title, "genre": "real-time 3D action", "params": params, "tuning": tuning}

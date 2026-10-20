@@ -1,0 +1,467 @@
+{
+ "cycle": "cycle_003",
+ "universe": "wardchar-2423429628",
+ "seed": 2423429628,
+ "prompt": "The Plague / the Purge",
+ "genres": [
+  "cordon",
+  "arcade3d",
+  "concept_campaign"
+ ],
+ "genre_scores": {
+  "cordon": 10.15,
+  "arcade3d": 8.48,
+  "concept_campaign": 6.4,
+  "steward": 2.34,
+  "arcade": 0.07
+ },
+ "games": [
+  {
+   "id": "cordon",
+   "title": "Wardchar: Cordon",
+   "genre": "network containment strategy",
+   "params": {
+    "nodes": 12,
+    "days": 30,
+    "beta": 80,
+    "flow": 6,
+    "mort": 22,
+    "rec": 12,
+    "ap": 4,
+    "meds": 8,
+    "treat": 150,
+    "q_days": 3,
+    "seeds": 3,
+    "win_pct": 75,
+    "purge_cap": 15,
+    "purge_ap": 2
+   },
+   "tuning": {
+    "params": {
+     "nodes": 12,
+     "days": 30,
+     "beta": 80,
+     "flow": 6,
+     "mort": 22,
+     "rec": 12,
+     "ap": 4,
+     "meds": 8,
+     "treat": 150,
+     "q_days": 3,
+     "seeds": 3,
+     "win_pct": 75,
+     "purge_cap": 15,
+     "purge_ap": 2
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.05,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.037500000000000006,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 2,
+      "best_fitness": 0.8285714285714286,
+      "skilled": 1.0,
+      "novice": 0.025000000000000005,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 3,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.025,
+      "evals_of_best": 4
+     },
+     {
+      "gen": 4,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.02,
+      "evals_of_best": 5
+     },
+     {
+      "gen": 5,
+      "best_fitness": 0.8285714285714286,
+      "skilled": 1.0,
+      "novice": 0.016666666666666666,
+      "evals_of_best": 6
+     },
+     {
+      "gen": 6,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.024999999999999998,
+      "evals_of_best": 7
+     },
+     {
+      "gen": 7,
+      "best_fitness": 0.8285714285714285,
+      "skilled": 1.0,
+      "novice": 0.021875,
+      "evals_of_best": 8
+     },
+     {
+      "gen": 8,
+      "best_fitness": 0.8285714285714286,
+      "skilled": 1.0,
+      "novice": 0.008333333333333333,
+      "evals_of_best": 3
+     }
+    ],
+    "default_params": {
+     "nodes": 12,
+     "days": 30,
+     "beta": 70,
+     "flow": 6,
+     "mort": 18,
+     "rec": 10,
+     "ap": 3,
+     "meds": 8,
+     "treat": 150,
+     "q_days": 4,
+     "seeds": 2,
+     "win_pct": 60,
+     "purge_cap": 15,
+     "purge_ap": 2
+    },
+    "holdout_best": {
+     "novice": 0.0,
+     "skilled": 1.0,
+     "skilled_score": 0.0,
+     "skilled_stage1": 1.0
+    },
+    "holdout_default": {
+     "novice": 0.125,
+     "skilled": 1.0,
+     "skilled_score": 0.0,
+     "skilled_stage1": 1.0
+    },
+    "start_fitness": 0.8285714285714285,
+    "final_fitness": 0.8285714285714286,
+    "evaluations": 108
+   }
+  },
+  {
+   "id": "arcade3d",
+   "title": "Wardchar: Expedition 3D",
+   "genre": "real-time 3D action",
+   "params": {
+    "law": "purge",
+    "law_strength": 1.1,
+    "spawn_every": 15,
+    "spawn_step": 3,
+    "hazard_speed": 140.0,
+    "goal": 5,
+    "stage_secs": 29.0,
+    "max_hazards": 20
+   },
+   "tuning": {
+    "params": {
+     "law": "purge",
+     "law_strength": 1.1,
+     "spawn_every": 15,
+     "spawn_step": 3,
+     "hazard_speed": 140.0,
+     "goal": 5,
+     "stage_secs": 29.0,
+     "max_hazards": 20
+    },
+    "curve": [
+     {
+      "gen": 0,
+      "best_fitness": 1.0,
+      "skilled": 0.708333333333333,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 1
+     },
+     {
+      "gen": 1,
+      "best_fitness": 1.0,
+      "skilled": 0.7291666666666665,
+      "novice": 0.0833333333333333,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 2,
+      "best_fitness": 1.0,
+      "skilled": 0.7083333333333334,
+      "novice": 0.06944444444444443,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 3,
+      "best_fitness": 1.0,
+      "skilled": 0.6666666666666665,
+      "novice": 0.04166666666666665,
+      "evals_of_best": 2
+     },
+     {
+      "gen": 4,
+      "best_fitness": 1.0,
+      "skilled": 0.6666666666666666,
+      "novice": 0.027777777777777766,
+      "evals_of_best": 3
+     },
+     {
+      "gen": 5,
+      "best_fitness": 1.0,
+      "skilled": 0.6458333333333333,
+      "novice": 0.020833333333333325,
+      "evals_of_best": 4
+     },
+     {
+      "gen": 6,
+      "best_fitness": 1.0,
+      "skilled": 0.6833333333333332,
+      "novice": 0.025,
+      "evals_of_best": 5
+     },
+     {
+      "gen": 7,
+      "best_fitness": 1.0,
+      "skilled": 0.673611111111111,
+      "novice": 0.02777777777777778,
+      "evals_of_best": 6
+     },
+     {
+      "gen": 8,
+      "best_fitness": 1.0,
+      "skilled": 0.6666666666666666,
+      "novice": 0.02380952380952381,
+      "evals_of_best": 7
+     }
+    ],
+    "default_params": {
+     "law": "purge",
+     "law_strength": 1.0,
+     "spawn_every": 14,
+     "spawn_step": 3,
+     "hazard_speed": 150.0,
+     "goal": 4,
+     "stage_secs": 32.0,
+     "max_hazards": 22
+    },
+    "holdout_best": {
+     "novice": 0.125,
+     "skilled": 0.708333333333333,
+     "skilled_score": 4065.70833333333,
+     "skilled_stage1": 1.0
+    },
+    "holdout_default": {
+     "novice": 0.0416666666666667,
+     "skilled": 0.75,
+     "skilled_score": 4062.41666666667,
+     "skilled_stage1": 1.0
+    },
+    "start_fitness": 1.0,
+    "final_fitness": 1.0,
+    "evaluations": 108
+   }
+  },
+  {
+   "id": "concept_campaign",
+   "title": "Wardchar: Trials",
+   "genre": "strategy duel campaign",
+   "evidence": [
+    {
+     "chapter": 1,
+     "source_id": "mu0210",
+     "proposer": "mutation",
+     "fitness": 0.7525252525252525,
+     "novelty_vs_seeds": 0.9473684210526316,
+     "live_actions": 4,
+     "n_actions": 5,
+     "interaction": 0.6508641967293095,
+     "leverage": 0.25,
+     "length": 17.348484848484848,
+     "flags": []
+    },
+    {
+     "chapter": 2,
+     "source_id": "mu0216",
+     "proposer": "mutation",
+     "fitness": 0.7739963739048291,
+     "novelty_vs_seeds": 0.85,
+     "live_actions": 4,
+     "n_actions": 6,
+     "interaction": 0.3636363633388429,
+     "leverage": 0.26666666666666666,
+     "length": 6.931034482758621,
+     "flags": []
+    },
+    {
+     "chapter": 3,
+     "source_id": "gr0156",
+     "proposer": "grammar",
+     "fitness": 0.885003885003885,
+     "novelty_vs_seeds": 0.8888888888888888,
+     "live_actions": 3,
+     "n_actions": 5,
+     "interaction": 0.5999999993750001,
+     "leverage": 0.2894736842105263,
+     "length": 8.492424242424242,
+     "flags": []
+    }
+   ],
+   "discovery": {
+    "evaluations": 332,
+    "viable": 137,
+    "cells": 48
+   }
+  }
+ ],
+ "verification": {
+  "cordon": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true,
+    "difficulty_tuned_on_holdout": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_tries": 1,
+     "bot_won": true,
+     "do_nothing_wins_of_12": 0,
+     "feedback_written": true,
+     "final_alive": 8113,
+     "final_day": 30,
+     "final_digest": "eed4b5fc",
+     "ok": true,
+     "purge_cap_enforced": true,
+     "save_written": true,
+     "seed": 500
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 182,
+     "title_colors": 132,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "digest_match": true,
+     "day_match": true,
+     "alive_match": true,
+     "won": 1
+    },
+    "tuning_holdout": {
+     "novice": 0.0,
+     "skilled": 1.0,
+     "skilled_score": 0.0,
+     "skilled_stage1": 1.0
+    }
+   },
+   "released": true
+  },
+  "arcade3d": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "difficulty_tuned_on_holdout": true
+   },
+   "details": {
+    "selftest": {
+     "audio_loaded": true,
+     "bot_completed_game": true,
+     "feedback_written": true,
+     "novice_full_clears_of_8": 0,
+     "ok": true,
+     "retries": 1,
+     "save_written": true,
+     "score": 4100,
+     "view_matches_state": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 391,
+     "title_colors": 142,
+     "w": 1100,
+     "ok": true
+    },
+    "tuning_holdout": {
+     "novice": 0.125,
+     "skilled": 0.708333333333333,
+     "skilled_score": 4065.70833333333,
+     "skilled_stage1": 1.0
+    }
+   },
+   "released": true
+  },
+  "concept_campaign": {
+   "checks": {
+    "selftest_passes": true,
+    "no_script_errors": true,
+    "assets_present": true,
+    "screenshots_nonblank": true,
+    "python_twin_matches": true
+   },
+   "details": {
+    "selftest": {
+     "attempts": 3,
+     "audio_loaded": true,
+     "chapters_cleared": 3,
+     "feedback_written": true,
+     "matches": 9,
+     "ok": true,
+     "save_written": true,
+     "universe_loaded": true
+    },
+    "script_errors": [],
+    "screenshots": {
+     "h": 680,
+     "play_colors": 121,
+     "title_colors": 136,
+     "w": 1100,
+     "ok": true
+    },
+    "twin": {
+     "sessions": 9,
+     "mismatches": 0
+    }
+   },
+   "released": true
+  }
+ },
+ "released": [
+  "cordon",
+  "arcade3d",
+  "concept_campaign"
+ ],
+ "timings_s": {
+  "1_inspiration": 0.0,
+  "2_universe": 34.8,
+  "2b_lore": 0.2,
+  "3_build_cordon": 17.0,
+  "3_build_arcade3d": 55.0,
+  "3_build_concept_campaign": 31.4,
+  "6_verification": 8.2,
+  "7_archive": 0.0,
+  "total": 146.7,
+  "8_retrospective_and_reset": 0.0
+ },
+ "reset": {
+  "state_dir_removed": true,
+  "grammar_priors_cleared": true,
+  "knowledge_retained": true,
+  "no_universe_leak_in_knowledge": true,
+  "ok": true
+ }
+}

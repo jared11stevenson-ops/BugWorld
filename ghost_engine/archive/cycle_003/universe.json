@@ -1,0 +1,266 @@
+{
+ "id": "wardchar-2423429628",
+ "seed": 2423429628,
+ "name": "Wardchar",
+ "inspirations": [
+  "humoral medicine and purging",
+  "forest fire ecology",
+  "John Snow's cholera map"
+ ],
+ "facts": {
+  "humoral medicine and purging": "Historic European medicine often tried to restore the body's balance by purging and bloodletting, practices now known to be ineffective or harmful.",
+  "forest fire ecology": "Some forests and their species depend on periodic fire to clear undergrowth and release seeds.",
+  "John Snow's cholera map": "In 1854 John Snow mapped London cholera deaths around the Broad Street pump, helping show that the disease spread through water."
+ },
+ "fields": [
+  "history",
+  "ecology",
+  "medicine"
+ ],
+ "tags": {
+  "purge": 2,
+  "selection": 2,
+  "contagion": 1,
+  "signal": 1
+ },
+ "law": "purge",
+ "law_text": "A cleansing line sweeps the world on a fixed cadence. Fire does not ask who is guilty; there is a narrow gap, and the wise learn where it opens.",
+ "palette": [
+  "#1c2812",
+  "#2e4c26",
+  "#9c56d8",
+  "#3cf23e",
+  "#9df2b2"
+ ],
+ "mood": "tense",
+ "lexicon": {
+  "factions": [
+   "The Ledger Assembly",
+   "The Cone Covenant",
+   "The Lancetblue Choir"
+  ],
+  "towns": [
+   "Wardhollow",
+   "Charford",
+   "Ledgerspire",
+   "Coneward",
+   "Lancetbluefall",
+   "Pumpfall"
+  ],
+  "currency": "scrip",
+  "potion": "draught",
+  "motifs": [
+   "ward",
+   "char",
+   "ledger",
+   "cone",
+   "lancet-blue",
+   "pump",
+   "burn-ground",
+   "basin",
+   "humor"
+  ]
+ },
+ "rules": {
+  "combat": {
+   "crit_mult_pct": 150,
+   "crit_pct": 5,
+   "fatigue_pct": 5,
+   "guard_counter_pct": 60,
+   "guard_pierce_pct": 70,
+   "guard_reduce_pct": 60,
+   "heal_vuln_pct": 20,
+   "potion_heal": 20,
+   "power_interrupt_pct": 50,
+   "power_mult_pct": 170,
+   "round_cap": 40,
+   "start_potions": 3
+  },
+  "economy": {
+   "base_price": 10,
+   "burn": 2,
+   "restock_ticks": 9,
+   "sell_pct": 78,
+   "stock_cap": 6,
+   "swing_pct": 16,
+   "tax_pct": 25,
+   "upkeep": 2,
+   "upkeep_every": 5,
+   "wage": 4
+  },
+  "name": "wardchar-2423429628",
+  "world": {
+   "aggro_pct": 9,
+   "flee_pct": 80,
+   "kill_rel_penalty": 8,
+   "loot_pct": 90,
+   "regen_div": 36,
+   "respawn_delay": 31,
+   "war_threshold": -40
+  }
+ },
+ "search": {
+  "generations": 12,
+  "population": 16,
+  "seeds": [
+   1,
+   2,
+   3
+  ],
+  "ticks": 600,
+  "curve": [
+   {
+    "gen": 0,
+    "best": 0.6969625237716452,
+    "mean": 0.631336871019345
+   },
+   {
+    "gen": 1,
+    "best": 0.6969625237716452,
+    "mean": 0.6334848127181599
+   },
+   {
+    "gen": 2,
+    "best": 0.6969625237716452,
+    "mean": 0.6604247089386289
+   },
+   {
+    "gen": 3,
+    "best": 0.6969625237716452,
+    "mean": 0.6535775975402075
+   },
+   {
+    "gen": 4,
+    "best": 0.6996351893258882,
+    "mean": 0.6631504048224073
+   },
+   {
+    "gen": 5,
+    "best": 0.6996351893258882,
+    "mean": 0.6559948465174128
+   },
+   {
+    "gen": 6,
+    "best": 0.6996351893258882,
+    "mean": 0.6417994185625165
+   },
+   {
+    "gen": 7,
+    "best": 0.7134245552318599,
+    "mean": 0.644561275020528
+   },
+   {
+    "gen": 8,
+    "best": 0.7134245552318599,
+    "mean": 0.6413169207697911
+   },
+   {
+    "gen": 9,
+    "best": 0.7134245552318599,
+    "mean": 0.6625519135196793
+   },
+   {
+    "gen": 10,
+    "best": 0.7134245552318599,
+    "mean": 0.6441352219257012
+   },
+   {
+    "gen": 11,
+    "best": 0.7134245552318599,
+    "mean": 0.6517562084112918
+   },
+   {
+    "gen": 12,
+    "best": 0.7134245552318599,
+    "mean": 0.6418419870411844
+   }
+  ],
+  "start_fitness": 0.6969625237716452,
+  "final_fitness": 0.7134245552318599,
+  "evaluations": 160
+ },
+ "canon": {
+  "seed": 105,
+  "fork_tick": 200,
+  "intervention": "kill_deadliest",
+  "richness": 0.7320550201993906,
+  "explored": 72,
+  "median_richness": 0.6846196073966189
+ },
+ "chronicle": [
+  "Day 35: Bram Ford of The Cone Covenant fell at Charford to Ash Thorn of The Ledger Assembly. It set off 1 later events.",
+  "Day 41: Dov Reed of The Cone Covenant fell at Wardhollow to Elda Reed of The Lancetblue Choir. It set off 1 later events.",
+  "Day 50: Bram Vale of The Lancetblue Choir fell at Wardhollow to Gale Marsh of The Ledger Assembly. It set off 1 later events.",
+  "Day 61: Ash Thorn of The Ledger Assembly fell at Lancetbluefall to Elda Wick of The Lancetblue Choir. It set off 1 later events.",
+  "Day 147: Bram Vale of The Ledger Assembly fell at Coneward to Gale Thorn of The Cone Covenant. It set off 1 later events.",
+  "Day 486: Cora Vale of The Ledger Assembly fell at Coneward to Bram Marsh of The Cone Covenant. It set off 2 later events."
+ ],
+ "pivotal": [
+  {
+   "event": 353,
+   "tick": 35,
+   "cascade": 1
+  },
+  {
+   "event": 417,
+   "tick": 41,
+   "cascade": 1
+  },
+  {
+   "event": 490,
+   "tick": 50,
+   "cascade": 1
+  },
+  {
+   "event": 590,
+   "tick": 61,
+   "cascade": 1
+  },
+  {
+   "event": 1399,
+   "tick": 147,
+   "cascade": 1
+  },
+  {
+   "event": 4491,
+   "tick": 486,
+   "cascade": 2
+  }
+ ],
+ "lore": {
+  "prologue": [
+   "Wardchar was not made; it was assembled from remembered truths. \"Historic European medicine often tried to restore the body's balance by purging and bloodletting, practices now known to be ineffective or harmful.\" \"Some forests and their species depend on periodic fire to clear undergrowth and release seeds.\"",
+   "Then came the third truth: \"In 1854 John Snow mapped London cholera deaths around the Broad Street pump, helping show that the disease spread through water.\" From the meeting of these three the law of Wardchar was born. A cleansing line sweeps the world on a fixed cadence. Fire does not ask who is guilty; there is a narrow gap, and the wise learn where it opens.",
+   "Day 35: Bram Ford of The Cone Covenant fell at Charford to Ash Thorn of The Ledger Assembly. It set off 1 later events. That was how the cleansing first showed itself to the living."
+  ],
+  "factions": {
+   "The Ledger Assembly": {
+    "trait": "beleaguered",
+    "blurb": "The Ledger Assembly are beleaguered: they have buried the most of their own. In the canon history they slew 14, lost 15, and still field 5 souls with 1797 scrip."
+   },
+   "The Cone Covenant": {
+    "trait": "ruthless",
+    "blurb": "The Cone Covenant are ruthless: they have taken more lives than any rival. In the canon history they slew 17, lost 13, and still field 7 souls with 2594 scrip."
+   },
+   "The Lancetblue Choir": {
+    "trait": "prosperous",
+    "blurb": "The Lancetblue Choir are prosperous: they hold the fattest purses. In the canon history they slew 7, lost 11, and still field 8 souls with 1529 scrip."
+   }
+  },
+  "towns": {
+   "Wardhollow": "Wardhollow: 5 souls live where ledger meets pump; the fire is felt here first.",
+   "Charford": "Charford: 1 souls live where cone meets lancet blue; the fire is felt here first.",
+   "Ledgerspire": "Ledgerspire: 2 souls live where ledger meets ward; the fire is felt here first.",
+   "Coneward": "Coneward: 6 souls live where ward meets lancet blue; the fire is felt here first.",
+   "Lancetbluefall": "Lancetbluefall: 3 souls live where lancet blue meets burn ground; the fire is felt here first.",
+   "Pumpfall": "Pumpfall: 3 souls live where ledger meets lancet blue; the fire is felt here first."
+  },
+  "epilogue_win": "The fire of Wardchar did not end, but it learned your name. Those who survive will tell it as a story of ash.",
+  "epilogue_lose": "The fire of Wardchar closes over the place where you stood. Perhaps the next keeper will remember what you could not.",
+  "traits": {
+   "1": "ruthless",
+   "0": "beleaguered",
+   "2": "prosperous"
+  }
+ }
+}

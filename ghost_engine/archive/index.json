@@ -26,5 +26,24 @@
    "the telegraph",
    "plate tectonics"
   ]
+ },
+ {
+  "cycle": "cycle_003",
+  "universe": "Wardchar",
+  "released": [
+   "cordon",
+   "arcade3d",
+   "concept_campaign"
+  ],
+  "inspirations": [
+   "humoral medicine and purging",
+   "forest fire ecology",
+   "John Snow's cholera map"
+  ],
+  "genres": [
+   "cordon",
+   "arcade3d",
+   "concept_campaign"
+  ]
  }
 ]
