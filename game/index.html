@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HOLLOWMERE</title>
+<style>
+:root{--ink:#e8dcc0;--gold:#d9a441;--red:#a8322d;--bg:#07090c}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;overflow:hidden;user-select:none}
+canvas{display:block;position:fixed;inset:0;width:100%;height:100%}
+#hud{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity 1s}
+#hud.on{opacity:1}
+.bars{position:absolute;left:28px;top:24px;width:min(320px,45vw)}
+.bar{height:10px;margin-bottom:8px;background:#0008;border:1px solid #d9a44166;transform:skewX(-18deg)}
+.bar i{display:block;height:100%;width:100%;transition:width .12s}
+#hp i{background:linear-gradient(#e0544c,#7d1d1a)}#st i{background:linear-gradient(#e6c76a,#8a6a1d)}
+#obj{position:absolute;right:28px;top:22px;text-align:right;text-shadow:0 2px 6px #000;max-width:40vw}
+#obj b{display:block;color:var(--gold);letter-spacing:.2em;font-size:12px}
+#obj span{font-size:15px}
+#prompt{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);padding:6px 16px;background:#000a;border:1px solid #d9a44199;letter-spacing:.15em;opacity:0;transition:opacity .2s}
+#sub{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);width:min(760px,86vw);text-align:center;font-style:italic;font-size:19px;text-shadow:0 2px 8px #000,0 0 3px #000;opacity:0;transition:opacity .6s}
+#boss{position:absolute;left:50%;top:7%;transform:translateX(-50%);width:min(560px,70vw);text-align:center;opacity:0;transition:opacity .5s}
+#boss .bar{height:12px;transform:none}#boss i{background:linear-gradient(#cfd8e8,#5c6a82)}
+#boss small{letter-spacing:.35em;font-size:12px;color:var(--gold)}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at center,#0b1118cc,#000 85%);transition:opacity 1.2s;z-index:5}
+.screen.hide{opacity:0;pointer-events:none}
+h1{font-size:min(11vw,110px);letter-spacing:.28em;margin:0 0 4px .28em;font-weight:400;color:var(--ink);text-shadow:0 0 40px #d9a44155}
+.tag{letter-spacing:.5em;color:var(--gold);font-size:13px;margin-bottom:34px}
+.lore{max-width:640px;line-height:1.7;opacity:.85;margin:0 20px 26px;font-size:16px}
+.keys{font-size:13px;opacity:.7;letter-spacing:.08em;line-height:1.9;margin-bottom:26px}
+button{font:inherit;letter-spacing:.35em;color:var(--ink);background:transparent;border:1px solid var(--gold);padding:12px 38px;cursor:pointer;pointer-events:auto}
+button:hover{background:#d9a44122}button:disabled{opacity:.35;cursor:wait}
+#vig{position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 160px #000c;z-index:2}
+#flash{position:fixed;inset:0;background:#a8322d;opacity:0;pointer-events:none;z-index:3;transition:opacity .35s}
+#load{width:260px;height:2px;background:#fff2;margin-top:18px}#load i{display:block;height:100%;width:0;background:var(--gold)}
+</style></head><body>
+<div id="hud">
+  <div class="bars"><div class="bar" id="hp"><i></i></div><div class="bar" id="st"><i></i></div></div>
+  <div id="obj"><b>OBJECTIVE</b><span id="objt"></span></div>
+  <div id="boss"><small id="bossn">THE CLOCKMAKER'S HEIR</small><div class="bar"><i id="bossb"></i></div></div>
+  <div id="prompt"></div><div id="sub"></div>
+</div>
+<div id="vig"></div><div id="flash"></div>
+<div class="screen" id="title">
+  <h1>HOLLOWMERE</h1><div class="tag">THE HOUR THAT NEVER ENDS</div>
+  <div class="lore">Every clock in the House of Hollowmere stopped at the same minute. Nothing has died since, and nothing has lived.
+  You are the last Warden, sent with a lantern to find the three Hands of the Master Clock and let the hour finally end.</div>
+  <div class="keys">WASD move &nbsp;·&nbsp; SHIFT run &nbsp;·&nbsp; SPACE roll &nbsp;·&nbsp; CLICK strike &nbsp;·&nbsp; E interact &nbsp;·&nbsp; ESC pause</div>
+  <button id="go" disabled>LOADING</button><div id="load"><i></i></div>
+</div>
+<div class="screen hide" id="end"><h1 id="endh" style="font-size:min(8vw,70px)"></h1><div class="lore" id="endp"></div><button id="again">BEGIN AGAIN</button></div>
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/jsm/"}}</script>
+<script type="module" src="./src/main.js"></script>
+</body></html>
